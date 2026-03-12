@@ -1,4 +1,5 @@
 using Api.Application.Common;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +8,8 @@ builder.Services.AddControllers();
 builder
     .LoadEnvFiles()
     .AddSwagger()
-    .AddApplicationServices();
+    .AddApplicationServices()
+    .AddDatabase();
 
 var app = builder.Build();
 
