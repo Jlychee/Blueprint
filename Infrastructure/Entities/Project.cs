@@ -1,4 +1,4 @@
-﻿namespace Infrastructure;
+﻿namespace Infrastructure.Entities;
 
 public class Project
 {

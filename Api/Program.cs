@@ -1,5 +1,6 @@
 using Api.Application.Common;
 using Infrastructure;
+using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

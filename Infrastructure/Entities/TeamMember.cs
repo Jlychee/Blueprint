@@ -1,6 +1,6 @@
 ﻿using Client.Models.Models.Enums;
 
-namespace Infrastructure;
+namespace Infrastructure.Entities;
 
 public class TeamMember
 {

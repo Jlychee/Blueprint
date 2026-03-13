@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Infrastructure.Db;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure;
+namespace Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {

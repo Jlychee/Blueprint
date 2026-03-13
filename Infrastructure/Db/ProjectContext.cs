@@ -1,7 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Infrastructure.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure;
+namespace Infrastructure.Db;
 
 public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContext(options)
 {
@@ -40,8 +41,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         // TODO: я хз, через Constraint не статическую проверку не сделать (я бы хотела, кнч текущий год проверять)
         builder.ToTable(t =>
         {
-            t.HasCheckConstraint("CK_PROJECT_YEAR", "Year >= 2000 AND Year <= 2100");
-            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "Semester IN (3,4)");
+            t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
+            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
         });
     }
 }
