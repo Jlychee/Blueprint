@@ -9,5 +9,8 @@ public class Project
     public int Year { get; set; }
     public int Semester { get; set; }
 
-    public ICollection<TeamMember> TeamMembers = new List<TeamMember>();
+    public File File { get; set; }
+
+    public ICollection<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
+    public ICollection<ProjectTag> ProjectTags { get; set; } = new List<ProjectTag>();
 }

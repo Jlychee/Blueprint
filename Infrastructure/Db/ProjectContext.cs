@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Entities;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using File = Infrastructure.Entities.File;
 
 namespace Infrastructure.Db;
 
@@ -9,12 +11,18 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
     public DbSet<Project> Projects { get; set; }
     public DbSet<TeamMember> TeamMembers { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<Tag> Tags { get; set; }
+    public DbSet<ProjectTag> ProjectTags { get; set; }
+    public DbSet<File> Files { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new ProjectConfiguration());
         modelBuilder.ApplyConfiguration(new TeamMemberConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new ProjectTagConfiguration());
+        modelBuilder.ApplyConfiguration(new TagConfiguration());
+        modelBuilder.ApplyConfiguration(new FileConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
@@ -75,5 +83,54 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
+    }
+}
+
+public class ProjectTagConfiguration : IEntityTypeConfiguration<ProjectTag>
+{
+    public void Configure(EntityTypeBuilder<ProjectTag> builder)
+    {
+        builder.HasKey(x => new { x.ProjectId, x.TagId });
+
+        builder.HasOne(pt => pt.Project)
+            .WithMany(p => p.ProjectTags)
+            .HasForeignKey(pt => pt.ProjectId)
+            .IsRequired();
+
+        builder.HasOne(pt => pt.Tag)
+            .WithMany(t => t.ProjectTags)
+            .HasForeignKey(pt => pt.TagId)
+            .IsRequired();
+    }
+}
+
+public class TagConfiguration : IEntityTypeConfiguration<Tag>
+{
+    public void Configure(EntityTypeBuilder<Tag> builder)
+    {
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
+        builder.Property(x => x.Color).HasMaxLength(7);
+
+        builder.Property(f => f.Icon)
+            .HasConversion(
+                v => v.ToString(),
+                v => new Uri(v))
+            .HasMaxLength(500);
+    }
+}
+
+public class FileConfiguration : IEntityTypeConfiguration<File>
+{
+    public void Configure(EntityTypeBuilder<File> builder)
+    {
+        builder.HasKey(x => x.ProjectId);
+
+        builder.Property(f => f.CustDev).HasUriConversion();
+        builder.Property(f => f.Description).HasUriConversion();
+        builder.Property(f => f.Mvp).HasUriConversion();
+        builder.Property(f => f.RoadMap).HasUriConversion();
+        builder.Property(f => f.Product).HasUriConversion();
     }
 }
