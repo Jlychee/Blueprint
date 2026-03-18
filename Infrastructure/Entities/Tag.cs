@@ -2,7 +2,7 @@
 
 public class Tag
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Title { get; set; }
     public Uri? Icon { get; set; }
     public string Color { get; set; }

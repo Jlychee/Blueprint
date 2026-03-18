@@ -1,0 +1,12 @@
+﻿namespace Client.Models.Models.DTO;
+
+public class FullProjectInfo
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public string Description { get; set; }
+
+    public List<FileDto> Files { get; set; } = [];
+    public List<TeamMemberDto> TeamMembers { get; set; } = [];
+    public List<TagDto> Tags { get; set; } = [];
+}

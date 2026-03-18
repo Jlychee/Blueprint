@@ -1,10 +1,7 @@
-﻿namespace Infrastructure.Entities;
+﻿namespace Client.Models.Models.DTO;
 
-public class File
+public class FileDto
 {
-    public int ProjectId { get; set; }
-    public Project Project { get; set; }
-
     public Uri? CustDev { get; set; }
     public Uri? Description { get; set; }
     public Uri? Mvp { get; set; }
