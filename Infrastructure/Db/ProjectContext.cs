@@ -14,6 +14,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ProjectTag> ProjectTags { get; set; }
     public DbSet<File> Files { get; set; }
+    public DbSet<TagType> TagTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +24,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
         modelBuilder.ApplyConfiguration(new ProjectTagConfiguration());
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new FileConfiguration());
+        modelBuilder.ApplyConfiguration(new TagTypeConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
@@ -118,6 +120,12 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     {
         builder.HasKey(x => x.Id);
 
+        builder
+            .HasOne(t => t.TagType)
+            .WithMany(tt => tt.Tags)
+            .HasForeignKey(t => t.TagTypeId)
+            .IsRequired();
+
         builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Color).HasMaxLength(7);
 
@@ -140,5 +148,27 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
         builder.Property(f => f.Mvp).HasUriListConversion();
         builder.Property(f => f.RoadMap).HasUriConversion();
         builder.Property(f => f.Product).HasUriConversion();
+    }
+}
+
+public class TagTypeConfiguration : IEntityTypeConfiguration<TagType>
+{
+    public void Configure(EntityTypeBuilder<TagType> builder)
+    {
+        builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Name)
+            .HasMaxLength(100)
+            .IsRequired();
+        
+        builder.Property(x => x.Priority)
+            .IsRequired();
+
+        builder.Property(x => x.Type)
+            .HasConversion<string>()
+            .IsRequired();
+
+        builder.HasIndex(x => x.Type);
+        builder.HasIndex(x => new { x.Type, x.Priority });
     }
 }
