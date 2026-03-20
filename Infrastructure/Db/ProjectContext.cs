@@ -52,6 +52,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
             t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
         });
+
+        builder.HasIndex(p => new { p.Year, p.Semester });
     }
 }
 
@@ -71,6 +73,9 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .IsRequired();
 
         builder.Property(x => x.Role).IsRequired();
+
+        builder.HasIndex(tm => new { tm.ProjectId, tm.UserId });
+        builder.HasIndex(tm => tm.UserId);
     }
 }
 
@@ -101,6 +106,9 @@ public class ProjectTagConfiguration : IEntityTypeConfiguration<ProjectTag>
             .WithMany(t => t.ProjectTags)
             .HasForeignKey(pt => pt.TagId)
             .IsRequired();
+
+        builder.HasIndex(pt => new { pt.ProjectId, pt.TagId });
+        builder.HasIndex(pt => pt.TagId);
     }
 }
 
@@ -129,7 +137,7 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
 
         builder.Property(f => f.CustDev).HasUriConversion();
         builder.Property(f => f.Description).HasUriConversion();
-        builder.Property(f => f.Mvp).HasUriConversion();
+        builder.Property(f => f.Mvp).HasUriListConversion();
         builder.Property(f => f.RoadMap).HasUriConversion();
         builder.Property(f => f.Product).HasUriConversion();
     }
