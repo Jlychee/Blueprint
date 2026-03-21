@@ -9,7 +9,8 @@ builder
     .LoadEnvFiles()
     .AddSwagger()
     .AddApplicationServices()
-    .AddDatabase();
+    .AddDatabase()
+    .AddInfrastructureServices();
 
 var app = builder.Build();
 
