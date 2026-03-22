@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vibik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #0e0e0e;
+      color: #f0f0f0;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+    }
+
+    body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      padding: 32px 48px;
+      gap: 0 60px;
+    }
+
+    /* NAV */
+    nav {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 28px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.03em;
+    }
+    .logo span { color: #caff00; }
+
+    .nav-tag {
+      font-size: 0.75rem;
+      color: #444;
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 5px 14px;
+      border-radius: 100px;
+      letter-spacing: 0.04em;
+    }
+
+    .btn-dl {
+      background: #caff00;
+      color: #000;
+      border: none;
+      padding: 9px 22px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-dl:hover { opacity: 0.85; }
+
+    /* LEFT */
+    .left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.72rem;
+      color: #888;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #caff00;
+      animation: blink 1.4s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+      line-height: 1.0;
+      letter-spacing: -0.04em;
+      margin-bottom: 16px;
+    }
+    h1 span { color: #caff00; }
+
+    .sub {
+      font-size: 0.92rem;
+      color: #666;
+      line-height: 1.65;
+      max-width: 380px;
+      margin-bottom: 32px;
+    }
+
+    .cta-row {
+      display: flex; gap: 12px; align-items: center;
+      margin-bottom: 40px;
+    }
+    .btn-primary {
+      background: #caff00;
+      color: #000;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-ghost {
+      background: none;
+      color: #888;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 24px;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .btn-ghost:hover { color: #f0f0f0; border-color: rgba(255,255,255,0.25); }
+
+    .stats { display: flex; gap: 36px; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: -0.03em;
+    }
+    .stat-num sup { font-size: 0.7em; color: #caff00; }
+    .stat-label { font-size: 0.75rem; color: #555; margin-top: 2px; }
+
+    /* RIGHT */
+    .right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .feat {
+      background: #161616;
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: border-color 0.2s;
+    }
+    .feat:hover { border-color: rgba(202,255,0,0.18); }
+
+    .feat-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .feat-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.88rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+    }
+    .feat-desc {
+      font-size: 0.79rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    /* FOOTER */
+    footer {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      margin-top: 28px;
+      font-size: 0.78rem;
+      color: #444;
+    }
+    footer a { color: #444; text-decoration: none; margin-left: 20px; transition: color 0.2s; }
+    footer a:hover { color: #888; }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Vib<span>ik</span></div>
+    <div class="nav-tag">Server API · v2.0</div>
+    <button class="btn-dl">Скачать</button>
+  </nav>
+
+  <div class="left">
+    <div class="badge"><span class="dot"></span> Серверная часть проекта</div>
+    <h1>Брось рутину.<br/>Сними<br/><span>момент.</span></h1>
+    <p class="sub">
+      Vibik выдаёт творческие задания для фотографии — чтобы каждый день был чуть интереснее обычного. Выполни задание, загрузи снимок, вдохнови других.
+    </p>
+    <div class="cta-row">
+      <button class="btn-primary">App Store</button>
+      <button class="btn-ghost">Google Play</button>
+    </div>
+    <div class="stats">
+      <div>
+        <div class="stat-num">500<sup>+</sup></div>
+        <div class="stat-label">Заданий</div>
+      </div>
+      <div>
+        <div class="stat-num">12<sup>K</sup></div>
+        <div class="stat-label">Фотографий</div>
+      </div>
+      <div>
+        <div class="stat-num">4.8<sup>★</sup></div>
+        <div class="stat-label">Рейтинг</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="feat">
+      <div class="feat-icon">📸</div>
+      <div>
+        <div class="feat-title">Ежедневные задания</div>
+        <div class="feat-desc">Каждый день — новое задание: снять тень, найти красный предмет, поймать движение. Всегда разное.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎲</div>
+      <div>
+        <div class="feat-title">Случайный вызов</div>
+        <div class="feat-desc">Не знаешь, чем заняться? Нажми кнопку — получи неожиданное задание прямо сейчас.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🗂️</div>
+      <div>
+        <div class="feat-title">Категории</div>
+        <div class="feat-desc">Природа, город, люди, абстракция — выбери тему или дай приложению выбрать за тебя.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🏆</div>
+      <div>
+        <div class="feat-title">Лента и голосование</div>
+        <div class="feat-desc">Смотри, как другие выполнили то же задание, и голосуй за лучшие снимки.</div>
+      </div>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📊</div>
+      <div>
+        <div class="feat-title">Прогресс и серии</div>
+        <div class="feat-desc">Считай выполненные задания, держи стрик и следи за своим творческим ростом.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>© 2025 Vibik</div>
+    <div>
+      <a href="#">API Docs</a>
+      <a href="#">GitHub</a>
+      <a href="#">Поддержка</a>
+    </div>
+  </footer>
+
+</body>
+</html>
