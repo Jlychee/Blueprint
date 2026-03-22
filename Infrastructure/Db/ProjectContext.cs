@@ -164,11 +164,7 @@ public class TagTypeConfiguration : IEntityTypeConfiguration<TagType>
         builder.Property(x => x.Priority)
             .IsRequired();
 
-        builder.Property(x => x.Type)
-            .HasConversion<string>()
-            .IsRequired();
-
-        builder.HasIndex(x => x.Type);
-        builder.HasIndex(x => new { x.Type, x.Priority });
+        builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.Priority);
     }
 }
