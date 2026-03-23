@@ -42,8 +42,8 @@ public static class ServiceCollectionExtensions
     public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
     {
         // TODO: сюда моки
-        builder.Services.AddScoped<IProjectRepository>();
-        builder.Services.AddScoped<ITagRepository>();
+        // builder.Services.AddScoped<IProjectRepository>();
+        // builder.Services.AddScoped<ITagRepository>();
 
         return builder;
     }
