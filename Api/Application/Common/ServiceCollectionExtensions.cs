@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Client.Models.Models.Configs;
+using Infrastructure.Repositories.Interfaces;
 
 namespace Api.Application.Common;
 
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
 
         return builder;
     }
-    
+
     public static WebApplicationBuilder AddApplicationServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddMediatR(cfg =>
@@ -25,7 +26,7 @@ public static class ServiceCollectionExtensions
 
         return builder;
     }
-    
+
     public static WebApplicationBuilder AddSwagger(this WebApplicationBuilder builder)
     {
         builder.Services.AddEndpointsApiExplorer();
@@ -34,6 +35,15 @@ public static class ServiceCollectionExtensions
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFile));
         });
+
+        return builder;
+    }
+
+    public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
+    {
+        // TODO: сюда моки
+        // builder.Services.AddScoped<IProjectRepository>();
+        // builder.Services.AddScoped<ITagRepository>();
 
         return builder;
     }

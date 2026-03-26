@@ -1,13 +1,16 @@
-using System.Reflection;
 using Api.Application.Common;
+using Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
 builder
     .LoadEnvFiles()
+    .AddSwagger()
     .AddApplicationServices()
-    .AddSwagger();
+    .AddDatabase()
+    .AddInfrastructureServices();
 
 var app = builder.Build();
 
