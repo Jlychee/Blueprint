@@ -4,11 +4,9 @@ using Api.Application.Common;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-
 builder
     .LoadEnvFiles()
+    .AddApplicationServices()
     .AddSwagger();
 
 var app = builder.Build();
