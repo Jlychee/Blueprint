@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Client.Models.Models.Configs;
-using Core.Interfaces;
-using Core.Parser;
+using Infrastructure.Interfaces;
 using Infrastructure.Mocks;
+using Infrastructure.Parsers;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Repositories.Mocks;
 
@@ -24,7 +24,10 @@ public static class ServiceCollectionExtensions
         builder.Services.AddMediatR(cfg =>
         {
             var mediatRConfig = builder.Configuration.GetSection("Licenses").Get<MediatRConfig>();
-            cfg.LicenseKey = mediatRConfig.LicenseKey;
+            if (mediatRConfig is not null)
+            {
+                cfg.LicenseKey = mediatRConfig.LicenseKey;
+            }
             cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly);
         });
 
@@ -47,8 +50,8 @@ public static class ServiceCollectionExtensions
     {
         // TODO: сюда моки
         builder.Services.AddScoped<IProjectRepository, MockProjectRepository>();
-        builder.Services.AddScoped<ITagRepository,TagRepositoryMock>();
-        builder.Services.AddScoped<IParserTable, CsvProjectParser>();
+        builder.Services.AddScoped<ITagRepository, TagRepositoryMock>();
+        builder.Services.AddScoped<IProjectTableParser, CsvProjectParser>();
 
         return builder;
     }

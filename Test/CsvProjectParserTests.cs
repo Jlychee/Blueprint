@@ -1,7 +1,6 @@
-using Core.Parser;
 using Infrastructure.Mocks;
+using Infrastructure.Parsers;
 using Infrastructure.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Tests.Parser;
 
@@ -21,9 +20,9 @@ public class CsvProjectParserTests()
     [Test]
     public async Task ParseTable_HeaderOnlyCsv_ReturnsEmptyList()
     {
-        var file = CreateCsvFile(Header);
+        using var stream = CreateCsvStream(Header);
 
-        var result = await parser.ParseTable(file);
+        var result = await parser.ParseTableAsync(stream, CancellationToken.None);
 
         Assert.That(result, Is.Empty);
     }
@@ -35,9 +34,9 @@ public class CsvProjectParserTests()
                   Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
                   LearnTogether,Иван Иванов,Мария Петрова,,,,2024,1,Краткое описание,https://example.com/description,https://example.com/custdev,https://example.com/mvp,https://example.com/roadmap,https://github.com/example/project,,
                   """;
-        var file = CreateCsvFile(csv);
+        using var stream = CreateCsvStream(csv);
 
-        var result = await parser.ParseTable(file);
+        var result = await parser.ParseTableAsync(stream, CancellationToken.None);
 
         Assert.Multiple(() =>
         {
@@ -60,9 +59,9 @@ public class CsvProjectParserTests()
                   }"
                   GuidesAi,Петр Петров,,,,,2024,2,Описание 2,https://example.com/description-2,,https://example.com/mvp-2,,https://github.com/example/project-2,,
                   """;
-        var file = CreateCsvFile(csv);
+        using var stream = CreateCsvStream(csv);
 
-        var result = await parser.ParseTable(file);
+        var result = await parser.ParseTableAsync(stream, CancellationToken.None);
 
         Assert.Multiple(() =>
         {
@@ -81,9 +80,9 @@ public class CsvProjectParserTests()
                   ""Language"": [""c#""]
                   }"
                   """;
-        var file = CreateCsvFile(csv);
+        using var stream = CreateCsvStream(csv);
 
-        var result = await parser.ParseTable(file);
+        var result = await parser.ParseTableAsync(stream, CancellationToken.None);
         var tags = result[0].Tags;
 
         Assert.Multiple(() =>
@@ -103,9 +102,9 @@ public class CsvProjectParserTests()
                   Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
                   SoloProject,Иван Иванов,,,,,2024,1,Описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,
                   """;
-        var file = CreateCsvFile(csv);
+        using var stream = CreateCsvStream(csv);
 
-        var result = await parser.ParseTable(file);
+        var result = await parser.ParseTableAsync(stream, CancellationToken.None);
 
         Assert.Multiple(() =>
         {
@@ -115,16 +114,10 @@ public class CsvProjectParserTests()
         });
     }
 
-    private static IFormFile CreateCsvFile(string content)
+    private static MemoryStream CreateCsvStream(string content)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(content);
-        var stream = new MemoryStream(bytes);
-
-        return new FormFile(stream, 0, bytes.Length, "table", "projects.csv")
-        {
-            Headers = new HeaderDictionary(),
-            ContentType = "text/csv"
-        };
+        return new MemoryStream(bytes);
     }
 
     private const string Header =
