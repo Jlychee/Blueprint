@@ -2,12 +2,14 @@ using System.Text;
 using Client.Models.Models.DTO;
 using Client.Models.Models.Enums;
 using Core.Interfaces;
+using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic.FileIO;
+using Newtonsoft.Json.Linq;
 
 namespace Core.Parser;
 
-public class CsvProjectParser : IParserTable
+public class CsvProjectParser(ITagRepository tagRepository) : IParserTable
 {
     public async Task<List<FullProjectInfo>> ParseTable(IFormFile table)
     {
@@ -18,12 +20,12 @@ public class CsvProjectParser : IParserTable
         parser.HasFieldsEnclosedInQuotes = true;
         parser.ReadFields();
         while (!parser.EndOfData)
-            projects.Add(ParseProject(parser));
+            projects.Add(await ParseProject(parser));
 
         return projects;
     }
 
-    private static FullProjectInfo ParseProject(TextFieldParser parser)
+    private async Task<FullProjectInfo> ParseProject(TextFieldParser parser)
     {
         var project = new FullProjectInfo();
         var fields = parser.ReadFields();
@@ -39,13 +41,27 @@ public class CsvProjectParser : IParserTable
 
         project.Files = ParseFiles(fields);
 
-        project.Tags = ParseTags(fields);
+        project.Tags = await ParseTags(fields[15]);
         return project;
     }
 
-    private static List<TagDto> ParseTags(string[]? fields)
+    private async Task<List<TagDto>?> ParseTags(string tags)
     {
-        return new List<TagDto>{new()};
+        if (string.IsNullOrWhiteSpace(tags))
+            return null;
+        var obj = JObject.Parse(tags);
+
+        var allTagsNames = obj.Properties()
+            .SelectMany(p => p.Value.Values<string>())
+            .ToList();
+        var allTagsIds = await tagRepository.GetTagsIdsByNameAsync(allTagsNames, CancellationToken.None);
+        return allTagsNames
+            .Zip(allTagsIds, (name, id) => new TagDto
+            {
+                Id = id,
+                Title = name
+            })
+            .ToList();
     }
 
 

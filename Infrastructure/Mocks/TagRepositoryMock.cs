@@ -10,8 +10,8 @@ public class TagRepositoryMock : ITagRepository
         throw new NotImplementedException();
     }
 
-    public Task<List<int>> GetTagsIdsByNameAsync(List<string> tagsNames, CancellationToken ct)
+    public Task<List<int>> GetTagsIdsByNameAsync(List<string?> tagsNames, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        return Task.FromResult(tagsNames.Select((_, i) => i + 1).ToList());
     }
 }

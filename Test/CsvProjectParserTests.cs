@@ -1,19 +1,23 @@
 using Core.Parser;
+using Infrastructure.Mocks;
+using Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Tests.Parser;
 
 [TestFixture]
-public class CsvProjectParserTests
+public class CsvProjectParserTests()
 {
-    private CsvProjectParser parser = null!;
+    private CsvProjectParser parser;
+    private ITagRepository tagRepository;
 
     [SetUp]
     public void Setup()
     {
-        parser = new CsvProjectParser();
+        tagRepository = new TagRepositoryMock();
+        parser = new CsvProjectParser(tagRepository);
     }
-
+    
     [Test]
     public async Task ParseTable_HeaderOnlyCsv_ReturnsEmptyList()
     {
@@ -64,6 +68,31 @@ public class CsvProjectParserTests
         {
             Assert.That(result, Has.Count.EqualTo(2));
             Assert.That(result.Select(project => project.Name), Is.EqualTo(new[] { "LearnTogether", "GuidesAi" }));
+        });
+    }
+
+    [Test]
+    public async Task ParseTable_TagsJson_MapsTitlesAndIdsFromMockRepository()
+    {
+        var csv = """
+                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+                  LearnTogether,Иван Иванов,,,,,2024,1,Описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,"{
+                  ""Platform"": [""web"", ""server""],
+                  ""Language"": [""c#""]
+                  }"
+                  """;
+        var file = CreateCsvFile(csv);
+
+        var result = await parser.ParseTable(file);
+        var tags = result[0].Tags;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Has.Count.EqualTo(1));
+            Assert.That(tags, Is.Not.Null);
+            Assert.That(tags, Has.Count.EqualTo(3));
+            Assert.That(tags.Select(tag => tag.Title), Is.EqualTo(new[] { "web", "server", "c#" }));
+            Assert.That(tags.Select(tag => tag.Id), Is.EqualTo(new[] { 1, 2, 3 }));
         });
     }
 
