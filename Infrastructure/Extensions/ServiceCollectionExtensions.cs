@@ -8,15 +8,12 @@ namespace Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static WebApplicationBuilder  AddDatabase(this WebApplicationBuilder  builder)
+    public static WebApplicationBuilder AddDatabase(this WebApplicationBuilder builder)
     {
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-        builder.Services.AddDbContext<ProjectContext>(o =>
-        {
-            o.UseNpgsql(connectionString);
-        });
-        
+        builder.Services.AddDbContext<ProjectContext>(o => { o.UseNpgsql(connectionString); });
+
         return builder;
     }
 }

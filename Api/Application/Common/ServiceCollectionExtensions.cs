@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
 using Client.Models.Models.Configs;
-using Infrastructure.Interfaces;
-using Infrastructure.Mocks;
 using Infrastructure.Parsers;
+using Infrastructure.Parsers.Interfaces;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Repositories.Mocks;
 

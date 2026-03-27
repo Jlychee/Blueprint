@@ -35,11 +35,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<string>("Mvp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Product")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Product")
+                        .HasColumnType("text");
 
                     b.Property<string>("RoadMap")
                         .HasMaxLength(500)
@@ -145,7 +145,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Role")
+                    b.Property<int?>("Role")
                         .HasColumnType("integer");
 
                     b.HasKey("ProjectId", "UserId");

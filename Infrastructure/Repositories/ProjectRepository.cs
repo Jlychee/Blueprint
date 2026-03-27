@@ -67,15 +67,43 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                 }).ToList()
         }).ToList();
 
-        //TODO: а ниче тот факт, что пользователей еще в команду загрузить надо?
-
         await projectContext.AddRangeAsync(entities, ct);
         await projectContext.SaveChangesAsync(ct);
     }
 
     public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)
     {
-        throw new NotImplementedException();
+        return projectContext.Projects
+            .Where(p => p.Id == id)
+            .Select(project => new FullProjectInfo
+            {
+                Id = project.Id,
+                Name = project.Name,
+                Description = project.DescriptionAi,
+                ShortDescription = project.ShortDescriptionAi,
+                Year = project.Year,
+                Semester = project.Semester,
+                Files = new FileDto
+                {
+                    CustDev = project.File.CustDev,
+                    Description = project.File.Description,
+                    Mvp = project.File.Mvp,
+                    RoadMap = project.File.RoadMap,
+                    Product = project.File.Product,
+                },
+                TeamMembers = project.TeamMembers.Select(m => new TeamMemberDto
+                {
+                    UserName = m.User.Name,
+                    Role = m.Role,
+                }).ToList(),
+                Tags = project.ProjectTags.Select(t => new TagDto
+                {
+                    Id = t.TagId,
+                    Title = t.Tag.Title,
+                    Icon = t.Tag.Icon,
+                    Color = t.Tag.Color,
+                }).ToList()
+            }).SingleOrDefaultAsync();
     }
 
     public Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)

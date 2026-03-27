@@ -1,5 +1,5 @@
 using Client.Models.Models.DTO;
-using Infrastructure.Interfaces;
+using Infrastructure.Parsers.Interfaces;
 using Infrastructure.Repositories.Interfaces;
 using MediatR;
 

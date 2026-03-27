@@ -5,7 +5,7 @@ using Infrastructure.Entities;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Tests.Repositories
+namespace Test
 {
     [TestFixture]
     public class ProjectRepositoryTests
@@ -56,7 +56,7 @@ namespace Infrastructure.Tests.Repositories
                     {
                         new() { UserName = "Котов Илья" },
                         new() { UserName = "Толканюк Катя" },
-                        new() { UserName = "Кискина Арина"},
+                        new() { UserName = "Кискина Арина" },
                         new() { UserName = "Скворок Артем" },
                     },
                     Tags = new List<TagDto>

@@ -1,6 +1,6 @@
 using System.Text;
 using Client.Models.Models.DTO;
-using Infrastructure.Interfaces;
+using Infrastructure.Parsers.Interfaces;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
