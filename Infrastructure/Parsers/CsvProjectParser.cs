@@ -1,71 +1,71 @@
 using System.Text;
 using Client.Models.Models.DTO;
-using Client.Models.Models.Enums;
-using Core.Interfaces;
+using Infrastructure.Interfaces;
 using Infrastructure.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
 
-namespace Core.Parser;
+namespace Infrastructure.Parsers;
 
-public class CsvProjectParser(ITagRepository tagRepository) : IParserTable
+public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParser
 {
-    public async Task<List<FullProjectInfo>> ParseTable(IFormFile table)
+    public async Task<List<FullProjectInfo>> ParseTableAsync(Stream stream, CancellationToken ct)
     {
         var projects = new List<FullProjectInfo>();
-        var stream = table.OpenReadStream();
-        var parser = new TextFieldParser(stream, Encoding.UTF8, detectEncoding: true);
+        using var parser = new TextFieldParser(stream, Encoding.UTF8, detectEncoding: true);
         parser.SetDelimiters(",");
         parser.HasFieldsEnclosedInQuotes = true;
+
+        if (parser.EndOfData)
+            return projects;
+
         parser.ReadFields();
         while (!parser.EndOfData)
-            projects.Add(await ParseProject(parser));
+            projects.Add(await ParseProjectAsync(parser, ct));
 
         return projects;
     }
 
-    private async Task<FullProjectInfo> ParseProject(TextFieldParser parser)
+    private async Task<FullProjectInfo> ParseProjectAsync(TextFieldParser parser, CancellationToken ct)
     {
         var project = new FullProjectInfo();
-        var fields = parser.ReadFields();
+        var fields = parser.ReadFields() ?? [];
+
         project.TeamMembers = fields[1..6]
             .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => new TeamMemberDto
-                { UserName = name }).ToList();
+            .Select(name => new TeamMemberDto { UserName = name.Trim() })
+            .ToList();
         project.Name = fields[0];
         project.Year = int.Parse(fields[6]);
         project.Semester = int.Parse(fields[7]);
         project.ShortDescription = fields[8];
-
-
         project.Files = ParseFiles(fields);
+        project.Tags = await ParseTagsAsync(fields[15], ct) ?? [];
 
-        project.Tags = await ParseTags(fields[15]);
         return project;
     }
 
-    private async Task<List<TagDto>?> ParseTags(string tags)
+    private async Task<List<TagDto>?> ParseTagsAsync(string tags, CancellationToken ct)
     {
         if (string.IsNullOrWhiteSpace(tags))
             return null;
-        var obj = JObject.Parse(tags);
 
+        var obj = JObject.Parse(tags);
         var allTagsNames = obj.Properties()
-            .SelectMany(p => p.Value.Values<string>())
+            .SelectMany(property => property.Value.Values<string>())
             .ToList();
-        var allTagsIds = await tagRepository.GetTagsIdsByNameAsync(allTagsNames, CancellationToken.None);
+
+        var allTagsIds = await tagRepository.GetTagsIdsByNameAsync(allTagsNames, ct);
         return allTagsNames
             .Zip(allTagsIds, (name, id) => new TagDto
             {
                 Id = id,
-                Title = name
+                Title = name ?? string.Empty
             })
             .ToList();
     }
 
-
-    private static FileDto ParseFiles(string[]? fields)
+    private static FileDto ParseFiles(string[] fields)
     {
         var files = new FileDto
         {
@@ -74,17 +74,17 @@ public class CsvProjectParser(ITagRepository tagRepository) : IParserTable
             Mvp = ParseUri(fields[11]),
             RoadMap = ParseUri(fields[12]),
         };
-        var mvpLinks = new List<Uri>();
+        var productLinks = new List<Uri>();
 
         var gitUri = ParseUri(fields[13]);
         if (gitUri is not null)
-            mvpLinks.Add(gitUri);
+            productLinks.Add(gitUri);
 
         var nonGitUri = ParseUri(fields[14]);
         if (nonGitUri is not null)
-            mvpLinks.Add(nonGitUri);
+            productLinks.Add(nonGitUri);
 
-        files.Product = mvpLinks;
+        files.Product = productLinks;
         return files;
     }
 
