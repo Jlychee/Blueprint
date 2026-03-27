@@ -1,0 +1,205 @@
+﻿*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#191919;
+    color:white;
+    font-family:Raleway, sans-serif;
+}
+
+.container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 20px;
+}
+
+
+/* HEADER */
+
+.header{
+    background:black;
+}
+
+.header-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height:100px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:59px;
+}
+
+.logo img{
+    width:52.51px;
+    height:68.22px;
+}
+
+.logo-text{
+    font-size:25px;
+    color:#9D6A69;
+    font-weight:50;
+}
+
+.nav{
+    display:flex;
+    gap:40px;
+}
+
+.nav a{
+    color:#C3C3C3;
+    text-decoration:none;
+    font-size:18px;
+}
+
+.profile{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.profile img{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+}
+
+.nav-link, .my-project {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    color: black;
+    padding: 4px 8px;
+    font-size: 14px;
+}
+
+.nav-link img, .my-project img {
+    display: block;
+}
+
+
+/* SEARCH */
+
+.search-section{
+    margin-top:80px;
+}
+
+.search-row{
+    display:flex;
+    gap:20px;
+    align-items:center;
+}
+
+.filter-btn{
+    display:flex;
+    align-items:center;
+    gap:8px;
+
+    padding:13px 20px;
+
+    border-radius:30px;
+    border:none;
+
+    background:white;
+    cursor:pointer;
+}
+
+.search{
+    display:flex;
+    align-items:center;
+
+    background:white;
+
+    border-radius:30px;
+
+    padding:10px 20px;
+
+    flex:1;
+}
+
+.search-icon{
+    width:18px;
+    margin-right:10px;
+}
+
+.search input{
+    border:none;
+    outline:none;
+
+    flex:1;
+
+    font-size:16px;
+}
+
+.clear{
+    cursor:pointer;
+    font-size:20px;
+    color:gray;
+}
+
+
+/* PROJECTS */
+
+.projects{
+    margin-top:60px;
+}
+
+.projects-grid{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:40px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    background: #111;
+    border-radius: 16px;
+    padding: 25px;
+    min-height: 260px;
+    text-decoration: none;
+    color: inherit;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.card p {
+    flex: 1;
+    margin-bottom: 10px;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.stack {
+    margin-top: auto;
+}
+
+.icons {
+    display: flex;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.icons img {
+    width: 26px;
+    height: 26px;
+}
