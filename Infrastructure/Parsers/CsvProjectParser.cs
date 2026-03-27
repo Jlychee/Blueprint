@@ -9,6 +9,8 @@ namespace Infrastructure.Parsers;
 
 public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParser
 {
+    private const int ExpectedFieldCount = 16;
+
     public async Task<List<FullProjectInfo>> ParseTableAsync(Stream stream, CancellationToken ct)
     {
         var projects = new List<FullProjectInfo>();
@@ -28,21 +30,35 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
 
     private async Task<FullProjectInfo> ParseProjectAsync(TextFieldParser parser, CancellationToken ct)
     {
-        var project = new FullProjectInfo();
         var fields = parser.ReadFields() ?? [];
+        if (fields.Length < ExpectedFieldCount)
+            throw new InvalidDataException(
+                $"CSV row contains {fields.Length} fields, expected at least {ExpectedFieldCount}.");
 
-        project.TeamMembers = fields[1..6]
-            .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => new TeamMemberDto { UserName = name.Trim() })
-            .ToList();
-        project.Name = fields[0];
-        project.Year = int.Parse(fields[6]);
-        project.Semester = int.Parse(fields[7]);
-        project.ShortDescription = fields[8];
-        project.Files = ParseFiles(fields);
-        project.Tags = await ParseTagsAsync(fields[15], ct) ?? [];
+        var name = fields[0];
+        var rawParticipantFields = fields[1..6];
+        var rawYear = fields[6];
+        var rawSemester = fields[7];
+        var shortDescription = fields[8];
+        var rawDescriptionLink = fields[9];
+        var rawCustDevLink = fields[10];
+        var rawMvpLink = fields[11];
+        var rawRoadMapLink = fields[12];
+        var rawGitLink = fields[13];
+        var rawNonGitLink = fields[14];
+        var rawTagsJson = fields[15];
 
-        return project;
+        return new FullProjectInfo
+        {
+            Name = name,
+            Year = int.Parse(rawYear),
+            Semester = int.Parse(rawSemester),
+            ShortDescription = shortDescription,
+            TeamMembers = ParseTeamMembers(rawParticipantFields),
+            Files = ParseFiles(rawDescriptionLink, rawCustDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,
+                rawNonGitLink),
+            Tags = await ParseTagsAsync(rawTagsJson, ct) ?? []
+        };
     }
 
     private async Task<List<TagDto>?> ParseTagsAsync(string tags, CancellationToken ct)
@@ -65,22 +81,36 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
             .ToList();
     }
 
-    private static FileDto ParseFiles(string[] fields)
+    private static List<TeamMemberDto> ParseTeamMembers(string[] participantFields)
+    {
+        return participantFields
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(name => new TeamMemberDto { UserName = name.Trim() })
+            .ToList();
+    }
+
+    private static FileDto ParseFiles(
+        string? descriptionLink,
+        string? custDevLink,
+        string? mvpLink,
+        string? roadMapLink,
+        string? gitLink,
+        string? nonGitLink)
     {
         var files = new FileDto
         {
-            Description = ParseUri(fields[9]),
-            CustDev = ParseUri(fields[10]),
-            Mvp = ParseUri(fields[11]),
-            RoadMap = ParseUri(fields[12]),
+            Description = ParseUri(descriptionLink),
+            CustDev = ParseUri(custDevLink),
+            Mvp = ParseUri(mvpLink),
+            RoadMap = ParseUri(roadMapLink),
         };
         var productLinks = new List<Uri>();
 
-        var gitUri = ParseUri(fields[13]);
+        var gitUri = ParseUri(gitLink);
         if (gitUri is not null)
             productLinks.Add(gitUri);
 
-        var nonGitUri = ParseUri(fields[14]);
+        var nonGitUri = ParseUri(nonGitLink);
         if (nonGitUri is not null)
             productLinks.Add(nonGitUri);
 
