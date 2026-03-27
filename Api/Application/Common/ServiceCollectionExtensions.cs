@@ -25,9 +25,7 @@ public static class ServiceCollectionExtensions
         {
             var mediatRConfig = builder.Configuration.GetSection("Licenses").Get<MediatRConfig>();
             if (mediatRConfig is not null)
-            {
                 cfg.LicenseKey = mediatRConfig.LicenseKey;
-            }
             cfg.RegisterServicesFromAssemblies(typeof(Program).Assembly);
         });
 
