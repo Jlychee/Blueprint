@@ -13,35 +13,24 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
     {
         var usersFromDto = projects
             .SelectMany(p => p.TeamMembers)
-            .GroupBy(m => m.UserId)
-            .Select(g => new
-            {
-                Id = g.Key,
-                Name = g.First().UserName
-            })
-            .ToList();
+            .Select(p => p.UserName)
+            .Distinct();
 
-        var userIds = usersFromDto.Select(u => u.Id).ToList();
-
-        var existingUsers = await projectContext.Users
-            .Where(u => userIds.Contains(u.Id))
-            .ToListAsync(ct);
-
-        var existingIds = existingUsers.Select(u => u.Id).ToHashSet();
+        var existingUsers = projectContext.Users
+            .Where(u => usersFromDto.Contains(u.Name))
+            .ToDictionary(u => u.Name, u => u.Id);
 
         var newUsers = usersFromDto
-            .Where(u => !existingIds.Contains(u.Id))
-            .Select(u => new User
-            {
-                Id = u.Id,
-                Name = u.Name
-            })
-            .ToList();
+            .Where(u => !existingUsers.ContainsKey(u))
+            .Select(userName => new User { Name = userName }).ToList();
 
-        if (newUsers.Any())
+        if (newUsers.Count != 0)
         {
             await projectContext.Users.AddRangeAsync(newUsers, ct);
             await projectContext.SaveChangesAsync(ct);
+
+            foreach (var user in newUsers)
+                existingUsers[user.Name] = user.Id;
         }
 
         var entities = projects.Select(dto => new Project
@@ -52,19 +41,21 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             Year = dto.Year,
             Semester = dto.Semester,
 
-            File = dto.Files == null ? null : new File
-            {
-                CustDev = dto.Files.CustDev,
-                Description = dto.Files.Description,
-                Mvp = dto.Files.Mvp,
-                RoadMap = dto.Files.RoadMap,
-                Product = dto.Files.Product,
-            },
+            File = dto.Files == null
+                ? null
+                : new File
+                {
+                    CustDev = dto.Files.CustDev,
+                    Description = dto.Files.Description,
+                    Mvp = dto.Files.Mvp,
+                    RoadMap = dto.Files.RoadMap,
+                    Product = dto.Files.Product,
+                },
 
             TeamMembers = dto.TeamMembers.Select(m => new TeamMember
             {
-                UserId = m.UserId,
-                Role = m.Role,
+                UserId = existingUsers[m.UserName],
+                Role = m.Role ?? null,
             }).ToList(),
 
             ProjectTags = dto.Tags
@@ -75,6 +66,8 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                     TagId = tagId,
                 }).ToList()
         }).ToList();
+
+        //TODO: а ниче тот факт, что пользователей еще в команду загрузить надо?
 
         await projectContext.AddRangeAsync(entities, ct);
         await projectContext.SaveChangesAsync(ct);
