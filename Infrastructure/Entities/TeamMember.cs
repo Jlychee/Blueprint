@@ -4,7 +4,7 @@ namespace Infrastructure.Entities;
 
 public class TeamMember
 {
-    public TeamRole Role { get; set; }
+    public TeamRole? Role { get; set; }
 
     public Project Project { get; set; }
     public int ProjectId { get; set; }
