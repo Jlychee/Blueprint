@@ -14,6 +14,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
     public DbSet<Tag> Tags { get; set; }
     public DbSet<ProjectTag> ProjectTags { get; set; }
     public DbSet<File> Files { get; set; }
+    public DbSet<TagType> TagTypes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +24,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
         modelBuilder.ApplyConfiguration(new ProjectTagConfiguration());
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new FileConfiguration());
+        modelBuilder.ApplyConfiguration(new TagTypeConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
@@ -52,6 +54,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
             t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
         });
+
+        builder.HasIndex(p => new { p.Year, p.Semester });
     }
 }
 
@@ -70,7 +74,10 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .HasForeignKey(x => x.ProjectId)
             .IsRequired();
 
-        builder.Property(x => x.Role).IsRequired();
+        builder.Property(x => x.Role);
+
+        builder.HasIndex(tm => new { tm.ProjectId, tm.UserId });
+        builder.HasIndex(tm => tm.UserId);
     }
 }
 
@@ -101,6 +108,9 @@ public class ProjectTagConfiguration : IEntityTypeConfiguration<ProjectTag>
             .WithMany(t => t.ProjectTags)
             .HasForeignKey(pt => pt.TagId)
             .IsRequired();
+
+        builder.HasIndex(pt => new { pt.ProjectId, pt.TagId });
+        builder.HasIndex(pt => pt.TagId);
     }
 }
 
@@ -109,6 +119,12 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.HasKey(x => x.Id);
+
+        builder
+            .HasOne(t => t.TagType)
+            .WithMany(tt => tt.Tags)
+            .HasForeignKey(t => t.TagTypeId)
+            .IsRequired();
 
         builder.Property(x => x.Title).IsRequired().HasMaxLength(100);
         builder.Property(x => x.Color).HasMaxLength(7);
@@ -131,6 +147,24 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
         builder.Property(f => f.Description).HasUriConversion();
         builder.Property(f => f.Mvp).HasUriConversion();
         builder.Property(f => f.RoadMap).HasUriConversion();
-        builder.Property(f => f.Product).HasUriConversion();
+        builder.Property(f => f.Product).HasUriListConversion();
+    }
+}
+
+public class TagTypeConfiguration : IEntityTypeConfiguration<TagType>
+{
+    public void Configure(EntityTypeBuilder<TagType> builder)
+    {
+        builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Name)
+            .HasMaxLength(100)
+            .IsRequired();
+        
+        builder.Property(x => x.Priority)
+            .IsRequired();
+
+        builder.HasIndex(x => x.Name);
+        builder.HasIndex(x => x.Priority);
     }
 }
