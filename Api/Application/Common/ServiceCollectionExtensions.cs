@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Client.Models.Models.Configs;
+using Core.Interfaces;
 using Infrastructure.Repositories.Interfaces;
+using Infrastructure.Repositories.Mocks;
 
 namespace Api.Application.Common;
 
@@ -42,9 +44,7 @@ public static class ServiceCollectionExtensions
     public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
     {
         // TODO: сюда моки
-        // builder.Services.AddScoped<IProjectRepository>();
-        // builder.Services.AddScoped<ITagRepository>();
-
+        builder.Services.AddScoped<IProjectRepository, MockProjectRepository>();
         return builder;
     }
 }
