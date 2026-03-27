@@ -1,7 +1,7 @@
 using System.Text;
 using Client.Models.Models.DTO;
 using Client.Models.Models.Enums;
-using Infrastructure.Interfaces;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic.FileIO;
 
@@ -30,7 +30,7 @@ public class CsvProjectParser : IParserTable
         project.TeamMembers = fields[1..6]
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => new TeamMemberDto
-                { UserName = name, UserId = 1, Role = TeamRole.Backend }).ToList();
+                { UserName = name }).ToList();
         project.Name = fields[0];
         project.Year = int.Parse(fields[6]);
         project.Semester = int.Parse(fields[7]);
@@ -55,8 +55,8 @@ public class CsvProjectParser : IParserTable
         {
             Description = ParseUri(fields[9]),
             CustDev = ParseUri(fields[10]),
+            Mvp = ParseUri(fields[11]),
             RoadMap = ParseUri(fields[12]),
-            Product = ParseUri(fields[13])
         };
         var mvpLinks = new List<Uri>();
 
@@ -68,7 +68,7 @@ public class CsvProjectParser : IParserTable
         if (nonGitUri is not null)
             mvpLinks.Add(nonGitUri);
 
-        files.Mvp = mvpLinks;
+        files.Product = mvpLinks;
         return files;
     }
 
