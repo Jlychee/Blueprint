@@ -1,7 +1,7 @@
-using Microsoft.AspNetCore.Http;
 using Client.Models.Models.DTO;
+using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Interfaces;
+namespace Core.Interfaces;
 
 public interface IParserTable
 {
