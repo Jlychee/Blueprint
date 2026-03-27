@@ -41,10 +41,10 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
         var rawSemester = fields[7];
         var shortDescription = fields[8];
         var rawDescriptionLink = fields[9];
-        var rawCustDevLink = fields[10];
+        var rawCastDevLink = fields[10];
         var rawMvpLink = fields[11];
         var rawRoadMapLink = fields[12];
-        var rawGitLink = fields[13];
+        var rawGitLink = fields[13];    
         var rawNonGitLink = fields[14];
         var rawTagsJson = fields[15];
 
@@ -55,7 +55,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
             Semester = int.Parse(rawSemester),
             ShortDescription = shortDescription,
             TeamMembers = ParseTeamMembers(rawParticipantFields),
-            Files = ParseFiles(rawDescriptionLink, rawCustDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,
+            Files = ParseFiles(rawDescriptionLink, rawCastDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,
                 rawNonGitLink),
             Tags = await ParseTagsAsync(rawTagsJson, ct) ?? []
         };
