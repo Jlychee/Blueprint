@@ -49,15 +49,15 @@ namespace Infrastructure.Tests.Repositories
                         CustDev = new Uri("https://buildin.ai/share/462227e8-c6dd-4442-9420-ac6d2ac9e3ba"),
                         Description =
                             new Uri("https://buildin.ai/share/808390e4-5457-402b-9b19-d4d83f3adc5e?code=AKA9HB"),
-                        Mvp = new List<Uri> { new Uri("https://buildin.ai/3fd65c41-6302-4c95-8397-0d265fdd7503") },
-                        Product = new Uri("https://github.com/Kitiketov/Vibik")
+                        Mvp = new Uri("https://buildin.ai/3fd65c41-6302-4c95-8397-0d265fdd7503"),
+                        Product = new List<Uri> { new Uri("https://github.com/Kitiketov/Vibik") }
                     },
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 1, UserName = "Котов Илья", Role = TeamRole.Backend },
-                        new() { UserId = 2, UserName = "Толканюк Катя", Role = TeamRole.Backend },
-                        new() { UserId = 3, UserName = "Кискина Арина", Role = TeamRole.Frontend },
-                        new() { UserId = 4, UserName = "Скворок Артем", Role = TeamRole.Backend },
+                        new() { UserName = "Котов Илья" },
+                        new() { UserName = "Толканюк Катя" },
+                        new() { UserName = "Кискина Арина"},
+                        new() { UserName = "Скворок Артем" },
                     },
                     Tags = new List<TagDto>
                     {
@@ -163,7 +163,7 @@ namespace Infrastructure.Tests.Repositories
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 1, UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван", Role = TeamRole.Backend }
                     },
                     Tags = new List<TagDto>()
                 },
@@ -178,7 +178,7 @@ namespace Infrastructure.Tests.Repositories
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 1, UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван" }
                     },
                     Tags = new List<TagDto>()
                 }
@@ -239,7 +239,7 @@ namespace Infrastructure.Tests.Repositories
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 1, UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван", Role = TeamRole.Backend }
                     },
                     Tags = new List<TagDto>()
                 }
@@ -266,7 +266,7 @@ namespace Infrastructure.Tests.Repositories
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 1, UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван" }
                     },
                     Tags = new List<TagDto>
                     {
@@ -284,7 +284,7 @@ namespace Infrastructure.Tests.Repositories
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserId = 2, UserName = "Мария", Role = TeamRole.Frontend }
+                        new() { UserName = "Мария" }
                     },
                     Tags = new List<TagDto>
                     {

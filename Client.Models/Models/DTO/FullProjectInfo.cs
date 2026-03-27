@@ -2,7 +2,7 @@
 
 public class FullProjectInfo
 {
-    public int Id { get; set; }
+    public int? Id { get; set; }
     public string Name { get; set; }
     public string Description { get; set; }
     public string ShortDescription { get; set; }
@@ -11,5 +11,5 @@ public class FullProjectInfo
 
     public FileDto Files { get; set; }
     public List<TeamMemberDto> TeamMembers { get; set; } = [];
-    public List<TagDto> Tags { get; set; } = [];
+    public List<TagDto>? Tags { get; set; } = [];
 }

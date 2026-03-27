@@ -74,7 +74,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
             .HasForeignKey(x => x.ProjectId)
             .IsRequired();
 
-        builder.Property(x => x.Role).IsRequired();
+        builder.Property(x => x.Role);
 
         builder.HasIndex(tm => new { tm.ProjectId, tm.UserId });
         builder.HasIndex(tm => tm.UserId);
@@ -145,9 +145,9 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
 
         builder.Property(f => f.CustDev).HasUriConversion();
         builder.Property(f => f.Description).HasUriConversion();
-        builder.Property(f => f.Mvp).HasUriListConversion();
+        builder.Property(f => f.Mvp).HasUriConversion();
         builder.Property(f => f.RoadMap).HasUriConversion();
-        builder.Property(f => f.Product).HasUriConversion();
+        builder.Property(f => f.Product).HasUriListConversion();
     }
 }
 

@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Client.Models.Models.Configs;
 using Core.Interfaces;
+using Core.Parser;
+using Infrastructure.Mocks;
 using Infrastructure.Repositories.Interfaces;
 using Infrastructure.Repositories.Mocks;
 
@@ -45,6 +47,9 @@ public static class ServiceCollectionExtensions
     {
         // TODO: сюда моки
         builder.Services.AddScoped<IProjectRepository, MockProjectRepository>();
+        builder.Services.AddScoped<ITagRepository,TagRepositoryMock>();
+        builder.Services.AddScoped<IParserTable, CsvProjectParser>();
+
         return builder;
     }
 }
