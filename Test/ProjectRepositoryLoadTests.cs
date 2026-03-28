@@ -37,13 +37,12 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Vibik",
                     Description = "Vibik - это супер-пупер имба, отвечаю",
                     ShortDescription =
                         "Приложение с короткими заданиями и картой воспоминаний, которое мотивирует выйти из дома и превратить прогулку в небольшое атмосферное приключение с целью и наградой.",
                     Year = 2025,
-                    Semester = 1,
+                    Semester = 3,
                     Files = new FileDto
                     {
                         CustDev = new Uri("https://buildin.ai/share/462227e8-c6dd-4442-9420-ac6d2ac9e3ba"),
@@ -61,11 +60,11 @@ namespace Test
                     },
                     Tags = new List<TagDto>
                     {
-                        new() { Id = 1, Title = "c#" },
-                        new() { Id = 2, Title = "android" },
-                        new() { Id = 3, Title = "jwt" },
-                        new() { Id = 4, Title = "asp.net" },
-                        new() { Id = 5, Title = "mobile" },
+                        new() { Title = "c#" },
+                        new() { Title = "android" },
+                        new() { Title = "jwt" },
+                        new() { Title = "asp.net" },
+                        new() { Title = "mobile" },
                     }
                 }
             };
@@ -104,12 +103,11 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект без команды",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 1,
+                    Semester = 4,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>(),
                     Tags = new List<TagDto>()
@@ -129,13 +127,12 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект без файлов",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 1,
-                    Files = null, // null
+                    Semester = 4,
+                    Files = null,
                     TeamMembers = new List<TeamMemberDto>(),
                     Tags = new List<TagDto>()
                 }
@@ -154,27 +151,25 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект 1",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 1,
+                    Semester = 3,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван" }
                     },
                     Tags = new List<TagDto>()
                 },
                 new()
                 {
-                    Id = 2,
                     Name = "Проект 2",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 2,
+                    Semester = 4,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
@@ -197,18 +192,17 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект 1",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 1,
+                    Semester = 4,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>(),
                     Tags = new List<TagDto>
                     {
-                        new() { Id = 1, Title = "c#" },
-                        new() { Id = 1, Title = "c#" } // дубликат
+                        new() { Title = "c#" },
+                        new() { Title = "c#" } // дубликат
                     }
                 }
             };
@@ -230,16 +224,15 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект",
                     Description = "Описание",
                     ShortDescription = "Кратко",
                     Year = 2026,
-                    Semester = 1,
+                    Semester = 3,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
-                        new() { UserName = "Иван", Role = TeamRole.Backend }
+                        new() { UserName = "Иван" }
                     },
                     Tags = new List<TagDto>()
                 }
@@ -257,12 +250,11 @@ namespace Test
             {
                 new()
                 {
-                    Id = 1,
                     Name = "Проект 1",
                     Description = "Описание 1",
                     ShortDescription = "Кратко 1",
                     Year = 2026,
-                    Semester = 1,
+                    Semester = 3,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
@@ -270,17 +262,16 @@ namespace Test
                     },
                     Tags = new List<TagDto>
                     {
-                        new() { Id = 1, Title = "c#" }
+                        new() { Title = "c#" }
                     }
                 },
                 new()
                 {
-                    Id = 2,
                     Name = "Проект 2",
                     Description = "Описание 2",
                     ShortDescription = "Кратко 2",
                     Year = 2025,
-                    Semester = 2,
+                    Semester = 4,
                     Files = new FileDto(),
                     TeamMembers = new List<TeamMemberDto>
                     {
@@ -288,7 +279,7 @@ namespace Test
                     },
                     Tags = new List<TagDto>
                     {
-                        new() { Id = 2, Title = "react" }
+                        new() { Title = "react" }
                     }
                 }
             };

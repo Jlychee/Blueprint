@@ -46,7 +46,7 @@ public class ProjectRepositoryGetTests
             DescriptionAi = "Desc",
             ShortDescriptionAi = "Short",
             Year = 2025,
-            Semester = 1,
+            Semester = 3,
             File = new File
             {
                 CustDev = new Uri("https://test.com"),
@@ -57,10 +57,7 @@ public class ProjectRepositoryGetTests
             },
             TeamMembers = new List<TeamMember>
             {
-                new()
-                {
-                    User = user
-                }
+                new() { User = user }
             },
             ProjectTags = new List<ProjectTag>
             {
@@ -88,7 +85,7 @@ public class ProjectRepositoryGetTests
             DescriptionAi = "Desc",
             ShortDescriptionAi = "Short",
             Year = 2025,
-            Semester = 1,
+            Semester = 4,
             File = new File
             {
                 CustDev = new Uri("https://cust"),

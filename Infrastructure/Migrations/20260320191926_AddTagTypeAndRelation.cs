@@ -35,7 +35,6 @@ namespace Infrastructure.Migrations
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Type = table.Column<string>(type: "text", nullable: false),
                     Priority = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -62,16 +61,6 @@ namespace Infrastructure.Migrations
                 name: "IX_Projects_Year_Semester",
                 table: "Projects",
                 columns: new[] { "Year", "Semester" });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TagTypes_Type",
-                table: "TagTypes",
-                column: "Type");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TagTypes_Type_Priority",
-                table: "TagTypes",
-                columns: new[] { "Type", "Priority" });
 
             migrationBuilder.AddForeignKey(
                 name: "FK_Tags_TagTypes_TagTypeId",
