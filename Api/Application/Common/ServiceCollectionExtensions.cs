@@ -2,8 +2,8 @@
 using Client.Models.Models.Configs;
 using Infrastructure.Parsers;
 using Infrastructure.Parsers.Interfaces;
+using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
-using Infrastructure.Repositories.Mocks;
 
 namespace Api.Application.Common;
 
@@ -47,8 +47,8 @@ public static class ServiceCollectionExtensions
 
     public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IProjectRepository, MockProjectRepository>();
-        builder.Services.AddScoped<ITagRepository, TagRepositoryMock>();
+        builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+        builder.Services.AddScoped<ITagRepository, TagRepository>();
         builder.Services.AddScoped<IProjectTableParser, CsvProjectParser>();
 
         return builder;

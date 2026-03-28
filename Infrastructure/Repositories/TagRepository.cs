@@ -1,6 +1,5 @@
 ﻿using Client.Models.Models.DTO;
 using Infrastructure.Db;
-using Infrastructure.Entities;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,24 +14,10 @@ public class TagRepository(ProjectContext projectContext) : ITagRepository
 
     public async Task<List<int>> GetTagsIdsByNameAsync(List<string?> tagsNames, CancellationToken ct)
     {
-        var existingTags = await projectContext.Tags
+        // TODO: если приходит тег, которого в бд нет, мы его скипаем (я хз как мне добавить тег с учетом того, что мы не знаем, какой у него будет тип)
+        return await projectContext.Tags
             .Where(t => tagsNames.Contains(t.Title))
-            .ToDictionaryAsync(t => t.Title, t => t.Id, cancellationToken: ct);
-
-        var newTags = tagsNames
-            .Where(t => !existingTags.ContainsKey(t))
-            .Select(t => new Tag { Title = t })
-            .ToList();
-
-        if (newTags.Count != 0)
-        {
-            await projectContext.Tags.AddRangeAsync(newTags, ct);
-            await projectContext.SaveChangesAsync(ct);
-
-            foreach (var tag in newTags)
-                existingTags[tag.Title] = tag.Id;
-        }
-
-        return existingTags.Values.ToList();
+            .Select(t => t.Id)
+            .ToListAsync(cancellationToken: ct);
     }
 }

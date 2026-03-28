@@ -1,5 +1,4 @@
 ﻿using Client.Models.Models.DTO;
-using Client.Models.Models.Enums;
 using Infrastructure.Db;
 using Infrastructure.Entities;
 using Infrastructure.Repositories;
