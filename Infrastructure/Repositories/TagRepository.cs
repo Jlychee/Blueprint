@@ -12,12 +12,9 @@ public class TagRepository(ProjectContext projectContext) : ITagRepository
         throw new NotImplementedException();
     }
 
-    public async Task<List<int>> GetTagsIdsByNameAsync(List<string?> tagsNames, CancellationToken ct)
-    {
-        // TODO: если приходит тег, которого в бд нет, мы его скипаем (я хз как мне добавить тег с учетом того, что мы не знаем, какой у него будет тип)
-        return await projectContext.Tags
-            .Where(t => tagsNames.Contains(t.Title))
-            .Select(t => t.Id)
-            .ToListAsync(cancellationToken: ct);
-    }
+    public async Task<List<int>> GetTagsIdsByNameAsync(List<string?> tagsNames, CancellationToken ct) =>
+        await projectContext.Tags
+        .Where(t => tagsNames.Contains(t.Title))
+        .Select(t => t.Id)
+        .ToListAsync(cancellationToken: ct);
 }
