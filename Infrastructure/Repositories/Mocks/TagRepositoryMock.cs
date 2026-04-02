@@ -1,7 +1,7 @@
 using Client.Models.Models.DTO;
 using Infrastructure.Repositories.Interfaces;
 
-namespace Infrastructure.Mocks;
+namespace Infrastructure.Repositories.Mocks;
 
 public class TagRepositoryMock : ITagRepository
 {

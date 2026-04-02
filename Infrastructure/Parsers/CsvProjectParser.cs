@@ -1,6 +1,6 @@
 using System.Text;
 using Client.Models.Models.DTO;
-using Infrastructure.Interfaces;
+using Infrastructure.Parsers.Interfaces;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.VisualBasic.FileIO;
 using Newtonsoft.Json.Linq;
@@ -53,6 +53,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
             Name = name,
             Year = int.Parse(rawYear),
             Semester = int.Parse(rawSemester),
+            Description = shortDescription,
             ShortDescription = shortDescription,
             TeamMembers = ParseTeamMembers(rawParticipantFields),
             Files = ParseFiles(rawDescriptionLink, rawCastDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,

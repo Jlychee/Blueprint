@@ -1,10 +1,8 @@
-using Api.Application.Features.Project.CreateProject;
-using Api.Application.Features.Project.GetProject;
 using Api.Application.Features.Table.LoadTable;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Api.Application.Features.Project;
+namespace Api.Application.Features.Table;
 
 [ApiController]
 [Route("api/project")]

@@ -3,7 +3,7 @@ using Infrastructure.Repositories.Interfaces;
 
 namespace Infrastructure.Repositories.Mocks;
 
-public class MockProjectRepository: IProjectRepository
+public class MockProjectRepository : IProjectRepository
 {
     public Task LoadProjectsAsync(List<FullProjectInfo> projects, CancellationToken ct)
     {

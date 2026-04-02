@@ -38,7 +38,7 @@ namespace Infrastructure.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Icon = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: false)
+                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: true)
                 },
                 constraints: table =>
                 {

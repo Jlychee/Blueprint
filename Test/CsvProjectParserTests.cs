@@ -1,8 +1,8 @@
-using Infrastructure.Mocks;
 using Infrastructure.Parsers;
 using Infrastructure.Repositories.Interfaces;
+using Infrastructure.Repositories.Mocks;
 
-namespace Infrastructure.Tests.Parser;
+namespace Test;
 
 [TestFixture]
 public class CsvProjectParserTests()

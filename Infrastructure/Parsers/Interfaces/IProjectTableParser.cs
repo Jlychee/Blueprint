@@ -1,6 +1,6 @@
 using Client.Models.Models.DTO;
 
-namespace Infrastructure.Interfaces;
+namespace Infrastructure.Parsers.Interfaces;
 
 public interface IProjectTableParser
 {
