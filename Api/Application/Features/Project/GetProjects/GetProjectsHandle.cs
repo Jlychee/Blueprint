@@ -5,22 +5,23 @@ using Api.Application.Features.Project.GetProjects;
 
 namespace Api.Application.Features.Project.GetProject;
 
-
-public class GetProjectsHandle(IProjectRepository projectRepository) : IRequestHandler<GetProjectsQuery, List<ProjectCardDto>>
+public class GetProjectsHandle(IProjectRepository projectRepository)
+    : IRequestHandler<GetProjectsQuery, PagedResultDto<ProjectCardDto>>
 {
-    public async Task<List<ProjectCardDto>> Handle(GetProjectsQuery request, CancellationToken cancellationToken)
+    public async Task<PagedResultDto<ProjectCardDto>> Handle(GetProjectsQuery request,
+        CancellationToken cancellationToken)
     {
-        System.Console.WriteLine(request.filter.Search);
+        // System.Console.WriteLine(request.filter.Search);
+        // System.Console.WriteLine(request.filter.Page);
+        // System.Console.WriteLine(request.filter.PageSize);
+        // System.Console.WriteLine(request.filter.Semester);
+        // System.Console.WriteLine(request.filter.TagIds);
+        // System.Console.WriteLine(request.filter.TeamMemberCount);
+        // System.Console.WriteLine(request.filter.Year);
 
-        return
-        [
-            new()
-            {
-                Id = 1,
-                Name = "ABOBA",
-                ShortDescriptionAi = "ABOBA AI",
-                Tags = []
-            }
-        ];
+        var projects = await projectRepository.SearchAsync(request.filter, cancellationToken)
+            ?? throw new Exception("Get projects exception");
+
+        return projects;
     }
 }
