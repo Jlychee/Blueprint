@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Link Overlay</title>
+    <link rel="stylesheet" href="css/linkOverlay.css">
+    <script src="js/linkOverlay.js"></script>
+
+</head>
+<body>
+<div class="overlay-bg" onclick="closeOverlay()"></div>
+
+<div class="overlay">
+    <span class="close-btn" onclick="closeOverlay()">×</span>
+
+    <h2>Ссылка на файл:</h2>
+    <div class="link-wrapper">
+        <input type="text" id="fileLink" value="https://projectblueprint.ru/Vibik/shortdescription" readonly>
+        <button class="copy-btn" onclick="copyLink('fileLink')"><img src="resources/images/copy.svg" alt="скопировать"></button>
+    </div>
+
+    <h2>Ссылка на проект:</h2>
+    <div class="link-wrapper">
+        <input type="text" id="projectLink" value="https://projectblueprint.ru/Vibik" readonly>
+        <button class="copy-btn" onclick="copyLink('projectLink')"><img src="resources/images/copy.svg" alt="скопировать"></button>
+    </div>
+</div>
+</body>
+</html>
