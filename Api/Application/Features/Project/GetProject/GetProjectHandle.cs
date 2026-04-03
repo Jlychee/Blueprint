@@ -1,11 +1,13 @@
+using Client.Models.Models.DTO;
+using Infrastructure.Repositories.Interfaces;
 using MediatR;
 
 namespace Api.Application.Features.Project.GetProject;
 
-public class GetProjectHandle: IRequestHandler<GetProjectQuery, GetProjectResponse>
+public class GetProjectHandle(IProjectRepository projectRepository): IRequestHandler<GetProjectQuery, FullProjectInfo>
 {
-    public Task<GetProjectResponse> Handle(GetProjectQuery request, CancellationToken cancellationToken)
+    public async Task<FullProjectInfo?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
-        return Task.FromResult(new GetProjectResponse("Test", "весенний", 2026)); //заглушка
+        return await projectRepository.GetFullProjectInfoAsync(request.Id);
     }
 }

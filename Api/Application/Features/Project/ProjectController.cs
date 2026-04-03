@@ -17,7 +17,7 @@ public class ProjectController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<IActionResult> GetProject(Guid id)
+    public async Task<IActionResult> GetProject(int id)
     {
         var result = await mediator.Send(new GetProjectQuery(id));
         return Ok(result);

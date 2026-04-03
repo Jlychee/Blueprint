@@ -3,7 +3,7 @@ using Infrastructure.Db;
 using Infrastructure.Entities;
 using Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using File = Infrastructure.Entities.File;  
+using File = Infrastructure.Entities.File;
 
 namespace Infrastructure.Repositories;
 
@@ -16,49 +16,58 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             .Select(p => p.UserName)
             .Distinct();
 
-        var existingUsers = projectContext.Users
+        var existingUsers = await projectContext.Users
             .Where(u => usersFromDto.Contains(u.Name))
-            .ToDictionary(u => u.Name, u => u.Id);
+            .ToDictionaryAsync(u => u.Name, u => u.Id, ct);
 
         var newUsers = usersFromDto
-            .Where(u => !existingUsers.ContainsKey(u))
-            .Select(userName => new User { Name = userName })
+            .Except(existingUsers.Keys)
+            .Select(u => new User { Name = u })
             .ToList();
 
         if (newUsers.Count != 0)
         {
             await projectContext.Users.AddRangeAsync(newUsers, ct);
             await projectContext.SaveChangesAsync(ct);
-
+            
             foreach (var user in newUsers)
+            {
                 existingUsers[user.Name] = user.Id;
+            }
         }
-        
+
         var tagsNames = projects
             .SelectMany(p => p.Tags)
             .Select(t => t.Title)
-            .Distinct()
-            .ToList();
-        
+            .Distinct();
+
         var existingTags = await projectContext.Tags
             .Where(t => tagsNames.Contains(t.Title))
-            .ToDictionaryAsync(t => t.Title, t => t.Id, cancellationToken: ct);
-        
-        var newTags = tagsNames
-            .Where(t => !existingTags.ContainsKey(t))
-            .Select(t => new Tag { Title = t })
-            .ToList();
+            .Select(t => new { t.Id, t.Title })
+            .ToDictionaryAsync(t => t.Title, t => t.Id, ct);
 
-        if (newTags.Count != 0)
-        {
-            await projectContext.Tags.AddRangeAsync(newTags, ct);
-            await projectContext.SaveChangesAsync(ct);
+        // TODO: можно в логи кидать, что при загрузке проекта такие-то теги скипнули, что потом мб добавить
+        // var missingTags = tagsNames.Where(t => !existingTags.ContainsKey(t)).ToList();
+        //
+        // foreach (var missingTag in missingTags)
+        // {
+        //     Console.WriteLine($"Тега '{missingTag}' нет в таблице Tags. Применяем метод скипа.");
+        // }
 
-            foreach (var tag in newTags)
-                existingTags[tag.Title] = tag.Id;
-        }
+        var projectNames = projects
+            .Select(p => p.Name)
+            .Distinct()
+            .ToArray();
 
-        var entities = projects.Select(dto => new Project
+        var existingProjects = await projectContext.Projects
+            .Where(p => projectNames.Contains(p.Name))
+            .Select(p => p.Name)
+            .ToListAsync(ct);
+
+        var newProjects = projects
+            .Where(p => !existingProjects.Contains(p.Name));
+
+        var entities = newProjects.Select(dto => new Project
         {
             Name = dto.Name,
             DescriptionAi = dto.Description,
@@ -85,15 +94,18 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
 
             ProjectTags = dto.Tags
                 .Select(t => t.Title)
-                .Distinct()
-                .Select(tagId => new ProjectTag
+                .Where(title => existingTags.ContainsKey(title))
+                .Select(title => new ProjectTag
                 {
-                    TagId = existingTags[tagId],
-                }).ToList()
+                    TagId = existingTags[title],
+                }).ToList(),
         }).ToList();
 
-        await projectContext.AddRangeAsync(entities, ct);
-        await projectContext.SaveChangesAsync(ct);
+        if (entities.Count > 0)
+        {
+            await projectContext.AddRangeAsync(entities, ct);
+            await projectContext.SaveChangesAsync(ct);
+        }
     }
 
     public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)

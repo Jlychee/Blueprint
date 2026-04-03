@@ -52,7 +52,7 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.ToTable(t =>
         {
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
-            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
         });
 
         builder.HasIndex(p => new { p.Year, p.Semester });
@@ -119,6 +119,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
 
         builder
             .HasOne(t => t.TagType)
