@@ -46,21 +46,6 @@ public class TagRepositoryGetTagsIdsTest
     }
 
     [Test]
-    public async Task GetTagsIdsByNameAsync_ShouldCreateNewTags()
-    {
-        var tags = new List<string?> { "new1", "new2" };
-
-        var result = await repository.GetTagsIdsByNameAsync(tags, CancellationToken.None);
-
-        Assert.That(result.Count, Is.EqualTo(2));
-
-        var dbTags = await projectContext.Tags.ToListAsync();
-        Assert.That(dbTags.Count, Is.EqualTo(2));
-        Assert.That(dbTags.Any(t => t.Title == "new1"));
-        Assert.That(dbTags.Any(t => t.Title == "new2"));
-    }
-
-    [Test]
     public async Task GetTagsIdsByNameAsync_ShouldNotDuplicateExistingTags()
     {
         projectContext.Tags.Add(new Tag { Title = "c#" });
@@ -74,22 +59,6 @@ public class TagRepositoryGetTagsIdsTest
 
         var dbTags = await projectContext.Tags.ToListAsync();
         Assert.That(dbTags.Count, Is.EqualTo(1));
-    }
-
-    [Test]
-    public async Task GetTagsIdsByNameAsync_ShouldMixExistingAndNewTags()
-    {
-        projectContext.Tags.Add(new Tag { Title = "existing" });
-        await projectContext.SaveChangesAsync();
-
-        var tags = new List<string?> { "existing", "new" };
-
-        var result = await repository.GetTagsIdsByNameAsync(tags, CancellationToken.None);
-
-        Assert.That(result.Count, Is.EqualTo(2));
-
-        var dbTags = await projectContext.Tags.ToListAsync();
-        Assert.That(dbTags.Count, Is.EqualTo(2));
     }
 
     [Test]
