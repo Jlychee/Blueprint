@@ -14,7 +14,8 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         var usersFromDto = projects
             .SelectMany(p => p.TeamMembers)
             .Select(p => p.UserName)
-            .Distinct();
+            .Distinct()
+            .ToList();
 
         var existingUsers = await projectContext.Users
             .Where(u => usersFromDto.Contains(u.Name))
@@ -31,15 +32,14 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             await projectContext.SaveChangesAsync(ct);
             
             foreach (var user in newUsers)
-            {
                 existingUsers[user.Name] = user.Id;
-            }
         }
 
         var tagsNames = projects
             .SelectMany(p => p.Tags)
             .Select(t => t.Title)
-            .Distinct();
+            .Distinct()
+            .ToList();
 
         var existingTags = await projectContext.Tags
             .Where(t => tagsNames.Contains(t.Title))
@@ -65,7 +65,8 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             .ToListAsync(ct);
 
         var newProjects = projects
-            .Where(p => !existingProjects.Contains(p.Name));
+            .Where(p => !existingProjects.Contains(p.Name))
+            .ToList();
 
         var entities = newProjects.Select(dto => new Project
         {
