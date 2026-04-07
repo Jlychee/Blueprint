@@ -7,6 +7,6 @@ public sealed class ProjectCatalogFilter
     public int? TeamMemberCount { get; init; }
     public int? Year {get; init;}
     public int? Semester {get; init;}
-    public int Page {get; init;}
+    public int Page { get; init; } = 1;
     public int PageSize { get; init; } = 9;
 }
