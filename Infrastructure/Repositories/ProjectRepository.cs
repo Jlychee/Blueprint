@@ -11,101 +11,114 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
 {
     public async Task LoadProjectsAsync(List<FullProjectInfo> projects, CancellationToken ct)
     {
-        var usersFromDto = projects
-            .SelectMany(p => p.TeamMembers)
-            .Select(p => p.UserName)
-            .Distinct()
-            .ToList();
+        var transaction = await projectContext.Database.BeginTransactionAsync(ct);
 
-        var existingUsers = await projectContext.Users
-            .Where(u => usersFromDto.Contains(u.Name))
-            .ToDictionaryAsync(u => u.Name, u => u.Id, ct);
-
-        var newUsers = usersFromDto
-            .Except(existingUsers.Keys)
-            .Select(u => new User { Name = u })
-            .ToList();
-
-        if (newUsers.Count != 0)
+        try
         {
-            await projectContext.Users.AddRangeAsync(newUsers, ct);
-            await projectContext.SaveChangesAsync(ct);
-            
-            foreach (var user in newUsers)
-                existingUsers[user.Name] = user.Id;
-        }
+            var usersFromDto = projects
+                .SelectMany(p => p.TeamMembers)
+                .Select(p => p.UserName)
+                .Distinct()
+                .ToList();
 
-        var tagsNames = projects
-            .SelectMany(p => p.Tags)
-            .Select(t => t.Title)
-            .Distinct()
-            .ToList();
+            var existingUsers = await projectContext.Users
+                .Where(u => usersFromDto.Contains(u.Name))
+                .ToDictionaryAsync(u => u.Name, u => u.Id, ct);
 
-        var existingTags = await projectContext.Tags
-            .Where(t => tagsNames.Contains(t.Title))
-            .Select(t => new { t.Id, t.Title })
-            .ToDictionaryAsync(t => t.Title, t => t.Id, ct);
+            var newUsers = usersFromDto
+                .Except(existingUsers.Keys)
+                .Select(u => new User { Name = u })
+                .ToList();
 
-        // TODO: можно в логи кидать, что при загрузке проекта такие-то теги скипнули, что потом мб добавить
-        // var missingTags = tagsNames.Where(t => !existingTags.ContainsKey(t)).ToList();
-        //
-        // foreach (var missingTag in missingTags)
-        // {
-        //     Console.WriteLine($"Тега '{missingTag}' нет в таблице Tags. Применяем метод скипа.");
-        // }
-
-        var projectNames = projects
-            .Select(p => p.Name)
-            .Distinct()
-            .ToArray();
-
-        var existingProjects = await projectContext.Projects
-            .Where(p => projectNames.Contains(p.Name))
-            .Select(p => p.Name)
-            .ToListAsync(ct);
-
-        var newProjects = projects
-            .Where(p => !existingProjects.Contains(p.Name))
-            .ToList();
-
-        var entities = newProjects.Select(dto => new Project
-        {
-            Name = dto.Name,
-            DescriptionAi = dto.Description,
-            ShortDescriptionAi = dto.ShortDescription,
-            Year = dto.Year,
-            Semester = dto.Semester,
-
-            File = dto.Files == null
-                ? null
-                : new File
-                {
-                    CustDev = dto.Files.CustDev,
-                    Description = dto.Files.Description,
-                    Mvp = dto.Files.Mvp,
-                    RoadMap = dto.Files.RoadMap,
-                    Product = dto.Files.Product,
-                },
-
-            TeamMembers = dto.TeamMembers.Select(m => new TeamMember
+            if (newUsers.Count != 0)
             {
-                UserId = existingUsers[m.UserName],
-                Role = m.Role ?? null,
-            }).ToList(),
+                await projectContext.Users.AddRangeAsync(newUsers, ct);
+                await projectContext.SaveChangesAsync(ct);
 
-            ProjectTags = dto.Tags
+                foreach (var user in newUsers)
+                    existingUsers[user.Name] = user.Id;
+            }
+
+            var tagsNames = projects
+                .SelectMany(p => p.Tags)
                 .Select(t => t.Title)
-                .Where(title => existingTags.ContainsKey(title))
-                .Select(title => new ProjectTag
-                {
-                    TagId = existingTags[title],
-                }).ToList(),
-        }).ToList();
+                .Distinct()
+                .ToList();
 
-        if (entities.Count > 0)
-        {
-            await projectContext.AddRangeAsync(entities, ct);
+            var existingTags = await projectContext.Tags
+                .Where(t => tagsNames.Contains(t.Title))
+                .Select(t => new { t.Id, t.Title })
+                .ToDictionaryAsync(t => t.Title, t => t.Id, ct);
+
+            // TODO: можно в логи кидать, что при загрузке проекта такие-то теги скипнули, что потом мб добавить
+            // var missingTags = tagsNames.Where(t => !existingTags.ContainsKey(t)).ToList();
+            //
+            // foreach (var missingTag in missingTags)
+            // {
+            //     Console.WriteLine($"Тега '{missingTag}' нет в таблице Tags. Применяем метод скипа.");
+            // }
+
+            var projectNames = projects
+                .Select(p => p.Name)
+                .Distinct()
+                .ToArray();
+
+            var existingProjects = await projectContext.Projects
+                .Where(p => projectNames.Contains(p.Name))
+                .Select(p => p.Name)
+                .ToListAsync(ct);
+
+            var newProjects = projects
+                .Where(p => !existingProjects.Contains(p.Name))
+                .ToList();
+
+            var entities = newProjects.Select(dto => new Project
+            {
+                Name = dto.Name,
+                DescriptionAi = dto.Description,
+                ShortDescriptionAi = dto.ShortDescription,
+                Year = dto.Year,
+                Semester = dto.Semester,
+
+                File = dto.Files == null
+                    ? null
+                    : new File
+                    {
+                        CustDev = dto.Files.CustDev,
+                        Description = dto.Files.Description,
+                        Mvp = dto.Files.Mvp,
+                        RoadMap = dto.Files.RoadMap,
+                        Product = dto.Files.Product,
+                    },
+
+                TeamMembers = dto.TeamMembers.Select(m => new TeamMember
+                {
+                    UserId = existingUsers[m.UserName],
+                    Role = m.Role ?? null,
+                }).ToList(),
+
+                ProjectTags = dto.Tags
+                    .Select(t => t.Title)
+                    .Where(title => existingTags.ContainsKey(title))
+                    .Select(title => new ProjectTag
+                    {
+                        TagId = existingTags[title],
+                    }).ToList(),
+            }).ToList();
+
+            if (entities.Count > 0)
+            {
+                await projectContext.AddRangeAsync(entities, ct);
+                await projectContext.SaveChangesAsync(ct);
+            }
+
             await projectContext.SaveChangesAsync(ct);
+            await transaction.CommitAsync(ct);
+        }
+        catch
+        {
+            await transaction.RollbackAsync(ct);
+            throw;
         }
     }
 
@@ -144,8 +157,53 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             }).SingleOrDefaultAsync();
     }
 
-    public Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
+    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var query = projectContext.Projects.AsQueryable();
+
+        if (filter.Year.HasValue)
+            query = query.Where(p => p.Year >= filter.Year.Value);
+
+        if (filter.Semester.HasValue)
+            query = query.Where(p => p.Semester == filter.Semester);
+
+        if (filter.TeamMemberCount.HasValue)
+            query = query.Where(p => p.TeamMembers.Count == filter.TeamMemberCount);
+
+        if (filter.TagIds?.Any() == true)
+        {
+            query = query.Where(p =>
+                filter.TagIds.All(tagId =>
+                    p.ProjectTags.Any(pt => pt.TagId == tagId)));
+        }
+
+        var total = await query.CountAsync(ct);
+
+        var items = await query
+            .OrderBy(p => p.Name)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .Select(p => new ProjectCardDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ShortDescriptionAi = p.ShortDescriptionAi,
+                Tags = p.ProjectTags
+                    .Select(pt => new TagDto
+                    {
+                        Id = pt.TagId,
+                        Title = pt.Tag.Title,
+                        Icon = pt.Tag.Icon,
+                        Color = pt.Tag.Color,
+                    }).ToList(),
+            }).ToListAsync(ct);
+
+        return new PagedResultDto<ProjectCardDto>
+        {
+            Items = items,
+            TotalCount = total,
+            Page = filter.Page,
+            PageSize = filter.PageSize,
+        };
     }
 }
