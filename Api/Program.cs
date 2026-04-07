@@ -8,6 +8,7 @@ builder.Services.AddControllers();
 
 builder
     .LoadEnvFiles()
+    .AddTelemetry()
     .AddSwagger()
     .AddApplicationServices()
     .AddDatabase()
@@ -21,5 +22,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 app.MapControllers();
 app.Run();
