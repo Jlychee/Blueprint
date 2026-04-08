@@ -2,7 +2,7 @@
 
 public class Project
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Name { get; set; }
     public string DescriptionAi { get; set; }
     public string ShortDescriptionAi { get; set; }

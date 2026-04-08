@@ -1,5 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,7 +15,8 @@ namespace Infrastructure.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     DescriptionAi = table.Column<string>(type: "text", nullable: false),
                     ShortDescriptionAi = table.Column<string>(type: "text", nullable: false),
@@ -25,7 +26,7 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.CheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+                    table.CheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
                     table.CheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
                 });
 
@@ -33,10 +34,11 @@ namespace Infrastructure.Migrations
                 name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Icon = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: false)
+                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -47,7 +49,8 @@ namespace Infrastructure.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -59,7 +62,7 @@ namespace Infrastructure.Migrations
                 name: "Files",
                 columns: table => new
                 {
-                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
                     CustDev = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Mvp = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
@@ -81,8 +84,8 @@ namespace Infrastructure.Migrations
                 name: "ProjectTags",
                 columns: table => new
                 {
-                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    TagId = table.Column<Guid>(type: "uuid", nullable: false)
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    TagId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,8 +108,8 @@ namespace Infrastructure.Migrations
                 name: "TeamMembers",
                 columns: table => new
                 {
-                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
