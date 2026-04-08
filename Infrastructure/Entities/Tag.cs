@@ -6,7 +6,7 @@ public class Tag
     public string Title { get; set; }
     public Uri? Icon { get; set; }
     public string? Color { get; set; }
-    
+
     public int TagTypeId { get; set; }
     public TagType TagType { get; set; }
 

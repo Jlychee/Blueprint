@@ -16,7 +16,7 @@ public class CsvProjectParserTests()
         tagRepository = new TagRepositoryMock();
         parser = new CsvProjectParser(tagRepository);
     }
-    
+
     [Test]
     public async Task ParseTable_HeaderOnlyCsv_ReturnsEmptyList()
     {
@@ -66,7 +66,7 @@ public class CsvProjectParserTests()
         Assert.Multiple(() =>
         {
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result.Select(project => project.Name), Is.EqualTo(new[] { "LearnTogether", "GuidesAi" }));
+            Assert.That(result.Select(project => project.Name), Is.EqualTo(new[] {"LearnTogether", "GuidesAi"}));
         });
     }
 
@@ -90,8 +90,8 @@ public class CsvProjectParserTests()
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(tags, Is.Not.Null);
             Assert.That(tags, Has.Count.EqualTo(3));
-            Assert.That(tags.Select(tag => tag.Title), Is.EqualTo(new[] { "web", "server", "c#" }));
-            Assert.That(tags.Select(tag => tag.Id), Is.EqualTo(new[] { 1, 2, 3 }));
+            Assert.That(tags.Select(tag => tag.Title), Is.EqualTo(new[] {"web", "server", "c#"}));
+            Assert.That(tags.Select(tag => tag.Id), Is.EqualTo(new[] {1, 2, 3}));
         });
     }
 

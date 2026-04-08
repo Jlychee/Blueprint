@@ -32,7 +32,7 @@ const projectId = params.get("id");
 const project = projects.find(p => p.id === projectId);
 
 
-if(project){
+if (project) {
 
     document.getElementById("project-title").textContent = project.title;
 

@@ -14,7 +14,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
     public async Task<List<FullProjectInfo>> ParseTableAsync(Stream stream, CancellationToken ct)
     {
         var projects = new List<FullProjectInfo>();
-        using var parser = new TextFieldParser(stream, Encoding.UTF8, detectEncoding: true);
+        using var parser = new TextFieldParser(stream, Encoding.UTF8, true);
         parser.SetDelimiters(",");
         parser.HasFieldsEnclosedInQuotes = true;
 
@@ -44,7 +44,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
         var rawCastDevLink = fields[10];
         var rawMvpLink = fields[11];
         var rawRoadMapLink = fields[12];
-        var rawGitLink = fields[13];    
+        var rawGitLink = fields[13];
         var rawNonGitLink = fields[14];
         var rawTagsJson = fields[15];
 
@@ -86,7 +86,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
     {
         return participantFields
             .Where(name => !string.IsNullOrWhiteSpace(name))
-            .Select(name => new TeamMemberDto { UserName = name.Trim() })
+            .Select(name => new TeamMemberDto {UserName = name.Trim()})
             .ToList();
     }
 
@@ -103,7 +103,7 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
             Description = ParseUri(descriptionLink),
             CustDev = ParseUri(custDevLink),
             Mvp = ParseUri(mvpLink),
-            RoadMap = ParseUri(roadMapLink),
+            RoadMap = ParseUri(roadMapLink)
         };
         var productLinks = new List<Uri>();
 

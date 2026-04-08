@@ -22,7 +22,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
 
         var newUsers = usersFromDto
             .Where(u => !existingUsers.ContainsKey(u))
-            .Select(userName => new User { Name = userName }).ToList();
+            .Select(userName => new User {Name = userName}).ToList();
 
         if (newUsers.Count != 0)
         {
@@ -49,13 +49,13 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                     Description = dto.Files.Description,
                     Mvp = dto.Files.Mvp,
                     RoadMap = dto.Files.RoadMap,
-                    Product = dto.Files.Product,
+                    Product = dto.Files.Product
                 },
 
             TeamMembers = dto.TeamMembers.Select(m => new TeamMember
             {
                 UserId = existingUsers[m.UserName],
-                Role = m.Role ?? null,
+                Role = m.Role ?? null
             }).ToList(),
 
             ProjectTags = dto.Tags
@@ -63,7 +63,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                 .Distinct()
                 .Select(tagId => new ProjectTag
                 {
-                    TagId = tagId,
+                    TagId = tagId
                 }).ToList()
         }).ToList();
 
