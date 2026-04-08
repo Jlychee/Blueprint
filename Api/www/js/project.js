@@ -24,6 +24,20 @@
     }
 ];
 
+async function loadProjects() {
+    const response = await fetch("/api/projects");
+    const data = await response.json();
+
+    const container = document.getElementById("projects");
+
+    data.forEach(p => {
+        const div = document.createElement("div");
+        div.innerText = p.name;
+        container.appendChild(div);
+    });
+}
+
+loadProjects();
 
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
