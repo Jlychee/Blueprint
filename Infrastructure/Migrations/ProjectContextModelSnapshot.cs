@@ -83,7 +83,7 @@ namespace Infrastructure.Migrations
 
                     b.ToTable("Projects", t =>
                         {
-                            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+                            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
 
                             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
                         });
@@ -137,6 +137,31 @@ namespace Infrastructure.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("Infrastructure.Entities.TagType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("Priority");
+
+                    b.ToTable("TagTypes");
+                });
+
             modelBuilder.Entity("Infrastructure.Entities.TeamMember", b =>
                 {
                     b.Property<int>("ProjectId")
@@ -175,31 +200,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TagType", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.HasIndex("Priority");
-
-                    b.ToTable("TagTypes");
-                });
-
             modelBuilder.Entity("Infrastructure.Entities.File", b =>
                 {
                     b.HasOne("Infrastructure.Entities.Project", "Project")
@@ -232,7 +232,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Infrastructure.Entities.Tag", b =>
                 {
-                    b.HasOne("TagType", "TagType")
+                    b.HasOne("Infrastructure.Entities.TagType", "TagType")
                         .WithMany("Tags")
                         .HasForeignKey("TagTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -275,14 +275,14 @@ namespace Infrastructure.Migrations
                     b.Navigation("ProjectTags");
                 });
 
+            modelBuilder.Entity("Infrastructure.Entities.TagType", b =>
+                {
+                    b.Navigation("Tags");
+                });
+
             modelBuilder.Entity("Infrastructure.Entities.User", b =>
                 {
                     b.Navigation("TeamMembers");
-                });
-
-            modelBuilder.Entity("TagType", b =>
-                {
-                    b.Navigation("Tags");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проект</title>
+    <link rel="stylesheet" href="css/linkOverlay.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/project.css">
+    <link rel="stylesheet" href="css/base.css">
+
+    <link rel="icon" type="image/svg" href="resources/images/logo.svg">
+
+</head>
+
+<body>
+
+<div id="header"></div>
+
+<section class="project-page">
+    <div class="container">
+        <div class="project-card">
+            <div class="navigation-wrapper">
+                <nav class="navigation">
+                    <ul class="navigation-objs">
+                        <li>
+                            <a href="index.html">
+                                <img src="resources/images/close.svg" alt="закрыть страницу проекта">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="openOverlay()">
+                                <img src="resources/images/share.svg" alt="поделиться">
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="project-header">
+                <h1 class="project-title">Vibik</h1>
+            </div>
+
+            <div class="tabs">
+
+                <button class="tab-btn active" data-tab="short">
+                    Краткое описание
+                </button>
+
+                <button class="tab-btn" data-tab="idea">
+                    Описание идеи
+                </button>
+
+                <button class="tab-btn" data-tab="custdev">
+                    CustDev
+                </button>
+
+                <button class="tab-btn" data-tab="mvp">
+                    MVP
+                </button>
+
+                <button class="tab-btn" data-tab="pivot">
+                    Пивот
+                </button>
+
+            </div>
+
+            <div class="tabs-content">
+
+                <div class="tab active" id="short">
+                    <p>
+                        Приложение с фото-заданиями, которое мотивирует выйти из рутины
+                        и прогуляться, превращая короткую прогулку в маленькое вдохновляющее приключение.
+                    </p>
+                </div>
+
+                <div class="tab" id="idea">
+                    <p>
+                        Пользователь получает случайные фото-задания во время прогулки.
+                    </p>
+                </div>
+
+                <div class="tab" id="custdev">
+                    <p>
+                        Проведено 15 интервью с потенциальными пользователями.
+                    </p>
+                </div>
+
+                <div class="tab" id="mvp">
+                    <p>
+                        MVP реализован в виде мобильного веб-приложения.
+                    </p>
+                </div>
+
+                <div class="tab" id="pivot">
+                    <p>
+                        Возможный пивот — переход в формат городского квеста.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="project-stack">
+
+                <h2>Стек:</h2>
+
+                <div class="icons">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+                         alt="питон">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg"
+                         alt="сишарп">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"
+                         alt="постгре скул">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"
+                         alt="докер">
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<script src="js/header.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/project.js"></script>
+<script src="js/linkOverlay.js" defer></script>
+
+
+</body>
+</html>

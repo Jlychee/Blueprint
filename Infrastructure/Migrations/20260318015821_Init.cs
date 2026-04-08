@@ -26,7 +26,7 @@ namespace Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
-                    table.CheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+                    table.CheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
                     table.CheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
                 });
 

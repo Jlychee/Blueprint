@@ -52,10 +52,10 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.ToTable(t =>
         {
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
-            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
         });
 
-        builder.HasIndex(p => new { p.Year, p.Semester });
+        builder.HasIndex(p => new {p.Year, p.Semester});
     }
 }
 
@@ -63,7 +63,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
 {
     public void Configure(EntityTypeBuilder<TeamMember> builder)
     {
-        builder.HasKey(x => new { x.ProjectId, x.UserId });
+        builder.HasKey(x => new {x.ProjectId, x.UserId});
         builder.HasOne(x => x.User)
             .WithMany(x => x.TeamMembers)
             .HasForeignKey(x => x.UserId)
@@ -76,7 +76,7 @@ public class TeamMemberConfiguration : IEntityTypeConfiguration<TeamMember>
 
         builder.Property(x => x.Role);
 
-        builder.HasIndex(tm => new { tm.ProjectId, tm.UserId });
+        builder.HasIndex(tm => new {tm.ProjectId, tm.UserId});
         builder.HasIndex(tm => tm.UserId);
     }
 }
@@ -97,7 +97,7 @@ public class ProjectTagConfiguration : IEntityTypeConfiguration<ProjectTag>
 {
     public void Configure(EntityTypeBuilder<ProjectTag> builder)
     {
-        builder.HasKey(x => new { x.ProjectId, x.TagId });
+        builder.HasKey(x => new {x.ProjectId, x.TagId});
 
         builder.HasOne(pt => pt.Project)
             .WithMany(p => p.ProjectTags)
@@ -109,7 +109,7 @@ public class ProjectTagConfiguration : IEntityTypeConfiguration<ProjectTag>
             .HasForeignKey(pt => pt.TagId)
             .IsRequired();
 
-        builder.HasIndex(pt => new { pt.ProjectId, pt.TagId });
+        builder.HasIndex(pt => new {pt.ProjectId, pt.TagId});
         builder.HasIndex(pt => pt.TagId);
     }
 }
@@ -119,6 +119,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id)
+            .ValueGeneratedOnAdd();
 
         builder
             .HasOne(t => t.TagType)

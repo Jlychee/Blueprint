@@ -5,5 +5,5 @@ public enum TeamRole
     Frontend,
     Backend,
     Designer,
-    DevOps,
+    DevOps
 }
