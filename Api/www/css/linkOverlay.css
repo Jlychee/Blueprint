@@ -1,0 +1,124 @@
+﻿.overlay {
+    color: black;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 5% 6%;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: 60%;
+    min-width: 320px;
+    height: auto;
+    min-height: auto;
+}
+
+.overlay-bg {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+}
+
+.close-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.close-btn:hover {
+    transform: scale(1.1);
+}
+
+.link-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 30px;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+.scroll-link-wrapper {
+    overflow-y: auto;
+    max-height: 200px;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+}
+
+.scroll-link-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scroll-link-wrapper::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.scroll-link-wrapper::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.scroll-link-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.link-wrapper input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 18px;
+    color: #333;
+    outline: none;
+    padding: 8px 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 150px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.link-wrapper textarea {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 18px;
+    color: #333;
+    outline: none;
+    padding: 8px 0;
+    overflow-y: auto;
+    resize: vertical;
+    min-height: 50px;
+    max-height: 150px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.copy-btn {
+    margin-left: 15px;
+    cursor: pointer;
+    border: none;
+    background: #ffffff;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover {
+    background: #e0e0e0;
+}
