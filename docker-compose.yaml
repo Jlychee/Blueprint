@@ -22,9 +22,27 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ../Api/www:/var/www/html
+      - ./Api/www:/var/www/html
     depends_on:
       - backend
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_USER}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_PASS}
     
 volumes:
   postgres_data: 
