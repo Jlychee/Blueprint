@@ -12,21 +12,20 @@ namespace Api.Application.Features.Project;
 [Route("api/projects")]
 public class ProjectController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("create_project")]
-    public async Task<IActionResult> CreateProject([FromBody] CreateProjectModel model)
-    {
-        var result = await mediator.Send(model);
-        return Ok(result);
-    }
 
     [HttpGet("project/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProject(int id)
     {
+
         var result = await mediator.Send(new GetProjectQuery(id));
         return Ok(result);
     }
 
     [HttpGet("projects")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProjects([FromQuery] ProjectCatalogFilter filter)
     {
         var result = await mediator.Send(new GetProjectsQuery(filter));
@@ -34,6 +33,8 @@ public class ProjectController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("tags")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetTask()
     {
         var result = await mediator.Send(new GetTagsQuery());

@@ -8,9 +8,7 @@ public class GetProjectHandle(IProjectRepository projectRepository) : IRequestHa
 {
     public async Task<FullProjectInfo?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetFullProjectInfoAsync(request.Id)
+        return await projectRepository.GetFullProjectInfoAsync(request.Id)
             ?? throw new Exception($"{request.Id}");
-
-        return project;
     }
 }

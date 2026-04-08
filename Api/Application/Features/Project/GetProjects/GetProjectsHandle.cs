@@ -19,9 +19,9 @@ public class GetProjectsHandle(IProjectRepository projectRepository)
         // System.Console.WriteLine(request.filter.TeamMemberCount);
         // System.Console.WriteLine(request.filter.Year);
 
-        var projects = await projectRepository.SearchAsync(request.filter, cancellationToken)
+        return await projectRepository.SearchAsync(request.filter, cancellationToken)
             ?? throw new Exception("Get projects exception");
 
-        return projects;
+
     }
 }
