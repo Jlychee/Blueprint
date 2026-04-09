@@ -1,50 +1,49 @@
-name: Deploy to Server
+name: .NET Tests
 
 on:
-  workflow_run:
-    workflows: [".NET Tests"]
-    types: 
-      - completed
-
-#штука чтобы одновременно мог выполняться только один деплой:
-concurrency:
-  group: deploy-${{ github.event.workflow_run.head_branch }}
-  cancel-in-progress: true
+  push:
+    branches: [ main, dev ]
+  pull_request: 
+    branches: [ main, dev ]
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal
   deploy:
-    if: >
-      github.event.workflow_run.conclusion == 'success' &&
-      (github.event.workflow_run.head_branch == 'main' || github.event.workflow_run.head_branch == 'dev')
+    if: github.event_name == 'push'
+    needs: test
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1 #выполняем команды на actione
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            set -e 
-            
-            if [ ! -d ~/app ]; then
-              mkdir -p ~/app
-            fi
-            
-            cd ~/app
-            
-            if [ ! -d .git ]; then
-              git clone https://github.com/Jlychee/Blueprint.git .
-            fi
-            
-            git fetch origin
-            
-            if [ "${{ github.event.workflow_run.head_branch }}" = "main" ]; then
-              git reset --hard origin/main
-            else
-              git reset --hard origin/dev
-            fi
-            
-            docker compose up -d --build
-            docker compose ps
+     - name: Deploy via SSH
+       uses: appleboy/ssh-action@v1 #выполняем команды на actione
+       with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         key: ${{ secrets.SSH_KEY }}
+         port: ${{ secrets.PORT }}
+         script: |
+           set -e 
+           cd ~/app
+           git fetch origin
+           git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+           git reset --hard origin/${{ github.ref_name }}
+           docker compose up -d --build
+           docker compose ps
