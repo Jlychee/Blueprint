@@ -39,6 +39,7 @@ jobs:
          username: ${{ secrets.USERNAME }}
          key: ${{ secrets.SSH_KEY }}
          port: ${{ secrets.PORT }}
+         debug: true
          script: |
            set -e 
            cd ~/app
