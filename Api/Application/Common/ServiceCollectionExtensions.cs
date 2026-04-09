@@ -14,8 +14,8 @@ public static class ServiceCollectionExtensions
 {
     public static WebApplicationBuilder LoadEnvFiles(this WebApplicationBuilder builder)
     {
-        DotNetEnv.Env.Load("../.env");
-        DotNetEnv.Env.Load();
+        DotNetEnv.Env.NoClobber().Load("../.env");
+        DotNetEnv.Env.NoClobber().Load();
         builder.Configuration.AddEnvironmentVariables();
 
         return builder;
@@ -113,6 +113,7 @@ public static class ServiceCollectionExtensions
     {
         builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
         builder.Services.AddScoped<ITagRepository, TagRepository>();
+        builder.Services.AddScoped<IMetricRepository, MetricRepository>();
         builder.Services.AddScoped<IProjectTableParser, CsvProjectParser>();
 
         return builder;

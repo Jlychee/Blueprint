@@ -8,7 +8,11 @@ public class GetProjectHandle(IProjectRepository projectRepository,IMetricReposi
 {
     public async Task<FullProjectInfo?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
-        metricRepository.RegisterOpenAsync(request.MetricId, DateOnly.FromDateTime(DateTime.UtcNow),cancellationToken);
-        return await projectRepository.GetFullProjectInfoAsync(request.Id);
+        var project = await projectRepository.GetFullProjectInfoAsync(request.Id);
+        if (project is null)
+            return null;
+
+        await metricRepository.RegisterOpenAsync(request.MetricId, DateOnly.FromDateTime(DateTime.UtcNow), cancellationToken);
+        return project;
     }
 }
