@@ -21,8 +21,11 @@ public class ProjectController(IMediator mediator) : ControllerBase
     {
         if (!Guid.TryParse(Request.Cookies["metric_user_id"],out var metricId))
             metricId = Guid.Empty;
+
+        if (!Guid.TryParse(Request.Cookies["filter_session_id"],out var filterSessionId))
+            filterSessionId = Guid.Empty;
         
-        var result = await mediator.Send(new GetProjectQuery(id,metricId));
+        var result = await mediator.Send(new GetProjectQuery(id,metricId,filterSessionId));
         return Ok(result);
     }
 }

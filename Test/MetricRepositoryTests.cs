@@ -91,6 +91,33 @@ public class MetricRepositoryTests
     }
 
     [Test]
+    public async Task RegisterFilteredProjectViewAsync_ShouldCreateView_WhenFilterSessionIdIsValid()
+    {
+        var filterSessionId = Guid.NewGuid();
+        var occurredAtUtc = new DateTime(2026, 4, 10, 12, 30, 0, DateTimeKind.Utc);
+
+        await repository.RegisterFilteredProjectViewAsync(filterSessionId, 42, occurredAtUtc, CancellationToken.None);
+
+        var view = await metricsContext.FilteredProjectViews.SingleAsync();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(view.FilterSessionId, Is.EqualTo(filterSessionId));
+            Assert.That(view.ProjectId, Is.EqualTo(42));
+            Assert.That(view.OpenedAtUtc, Is.EqualTo(occurredAtUtc));
+        });
+    }
+
+    [Test]
+    public async Task RegisterFilteredProjectViewAsync_EmptyFilterSessionId_ShouldNotCreateView()
+    {
+        await repository.RegisterFilteredProjectViewAsync(Guid.Empty, 42,
+            new DateTime(2026, 4, 10, 12, 30, 0, DateTimeKind.Utc), CancellationToken.None);
+
+        Assert.That(await metricsContext.FilteredProjectViews.CountAsync(), Is.EqualTo(0));
+    }
+
+    [Test]
     public async Task RebuildOpenCohortsRetentionAsync_ShouldUpdateFlagsAndGroupedMetrics()
     {
         metricsContext.UserRetentionStates.AddRange(

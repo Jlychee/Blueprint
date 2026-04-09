@@ -11,11 +11,13 @@ public class MetricsContext(DbContextOptions<MetricsContext> options) : DbContex
 {
     public DbSet<UserRetentionState> UserRetentionStates { get; set; }
     public DbSet<RetentionByCohort> RetentionByCohorts { get; set; }
+    public DbSet<FilteredProjectView> FilteredProjectViews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserRetentionStateConfiguration());
         modelBuilder.ApplyConfiguration(new RetentionByCohortConfiguration());
+        modelBuilder.ApplyConfiguration(new FilteredProjectViewConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
@@ -47,5 +49,21 @@ public class UserRetentionStateConfiguration : IEntityTypeConfiguration<UserRete
         builder.Property(x => x.r7D).HasDefaultValue(false);
         builder.Property(x => x.r14D).HasDefaultValue(false);
         builder.Property(x => x.r30D).HasDefaultValue(false);
+    }
+}
+
+public class FilteredProjectViewConfiguration : IEntityTypeConfiguration<FilteredProjectView>
+{
+    public void Configure(EntityTypeBuilder<FilteredProjectView> builder)
+    {
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.FilterSessionId)
+            .IsRequired();
+        builder.Property(x => x.ProjectId)
+            .IsRequired();
+        builder.Property(x => x.OpenedAtUtc)
+            .IsRequired();
+
+        builder.HasIndex(x => x.FilterSessionId);
     }
 }

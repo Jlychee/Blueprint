@@ -12,7 +12,9 @@ public class GetProjectHandle(IProjectRepository projectRepository,IMetricReposi
         if (project is null)
             return null;
 
-        await metricRepository.RegisterOpenAsync(request.MetricId, DateOnly.FromDateTime(DateTime.UtcNow), cancellationToken);
+        var occurredAtUtc = DateTime.UtcNow;
+        await metricRepository.RegisterOpenAsync(request.MetricId, DateOnly.FromDateTime(occurredAtUtc), cancellationToken);
+        await metricRepository.RegisterFilteredProjectViewAsync(request.FilterSessionId, request.Id, occurredAtUtc, cancellationToken);
         return project;
     }
 }

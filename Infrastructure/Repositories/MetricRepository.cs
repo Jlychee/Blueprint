@@ -37,6 +37,22 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
         await metricsContext.SaveChangesAsync(ct);
     }
 
+    public async Task RegisterFilteredProjectViewAsync(Guid filterSessionId, int projectId, DateTime occurredAtUtc, CancellationToken ct)
+    {
+        if (filterSessionId == Guid.Empty)
+            return;
+
+        await metricsContext.FilteredProjectViews.AddAsync(new FilteredProjectView
+        {
+            Id = Guid.NewGuid(),
+            FilterSessionId = filterSessionId,
+            ProjectId = projectId,
+            OpenedAtUtc = occurredAtUtc,
+        }, ct);
+
+        await metricsContext.SaveChangesAsync(ct);
+    }
+
     public async Task RebuildOpenCohortsRetentionAsync(CancellationToken ct)
     {
         var userRetentionStates = await metricsContext.UserRetentionStates.ToListAsync(ct);
