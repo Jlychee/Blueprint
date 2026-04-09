@@ -1,6 +1,6 @@
 ﻿const projects = [
     {
-        id: 'vibik',
+        id: 1,
         title: "Vibik",
         description: "Приложение с фото-заданиями, которое мотивирует выйти из рутины и прогуляться.",
         stack: [
@@ -12,7 +12,7 @@
     },
 
     {
-        id: 'matmeh-maps',
+        id: 2,
         title: "Матмех мэпс",
         description: "Приложение — навигатор по матмеху",
         stack: [
@@ -24,7 +24,7 @@
     },
 
     {
-        id: 'stud-compas',
+        id: 3,
         title: "СтудКомпас",
         description: "Приложение — навигатор по матмеху",
         stack: [
@@ -35,7 +35,7 @@
         ]
     },
     {
-        id: 'vibik',
+        id: 1,
         title: "Vibik",
         description: "Приложение с фото-заданиями, которое мотивирует выйти из рутины и прогуляться.",
         stack: [
@@ -47,7 +47,7 @@
     },
 
     {
-        id: 'matmeh-maps',
+        id: 2,
         title: "Матмех мэпс",
         description: "Приложение — навигатор по матмеху",
         stack: [
@@ -59,7 +59,7 @@
     },
 
     {
-        id: 'stud-compas',
+        id: 3,
         title: "СтудКомпас",
         description: "Приложение — навигатор по матмеху",
         stack: [
