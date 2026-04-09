@@ -19,7 +19,10 @@ public class ProjectController(IMediator mediator) : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetProject(int id)
     {
-        var result = await mediator.Send(new GetProjectQuery(id));
+        if (!Guid.TryParse(Request.Cookies["metric_user_id"],out var metricId))
+            metricId = Guid.Empty;
+        
+        var result = await mediator.Send(new GetProjectQuery(id,metricId));
         return Ok(result);
     }
 }
