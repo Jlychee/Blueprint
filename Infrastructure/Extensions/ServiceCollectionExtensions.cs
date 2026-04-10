@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,12 +23,6 @@ public static class ServiceCollectionExtensions
         builder.Services.AddDbContext<ProjectContext>((sp, options) =>
         {
             options.UseNpgsql(connectionString);
-
-            if (env.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging()
-                    .LogTo(Console.WriteLine, LogLevel.Information);
-            }
         });
 
         builder.Services.AddDbContext<MetricsContext>((sp, options) =>

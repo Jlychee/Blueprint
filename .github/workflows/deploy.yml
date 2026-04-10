@@ -1,0 +1,50 @@
+name: .NET Tests
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request: 
+    branches: [ main, dev ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+
+      - name: Test
+        run: dotnet test --no-build --configuration Release --verbosity normal
+  deploy:
+    if: github.event_name == 'push'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+     - name: Deploy via SSH
+       uses: appleboy/ssh-action@v1 #выполняем команды на actionee
+       with:
+         host: ${{ secrets.HOST }}
+         username: ${{ secrets.USERNAME }}
+         key: ${{ secrets.SSH_KEY }}
+         port: ${{ secrets.PORT }}
+         debug: true
+         script: |
+           set -e 
+           cd ~/app
+           git fetch origin
+           git checkout ${{ github.ref_name }} || git checkout -b ${{ github.ref_name }} origin/${{ github.ref_name }}
+           git reset --hard origin/${{ github.ref_name }}
+           docker compose up -d --build
+           docker compose ps

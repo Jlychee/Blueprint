@@ -8,7 +8,7 @@ public class GetProjectHandle(IProjectRepository projectRepository,IMetricReposi
 {
     public async Task<FullProjectInfo?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetFullProjectInfoAsync(request.Id);
+        var project = await projectRepository.GetFullProjectInfoAsync(request.Id) ?? throw new KeyNotFoundException($"{request.Id}");
         if (project is null)
             return null;
 
