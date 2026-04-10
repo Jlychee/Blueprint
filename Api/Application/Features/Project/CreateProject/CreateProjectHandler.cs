@@ -1,4 +1,5 @@
 using MediatR;
+
 namespace Api.Application.Features.Project.CreateProject;
 
 public class CreateProjectHandler : IRequestHandler<CreateProjectModel, Guid>

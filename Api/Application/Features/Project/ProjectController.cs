@@ -1,5 +1,8 @@
 using Api.Application.Features.Project.CreateProject;
 using Api.Application.Features.Project.GetProject;
+using Api.Application.Features.Project.GetProjects;
+using Api.Application.Features.Project.GetTags;
+using Client.Models.Models.DTO;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +12,32 @@ namespace Api.Application.Features.Project;
 [Route("api/projects")]
 public class ProjectController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("create_project")]
-    public async Task<IActionResult> CreateProject([FromBody] CreateProjectModel model)
+
+    [HttpGet("project/{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProject(int id)
     {
-        var result = await mediator.Send(model);
+
+        var result = await mediator.Send(new GetProjectQuery(id));
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetProject(int id)
+    [HttpGet("projects")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetProjects([FromQuery] ProjectCatalogFilter filter)
     {
-        var result = await mediator.Send(new GetProjectQuery(id));
+        var result = await mediator.Send(new GetProjectsQuery(filter));
+        return Ok(result);
+    }
+
+    [HttpGet("tags")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetTask()
+    {
+        var result = await mediator.Send(new GetTagsQuery());
         return Ok(result);
     }
 }

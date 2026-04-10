@@ -8,13 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Client.Models\Client.Models.csproj" />
-      <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Client.Models\Client.Models.csproj"/>
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>
