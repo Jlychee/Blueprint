@@ -18,10 +18,17 @@ public class ProjectController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProject(int id)
     {
+      if (!Guid.TryParse(Request.Cookies["metric_user_id"],out var metricId))
+            metricId = Guid.Empty;
 
-        var result = await mediator.Send(new GetProjectQuery(id));
+        if (!Guid.TryParse(Request.Cookies["filter_session_id"],out var filterSessionId))
+            filterSessionId = Guid.Empty;
+
+        var result = await mediator.Send(new GetProjectQuery(id,metricId,filterSessionId));
+    
         if (result is null)
             return NotFound();
+            
         return Ok(result);
     }
 
@@ -42,9 +49,12 @@ public class ProjectController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetTags()
     {
         var result = await mediator.Send(new GetTagsQuery());
+        
         System.Console.WriteLine(result.Count);
+        
         if (result is null)
             return NotFound();
+
         return Ok(result);
     }
 }

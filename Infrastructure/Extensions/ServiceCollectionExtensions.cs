@@ -24,6 +24,18 @@ public static class ServiceCollectionExtensions
         {
             options.UseNpgsql(connectionString);
         });
+
+        builder.Services.AddDbContext<MetricsContext>((sp, options) =>
+        {
+            options.UseNpgsql(connectionString);
+
+            if (env.IsDevelopment())
+            {
+                options.EnableSensitiveDataLogging()
+                    .LogTo(Console.WriteLine, LogLevel.Information);
+            }
+        });
+
         return builder;
     }
 }
