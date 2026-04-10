@@ -14,7 +14,7 @@ public class TagSeeder
                 AppContext.BaseDirectory,
                 "Db",
                 "Seed",
-                "Data",
+                "SeedData",
                 "tag.json"
             );
 

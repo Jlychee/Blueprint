@@ -1,6 +1,5 @@
 using Api.Application.Common;
 using Infrastructure.Extensions;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +18,7 @@ var app = builder
   .Build()
   .InitializeDatabase();
 
-await app.EnsureDatabaseReadyAsync();
+// await app.EnsureDatabaseReadyAsync();
 
 
 if (app.Environment.IsDevelopment())
@@ -28,7 +27,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// app.UseOpenTelemetryPrometheusScrapingEndpoint();
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
 app.MapControllers();
 app.Run();
 

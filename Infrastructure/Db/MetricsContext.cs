@@ -1,8 +1,6 @@
 using Infrastructure.Entities;
-using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using File = Infrastructure.Entities.File;
 
 
 namespace Infrastructure.Db;
