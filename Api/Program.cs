@@ -13,7 +13,9 @@ builder
     .AddDatabase()
     .AddInfrastructureServices();
 
-var app = builder.Build();
+var app = builder
+    .Build()
+    .InitializeDatabase();
 
 if (app.Environment.IsDevelopment())
 {
@@ -22,4 +24,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
+
 app.Run();

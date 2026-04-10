@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
 
     public static WebApplicationBuilder AddInfrastructureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IProjectRepository, MockProjectRepository>();
+        builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
         builder.Services.AddScoped<ITagRepository, TagRepository>();
         builder.Services.AddScoped<IProjectTableParser, CsvProjectParser>();
 

@@ -30,7 +30,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         {
             await projectContext.Users.AddRangeAsync(newUsers, ct);
             await projectContext.SaveChangesAsync(ct);
-            
+
             foreach (var user in newUsers)
                 existingUsers[user.Name] = user.Id;
         }
@@ -68,44 +68,52 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             .Where(p => !existingProjects.Contains(p.Name))
             .ToList();
 
-        var entities = newProjects.Select(dto => new Project
+        foreach (var project in newProjects)
         {
-            Name = dto.Name,
-            DescriptionAi = dto.Description,
-            ShortDescriptionAi = dto.ShortDescription,
-            Year = dto.Year,
-            Semester = dto.Semester,
+            await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
 
-            File = dto.Files == null
-                ? null
-                : new File
-                {
-                    CustDev = dto.Files.CustDev,
-                    Description = dto.Files.Description,
-                    Mvp = dto.Files.Mvp,
-                    RoadMap = dto.Files.RoadMap,
-                    Product = dto.Files.Product,
-                },
-
-            TeamMembers = dto.TeamMembers.Select(m => new TeamMember
+            try
             {
-                UserId = existingUsers[m.UserName],
-                Role = m.Role ?? null,
-            }).ToList(),
-
-            ProjectTags = dto.Tags
-                .Select(t => t.Title)
-                .Where(title => existingTags.ContainsKey(title))
-                .Select(title => new ProjectTag
+                var entity = new Project
                 {
-                    TagId = existingTags[title],
-                }).ToList(),
-        }).ToList();
+                    Name = project.Name,
+                    DescriptionAi = project.Description,
+                    ShortDescriptionAi = project.ShortDescription,
+                    Year = project.Year,
+                    Semester = project.Semester,
+                    File = project.Files == null
+                        ? null
+                        : new File
+                        {
+                            CustDev = project.Files.CustDev,
+                            Description = project.Files.Description,
+                            Mvp = project.Files.Mvp,
+                            RoadMap = project.Files.RoadMap,
+                            Product = project.Files.Product,
+                        },
+                    TeamMembers = project.TeamMembers.Select(m => new TeamMember
+                    {
+                        UserId = existingUsers[m.UserName],
+                        Role = m.Role
+                    }).ToList(),
+                    ProjectTags = project.Tags
+                        .Where(t => existingTags.ContainsKey(t.Title))
+                        .Select(t => new ProjectTag
+                        {
+                            TagId = existingTags[t.Title]
+                        }).ToList()
+                };
 
-        if (entities.Count > 0)
-        {
-            await projectContext.AddRangeAsync(entities, ct);
-            await projectContext.SaveChangesAsync(ct);
+                projectContext.Projects.Add(entity);
+                await projectContext.SaveChangesAsync(ct);
+
+                await transaction.CommitAsync(ct);
+            }
+            catch
+            {
+                await transaction.RollbackAsync(ct);
+                throw;
+            }
         }
     }
 
@@ -144,8 +152,53 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             }).SingleOrDefaultAsync();
     }
 
-    public Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
+    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        var query = projectContext.Projects.AsQueryable();
+
+        if (filter.Year.HasValue)
+            query = query.Where(p => p.Year >= filter.Year.Value);
+
+        if (filter.Semester.HasValue)
+            query = query.Where(p => p.Semester == filter.Semester);
+
+        if (filter.TeamMemberCount.HasValue)
+            query = query.Where(p => p.TeamMembers.Count == filter.TeamMemberCount);
+
+        if (filter.TagIds?.Any() == true)
+        {
+            query = query.Where(p =>
+                filter.TagIds.All(tagId =>
+                    p.ProjectTags.Any(pt => pt.TagId == tagId)));
+        }
+
+        var total = await query.CountAsync(ct);
+
+        var items = await query
+            .OrderBy(p => p.Name)
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize)
+            .Select(p => new ProjectCardDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                ShortDescriptionAi = p.ShortDescriptionAi,
+                Tags = p.ProjectTags
+                    .Select(pt => new TagDto
+                    {
+                        Id = pt.TagId,
+                        Title = pt.Tag.Title,
+                        Icon = pt.Tag.Icon,
+                        Color = pt.Tag.Color,
+                    }).ToList(),
+            }).ToListAsync(ct);
+
+        return new PagedResultDto<ProjectCardDto>
+        {
+            Items = items,
+            TotalCount = total,
+            Page = filter.Page,
+            PageSize = filter.PageSize,
+        };
     }
 }
