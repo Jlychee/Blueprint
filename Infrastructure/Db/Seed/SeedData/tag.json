@@ -1,0 +1,394 @@
+﻿[
+  {
+    "Id": 1,
+    "Title": "windows",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 2,
+    "Title": "ios",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 3,
+    "Title": "android",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 4,
+    "Title": "macos",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 5,
+    "Title": "linux",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 6,
+    "Title": "cross-platform",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 7,
+    "Title": "kotlin",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 8,
+    "Title": "python",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 9,
+    "Title": "c++",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 10,
+    "Title": "c#",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 11,
+    "Title": "c",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 12,
+    "Title": "java",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 13,
+    "Title": "go",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 14,
+    "Title": "js",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 15,
+    "Title": "rust",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 16,
+    "Title": "ts",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 17,
+    "Title": "swift",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 18,
+    "Title": "jwt",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 19,
+    "Title": "oauth",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 20,
+    "Title": "asp.net",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 21,
+    "Title": "react",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 22,
+    "Title": "next",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 23,
+    "Title": "django",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 24,
+    "Title": "flask",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 25,
+    "Title": "fastapi",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 26,
+    "Title": "postgresql",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 27,
+    "Title": "mysql",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 28,
+    "Title": "sqlite",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 29,
+    "Title": "redis",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 30,
+    "Title": "elasticsearch",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 31,
+    "Title": "kafka",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 32,
+    "Title": "maui",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 33,
+    "Title": "qt",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 34,
+    "Title": "mongodb",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 35,
+    "Title": "xamarin",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 36,
+    "Title": "unity",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 37,
+    "Title": "godot",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 38,
+    "Title": "unreal engine",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 39,
+    "Title": "websocket",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 40,
+    "Title": "entity framework core",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 41,
+    "Title": "signalr",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 42,
+    "Title": "grafana",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 43,
+    "Title": "prometheus",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 44,
+    "Title": "docker",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 45,
+    "Title": "swagger",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 46,
+    "Title": "github actions",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 47,
+    "Title": "nginx",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 48,
+    "Title": "apache",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 49,
+    "Title": "web",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 50,
+    "Title": "bot",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 51,
+    "Title": "mobile",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 52,
+    "Title": "desktop",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 53,
+    "Title": "game",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 54,
+    "Title": "api",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 55,
+    "Title": "cli",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 56,
+    "Title": "library",
+    "Icon": null,
+    "Color": null,
+    "TagTypeId": 5
+  }
+]

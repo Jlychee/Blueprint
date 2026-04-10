@@ -7,7 +7,6 @@ using Infrastructure.Repositories.Interfaces;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using Infrastructure.Repositories.Mocks;
 
 namespace Api.Application.Common;
 
