@@ -34,6 +34,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
     public void Configure(EntityTypeBuilder<Project> builder)
     {
         builder.HasKey(x => x.Id);
+        
+        builder.Property(x => x.Id).ValueGeneratedOnAdd();
         builder.HasMany(p => p.TeamMembers)
             .WithOne(t => t.Project)
             .HasForeignKey(t => t.ProjectId)
