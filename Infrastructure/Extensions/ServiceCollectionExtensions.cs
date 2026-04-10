@@ -23,12 +23,6 @@ public static class ServiceCollectionExtensions
         builder.Services.AddDbContext<ProjectContext>((sp, options) =>
         {
             options.UseNpgsql(connectionString);
-
-            if (env.IsDevelopment())
-            {
-                options.EnableSensitiveDataLogging()
-                    .LogTo(Console.WriteLine, LogLevel.Information);
-            }
         });
         return builder;
     }
