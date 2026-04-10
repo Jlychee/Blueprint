@@ -10,6 +10,6 @@ public class GetProjectHandle(ITagRepository tagRepository) : IRequestHandler<Ge
     public async Task<List<TagGroupDto>> Handle(GetTagsQuery request, CancellationToken cancellationToken)
     {
         return await tagRepository.GetGroupedTagsAsync(cancellationToken)
-            ?? throw new Exception("getTags exception");        
+            ?? throw new KeyNotFoundException();
     }
 }

@@ -20,6 +20,8 @@ public class ProjectController(IMediator mediator) : ControllerBase
     {
 
         var result = await mediator.Send(new GetProjectQuery(id));
+        if (result is null)
+            return NotFound();
         return Ok(result);
     }
 
@@ -29,15 +31,20 @@ public class ProjectController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> GetProjects([FromQuery] ProjectCatalogFilter filter)
     {
         var result = await mediator.Send(new GetProjectsQuery(filter));
+        if (result is null)
+            return NotFound();
         return Ok(result);
     }
 
     [HttpGet("tags")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetTask()
+    public async Task<IActionResult> GetTags()
     {
         var result = await mediator.Send(new GetTagsQuery());
+        System.Console.WriteLine(result.Count);
+        if (result is null)
+            return NotFound();
         return Ok(result);
     }
 }
