@@ -30,9 +30,6 @@ appsettings.*.json
 *.DotSettings.user
 .vscode/
 
-Migrations/
-*.snapshot
-
 TestResults/
 *.trx
 *.coverage

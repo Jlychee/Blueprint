@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ProjectContext))]
-    [Migration("20260318015821_Init")]
+    [Migration("20260410074131_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -42,8 +42,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("character varying(500)");
 
                     b.Property<string>("Product")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)");
+                        .HasColumnType("text");
 
                     b.Property<string>("RoadMap")
                         .HasMaxLength(500)
@@ -83,9 +82,11 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Year", "Semester");
+
                     b.ToTable("Projects", t =>
                         {
-                            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (3,4)");
+                            t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
 
                             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
                         });
@@ -103,6 +104,8 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("TagId");
 
+                    b.HasIndex("ProjectId", "TagId");
+
                     b.ToTable("ProjectTags");
                 });
 
@@ -115,13 +118,15 @@ namespace Infrastructure.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Color")
-                        .IsRequired()
                         .HasMaxLength(7)
                         .HasColumnType("character varying(7)");
 
                     b.Property<string>("Icon")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
+
+                    b.Property<int>("TagTypeId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -130,7 +135,34 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("TagTypeId");
+
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.TagType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.HasIndex("Priority");
+
+                    b.ToTable("TagTypes");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.TeamMember", b =>
@@ -141,12 +173,14 @@ namespace Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Role")
+                    b.Property<int?>("Role")
                         .HasColumnType("integer");
 
                     b.HasKey("ProjectId", "UserId");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("ProjectId", "UserId");
 
                     b.ToTable("TeamMembers");
                 });
@@ -199,6 +233,17 @@ namespace Infrastructure.Migrations
                     b.Navigation("Tag");
                 });
 
+            modelBuilder.Entity("Infrastructure.Entities.Tag", b =>
+                {
+                    b.HasOne("Infrastructure.Entities.TagType", "TagType")
+                        .WithMany("Tags")
+                        .HasForeignKey("TagTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TagType");
+                });
+
             modelBuilder.Entity("Infrastructure.Entities.TeamMember", b =>
                 {
                     b.HasOne("Infrastructure.Entities.Project", "Project")
@@ -231,6 +276,11 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Infrastructure.Entities.Tag", b =>
                 {
                     b.Navigation("ProjectTags");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.TagType", b =>
+                {
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.User", b =>

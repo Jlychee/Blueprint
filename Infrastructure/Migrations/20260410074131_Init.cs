@@ -31,18 +31,17 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Tags",
+                name: "TagTypes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Icon = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: true)
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Priority = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.PrimaryKey("PK_TagTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +66,7 @@ namespace Infrastructure.Migrations
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     Mvp = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     RoadMap = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
-                    Product = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
+                    Product = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,6 +75,53 @@ namespace Infrastructure.Migrations
                         name: "FK_Files_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    Icon = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    Color = table.Column<string>(type: "character varying(7)", maxLength: 7, nullable: true),
+                    TagTypeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tags_TagTypes_TagTypeId",
+                        column: x => x.TagTypeId,
+                        principalTable: "TagTypes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TeamMembers",
+                columns: table => new
+                {
+                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false),
+                    Role = table.Column<int>(type: "integer", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TeamMembers", x => new { x.ProjectId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_TeamMembers_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TeamMembers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -104,35 +150,40 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "TeamMembers",
-                columns: table => new
-                {
-                    ProjectId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TeamMembers", x => new { x.ProjectId, x.UserId });
-                    table.ForeignKey(
-                        name: "FK_TeamMembers_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TeamMembers_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Projects_Year_Semester",
+                table: "Projects",
+                columns: new[] { "Year", "Semester" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProjectTags_ProjectId_TagId",
+                table: "ProjectTags",
+                columns: new[] { "ProjectId", "TagId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectTags_TagId",
                 table: "ProjectTags",
                 column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_TagTypeId",
+                table: "Tags",
+                column: "TagTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TagTypes_Name",
+                table: "TagTypes",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TagTypes_Priority",
+                table: "TagTypes",
+                column: "Priority");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TeamMembers_ProjectId_UserId",
+                table: "TeamMembers",
+                columns: new[] { "ProjectId", "UserId" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_TeamMembers_UserId",
@@ -160,6 +211,9 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "TagTypes");
         }
     }
 }
