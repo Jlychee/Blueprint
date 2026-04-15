@@ -19,8 +19,9 @@
 
 
 /* BODY */
-
 body {
+    padding-top: 70px;
+
     background: var(--bg);
     color: var(--text);
     font-family: Raleway, sans-serif;
@@ -48,4 +49,20 @@ a {
 
 img {
     display: block;
+}
+
+/* FOOTER */
+
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Raleway, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
