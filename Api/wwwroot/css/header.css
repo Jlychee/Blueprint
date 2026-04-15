@@ -75,3 +75,55 @@
     height: 24px;
 }
 
+@media (max-width: 768px) {
+    .header {
+        height: auto;
+    }
+    .header-row {
+        min-height: 100px;
+        gap: 14px;
+    }
+
+    .logo {
+        gap: 12px;
+    }
+
+    .logo img {
+        width: 36px;
+        height: 46px;
+    }
+
+    .logo-text {
+        font-size: 16px;
+    }
+
+    .nav {
+        gap: 8px;
+    }
+}
+@media (max-width: 520px) {
+    .header-row {
+        flex-wrap: nowrap;
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    .logo {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .nav-button span {
+        display: none;
+    }
+
+    .nav-button {
+        padding: 6px;
+        gap: 0;
+    }
+}

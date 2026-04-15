@@ -21,62 +21,73 @@ body {
 /* SEARCH */
 
 .search-section {
-    margin-top: 80px;
+    margin-top: 0;
+    padding-top: 80px;
 }
-.search-section.active {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: all;
-}
+
 .search-row {
     display: flex;
     gap: 20px;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
 .filter-btn {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 0 20px;
+    min-height: 48px;
     border-radius: 30px;
-    height: 48px;
-
     border: none;
     font-family: Raleway, sans-serif;
     font-size: 16px;
     background: #111;
     color: white;
     cursor: pointer;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.filter-btn img {
+    flex-shrink: 0;
 }
 
 .search {
-    height: 48px;
+    min-height: 48px;
     padding: 0 20px;
-
     display: flex;
     align-items: center;
-
     background: white;
-
     border-radius: 30px;
-
     flex: 1;
+    min-width: 0;
 }
 
 .search-icon {
     width: 18px;
     margin-right: 10px;
+    flex-shrink: 0;
 }
+
 .search label {
     display: flex;
     flex: 1;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
 }
+
 .search input {
     border: none;
     outline: none;
     flex: 1;
+    width: 100%;
+    height: 100%;
     font-size: 16px;
+    background: transparent;
+    min-width: 0;
 }
 
 .clear {
@@ -86,12 +97,12 @@ body {
     border: none;
     background: none;
     display: none;
+    flex-shrink: 0;
 }
 
 .clear.active {
     display: block;
 }
-
 /* PROJECTS */
 
 .projects {
@@ -149,4 +160,80 @@ body {
 .icons img {
     width: 26px;
     height: 26px;
+}
+
+@media (max-width: 900px) {
+    .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+    .search-section {
+        margin-top: 0;
+        padding-top: 60px;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .search-row {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .filter-btn,
+    .search {
+        margin-top: 0;
+    }
+
+    .projects {
+        margin-top: 36px;
+    }
+}
+
+@media (max-width: 560px) {
+    .container {
+        padding: 0 14px;
+    }
+
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .card {
+        min-height: auto;
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .card h3 {
+        font-size: 18px;
+    }
+
+    .card p {
+        font-size: 14px;
+    }
+
+    .search {
+        min-height: 44px;
+        padding: 0 14px;
+    }
+
+    .search input {
+        font-size: 14px;
+    }
+
+    .filter-btn {
+        min-height: 44px;
+        width: 44px;
+        min-width: 44px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50%;
+    }
+
+    .filter-btn span {
+        display: none;
+    }
 }
