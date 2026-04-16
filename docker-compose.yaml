@@ -13,8 +13,8 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./Infrastructure/Db/Seed/SeedData/tag.json:/etc/Seed/SeedData/tag.json:ro
-      - ./Infrastructure/Db/Seed/SeedData/tagTypes.json:/etc/Seed/SeedData/tagTypes.json:ro
+      - ./etc/SeedData/tag.json:/etc/SeedData/tag.json:ro
+      - ./etc/SeedData/tagTypes.json:/etc/SeedData/tagTypes.json:ro
   db:
     image: postgres:15
     env_file:

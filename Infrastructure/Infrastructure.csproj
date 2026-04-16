@@ -13,13 +13,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.5"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <Content Include="Db\Seed\Data\**\*.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </Content>
-    </ItemGroup>
-
+    
     <ItemGroup>
         <ProjectReference Include="..\Client.Models\Client.Models.csproj"/>
     </ItemGroup>

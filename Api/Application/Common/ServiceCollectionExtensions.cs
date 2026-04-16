@@ -4,6 +4,7 @@ using Infrastructure.Parsers;
 using Infrastructure.Parsers.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Interfaces;
+using Infrastructure.Repositories.Mocks;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
