@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Проект</title>
+    <link rel="stylesheet" href="css/linkOverlay.css">
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/project.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/footer.css">
+
+    <link rel="icon" type="image/svg" href="resources/images/logo.svg">
+
+</head>
+
+<body>
+
+<div id="header"></div>
+
+<section class="project-page">
+    <div class="container">
+        <div class="project-card">
+            <div class="navigation-wrapper">
+                <nav class="navigation">
+                    <ul class="navigation-objs">
+                        <li>
+                            <a href="index.html">
+                                <img src="resources/images/close.svg" alt="закрыть страницу проекта">
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" onclick="openOverlay()">
+                                <img src="resources/images/share.svg" alt="поделиться">
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="project-header">
+                <h1 class="project-title" id="project-title"></h1>
+            </div>
+
+            <div class="tabs">
+
+                <button class="tab-btn active" data-tab="short">
+                    Краткое описание
+                </button>
+
+                <button class="tab-btn" data-tab="custdev">
+                    CustDev
+                </button>
+
+                <button class="tab-btn" data-tab="description">
+                    Описание идеи
+                </button>
+
+                <button class="tab-btn" data-tab="mvp">
+                    MVP
+                </button>
+
+                <button class="tab-btn" data-tab="roadmap">
+                    RoadMap
+                </button>
+
+                <button class="tab-btn" data-tab="pivot">
+                    Пивот
+                </button>
+                <button class="tab-btn" data-tab="product">
+                    Продукт
+                </button>
+
+            </div>
+
+            <div class="tabs-content" id="tabs-content">
+
+                <div class="tab active" id="short">
+                    <p id="short-description"></p>
+                    <div class="project-stack">
+                        <h3>Стек:</h3>
+
+                        <div class="icons">
+                            <div class="icon-item">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg"
+                                     alt="питон">
+                                <span class="icon-label">Python</span>
+                            </div>
+                            <div class="icon-item">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg"
+                                     alt="сишарп">
+                                <span class="icon-label">C#</span>
+                            </div>
+                            <div class="icon-item">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"
+                                     alt="постгре скуэль">
+                                <span class="icon-label">PostgreSQL</span>
+                            </div>
+                            <div class="icon-item">
+                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg"
+                                     alt="докер">
+                                <span class="icon-label">Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <div class="table-caption">
+                            <h3>Информация о времени создания проекта:</h3>
+                        </div>
+
+                        <table class="info-table">
+                            <thead>
+                            <tr>
+                                <th>Год создания</th>
+                                <td><p id="year"></p></td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th>Семестр</th>
+                                <td><p id="semester"></p></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<script src="js/header.js"></script>
+<script type="module" src="js/project.js"></script>
+<script src="js/tabs.js"></script>
+<script src="js/linkOverlay.js" defer></script>
+<div id="footer"></div>
+<script src="js/footer.js"></script>
+
+</body>
+</html>

@@ -17,81 +17,17 @@ body {
 }
 
 
-/* HEADER */
-
-.header {
-    background: black;
-    position: sticky;
-}
-
-.header-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 100px;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 59px;
-}
-
-.logo img {
-    width: 52.51px;
-    height: 68.22px;
-}
-
-.logo-text {
-    font-size: 25px;
-    color: #9D6A69;
-    font-weight: 50;
-}
-
-.nav {
-    display: flex;
-    gap: 40px;
-}
-
-.nav a {
-    color: #C3C3C3;
-    text-decoration: none;
-    font-size: 18px;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.profile img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-}
-
-.nav-link, .my-project {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    text-decoration: none;
-    color: black;
-    padding: 4px 8px;
-    font-size: 14px;
-}
-
-.nav-link img, .my-project img {
-    display: block;
-}
-
 
 /* SEARCH */
 
 .search-section {
     margin-top: 80px;
 }
-
+.search-section.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+}
 .search-row {
     display: flex;
     gap: 20px;
@@ -102,25 +38,28 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-
-    padding: 13px 20px;
-
+    padding: 0 20px;
     border-radius: 30px;
-    border: none;
+    height: 48px;
 
-    background: white;
+    border: none;
+    font-family: Raleway, sans-serif;
+    font-size: 16px;
+    background: #111;
+    color: white;
     cursor: pointer;
 }
 
 .search {
+    height: 48px;
+    padding: 0 20px;
+
     display: flex;
     align-items: center;
 
     background: white;
 
     border-radius: 30px;
-
-    padding: 10px 20px;
 
     flex: 1;
 }
@@ -129,13 +68,14 @@ body {
     width: 18px;
     margin-right: 10px;
 }
-
+.search label {
+    display: flex;
+    flex: 1;
+}
 .search input {
     border: none;
     outline: none;
-
     flex: 1;
-
     font-size: 16px;
 }
 
@@ -143,8 +83,14 @@ body {
     cursor: pointer;
     font-size: 20px;
     color: gray;
+    border: none;
+    background: none;
+    display: none;
 }
 
+.clear.active {
+    display: block;
+}
 
 /* PROJECTS */
 

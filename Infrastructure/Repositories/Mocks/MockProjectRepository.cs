@@ -12,13 +12,21 @@ public class MockProjectRepository : IProjectRepository
 
     public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)
     {
+        var files = new FileDto
+        {
+            CustDev = new Uri("http://localhost:5000"),
+            Description = new Uri("http://localhost:5000"),
+            Mvp = new Uri("http://localhost:5000"),
+            RoadMap = new Uri("http://localhost:5000"),
+            Product = [new Uri("http://localhost:5000"), new Uri("http://localhost:5000")]
+        };
         var project = new FullProjectInfo
         {
             Name = "Test Project",
             Description = "Test Description",
             Year = 2020,
             Semester = 2,
-            Files = new FileDto(),
+            Files = files,
             Id = 1,
             ShortDescription = "Short Description"
         };
