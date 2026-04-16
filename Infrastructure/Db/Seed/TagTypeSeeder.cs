@@ -10,7 +10,12 @@ public class TagTypeSeeder
     {
         if (!context.TagTypes.Any())
         {
-            var path = "/etc/Seed/SeedData/tagTypes.json";
+            var path = Path.Combine(
+                "..",
+                "etc",
+                "SeedData",
+                "tagTypes.json"
+            );
 
             var json = File.ReadAllText(path);
             var tagTypes = JsonSerializer.Deserialize<List<TagType>>(json) ?? [];
