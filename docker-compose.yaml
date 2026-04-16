@@ -7,8 +7,8 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-      ASPNETCORE__URLS: ${ASPNETCORE__URLS}
-      ASPNETCORE__ENVIRONMENT: ${ASPNETCORE__ENVIRONMENT}
+      ASPNETCORE_URLS: ${ASPNETCORE__URLS}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE__ENVIRONMENT}
     depends_on:
       db:
         condition: service_healthy
