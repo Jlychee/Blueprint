@@ -5,7 +5,7 @@
     <title>Project Blueprint</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/base.css">
-
+    <link rel="stylesheet" href="css/filters.css">
     <link rel="icon" type="image/svg" href="resources/images/logo.svg">
 </head>
 
@@ -36,29 +36,30 @@
     </div>
 </section>
 
-
-<section class="projects">
-    <div class="container">
-
-        <div class="projects-grid" id="projects-grid"></div>
-
-        <template id="project-card-template">
-            <a class="card">
-                <h1 class="project-title"></h1>
-                <p class="project-description"></p>
-
-                <div class="stack">
-                    <span>Стек:</span>
-                    <div class="icons"></div>
-                </div>
-            </a>
-        </template>
-
+<div class="container">
+    <div class="main-layout">
+        <div id="filters-container"></div>
+        <section class="projects">
+            <div class="projects-grid" id="projects-grid"></div>
+            <template id="project-card-template">
+                <a class="card">
+                    <h1 class="project-title"></h1>
+                    <p class="project-description"></p>
+    
+                    <div class="stack">
+                        <span>Стек:</span>
+                        <div class="icons"></div>
+                    </div>
+                </a>
+            </template>
+        </section>
     </div>
-</section>
+</div>   
+
+
 <script src="js/projects.js"></script>
 <script src="js/header.js"></script>
-
+<script src="js/filters.js"></script>
 
 </body>
 </html>
