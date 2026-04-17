@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -15,14 +16,34 @@ namespace Infrastructure.Migrations.Metrics
                 name: "FilteredProjectViews",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     FilterSessionId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    HasFilter = table.Column<bool>(type: "boolean", nullable: false),
                     OpenedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_FilteredProjectViews", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FilteredViews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FilterSessionId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Page = table.Column<int>(type: "integer", nullable: false),
+                    Filter = table.Column<string>(type: "jsonb", nullable: true),
+                    OpenedAtUtc = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FilteredViews", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,6 +82,11 @@ namespace Infrastructure.Migrations.Metrics
                 name: "IX_FilteredProjectViews_FilterSessionId",
                 table: "FilteredProjectViews",
                 column: "FilterSessionId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FilteredViews_FilterSessionId",
+                table: "FilteredViews",
+                column: "FilterSessionId");
         }
 
         /// <inheritdoc />
@@ -68,6 +94,9 @@ namespace Infrastructure.Migrations.Metrics
         {
             migrationBuilder.DropTable(
                 name: "FilteredProjectViews");
+
+            migrationBuilder.DropTable(
+                name: "FilteredViews");
 
             migrationBuilder.DropTable(
                 name: "RetentionByCohorts");
