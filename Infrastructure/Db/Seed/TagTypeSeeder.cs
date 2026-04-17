@@ -11,10 +11,9 @@ public class TagTypeSeeder
         if (!context.TagTypes.Any())
         {
             var path = Path.Combine(
-                AppContext.BaseDirectory,
-                "Db",
-                "Seed",
-                "Data",
+                "..",
+                "etc",
+                "SeedData",
                 "tagTypes.json"
             );
 

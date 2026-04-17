@@ -11,12 +11,12 @@ public class TagSeeder
         if (!context.Tags.Any())
         {
             var path = Path.Combine(
-                AppContext.BaseDirectory,
-                "Db",
-                "Seed",
-                "Data",
+                "..",
+                "etc",
+                "SeedData",
                 "tag.json"
             );
+            
 
             var json = File.ReadAllText(path);
             var tags = JsonSerializer.Deserialize<List<Tag>>(json) ?? [];

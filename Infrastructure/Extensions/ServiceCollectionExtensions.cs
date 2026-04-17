@@ -23,6 +23,11 @@ public static class ServiceCollectionExtensions
         builder.Services.AddDbContext<ProjectContext>((sp, options) =>
         {
             options.UseNpgsql(connectionString);
+        });
+
+        builder.Services.AddDbContext<MetricsContext>((sp, options) =>
+        {
+            options.UseNpgsql(connectionString);
 
             if (env.IsDevelopment())
             {
@@ -30,6 +35,7 @@ public static class ServiceCollectionExtensions
                     .LogTo(Console.WriteLine, LogLevel.Information);
             }
         });
+
         return builder;
     }
 }
