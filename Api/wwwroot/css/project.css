@@ -29,6 +29,7 @@
     font-size: 64px;
     margin-bottom: 50px;
     text-align: center;
+    word-break: break-word;
 }
 .stack-empty {
     font-size: 24px;
@@ -44,6 +45,8 @@
     display: flex;
     gap: 76px;
     margin-bottom: 50px;
+    overflow-x: auto;
+    scrollbar-width: thin;
 }
 
 .tab-btn {
@@ -57,7 +60,7 @@
 .tab-btn.active {
     background: #191919;
     border-radius: 12549.8px;
-    padding: 19px 16px 19px 16px;
+    padding: 19px 16px;
 }
 
 .tabs-content {
@@ -105,7 +108,7 @@
     backdrop-filter: blur(10px);
     border-radius: 24px;
     width: fit-content;
-    max-width: 95vw;
+    max-width: 100%;
 }
 
 .table-caption {
@@ -171,7 +174,6 @@
     padding: 0;
     font-weight: 700;
     background: white;
-    -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
     display: inline-block;
