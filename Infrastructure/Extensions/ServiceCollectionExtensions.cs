@@ -22,12 +22,14 @@ public static class ServiceCollectionExtensions
 
         builder.Services.AddDbContext<ProjectContext>((sp, options) =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(connectionString, x =>
+                x.MigrationsHistoryTable("__EFMigrationsHistory_Project"));
         });
 
         builder.Services.AddDbContext<MetricsContext>((sp, options) =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(connectionString, x =>
+                x.MigrationsHistoryTable("__EFMigrationsHistory_Metrics"));
 
             if (env.IsDevelopment())
             {
