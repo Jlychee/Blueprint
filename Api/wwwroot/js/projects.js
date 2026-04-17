@@ -97,6 +97,13 @@ function renderProjects(items) {
         container.appendChild(clone);
     });
 }
+function hasActiveFilters() {
+    return Boolean(
+        state.search ||
+        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
+        state.year
+    );
+}
 
 async function loadProjects() {
     const container = document.getElementById('projects-grid');
@@ -106,6 +113,14 @@ async function loadProjects() {
     }
 
     try {
+        let filterSessionId;
+
+        if (hasActiveFilters()) {
+            getOrCreateFilterSessionId();
+        } else {
+            getOrCreateFilterSessionId(true); 
+        }
+        
         const data = await getAllProjects({
             search: state.search,
             tagIds: state.tagIds,
