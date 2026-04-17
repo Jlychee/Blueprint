@@ -25,13 +25,13 @@ function getOrCreateUserMetricId() {
     return id;
 }
 
-function deleteFilterSessionId() {
-    document.cookie = "filterSessionId=; max-age=0; path=/";
+function deleteFilterSessionId(name) {
+    document.cookie = `f${name}=; max-age=0; path=/`;
 }
 
 function getOrCreateFilterSessionId(needReset = false) {
     if (needReset) {
-        deleteFilterSessionId()
+        deleteFilterSessionId('filter_session_id')
     } else {
         let id = getCookie('filter_session_id');
 
