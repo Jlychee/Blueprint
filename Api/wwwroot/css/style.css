@@ -274,6 +274,42 @@ body.filters-open {
     color: #ffb3b3;
     font-size: 18px;
 }
+.projects-pagination {
+    margin-top: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+}
+
+.pagination-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    background: #111;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: #181818;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.pagination-info {
+    min-width: 140px;
+    text-align: center;
+    color: #C3C3C3;
+    font-size: 15px;
+}
 
 @media (max-width: 900px) {
     .projects-grid {

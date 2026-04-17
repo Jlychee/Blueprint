@@ -1,12 +1,9 @@
-﻿const API_BASE_URL = 'http://localhost';
-
-console.log('projectApi.js loaded');
-console.log('project API_BASE_URL =', API_BASE_URL);
+﻿console.log('projectApi.js loaded');
 console.log('project window.location.origin =', window.location.origin);
 
 function buildUrl(path, params = new URLSearchParams()) {
     const query = params.toString();
-    return `${API_BASE_URL}${path}${query ? `?${query}` : ''}`;
+    return `${path}${query ? `?${query}` : ''}`;
 }
 
 async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {

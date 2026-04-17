@@ -13,16 +13,6 @@ builder
     .AddApplicationServices()
     .AddDatabase()
     .AddInfrastructureServices();
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontendDev", policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:63342")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
 
 var app = builder
   .Build()

@@ -2,13 +2,14 @@
 
 const PAGE_SIZE = 9;
 const AVAILABLE_YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
-
 const state = {
     search: '',
     tagIds: [],
     year: null,
     page: 1,
-    pageSize: PAGE_SIZE
+    pageSize: PAGE_SIZE,
+    totalPages: 1,
+    totalCount: 0
 };
 
 let baseInitialized = false;
@@ -17,7 +18,24 @@ let searchDebounce = null;
 
 console.log('projects.js loaded');
 console.log('window.location.origin =', window.location.origin);
+function renderPagination() {
+    const pagination = document.getElementById('projects-pagination');
+    const prevBtn = document.getElementById('pagination-prev');
+    const nextBtn = document.getElementById('pagination-next');
+    const info = document.getElementById('pagination-info');
 
+    if (!pagination || !prevBtn || !nextBtn || !info) return;
+
+    const totalPages = Math.max(state.totalPages || 1, 1);
+    const currentPage = Math.min(state.page, totalPages);
+
+    info.textContent = `Страница ${currentPage} из ${totalPages}`;
+
+    prevBtn.disabled = currentPage <= 1;
+    nextBtn.disabled = currentPage >= totalPages;
+
+    pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+}
 function createTagChip(tag) {
     if (tag.icon) {
         const img = document.createElement('img');
@@ -96,13 +114,48 @@ async function loadProjects() {
             pageSize: state.pageSize
         });
 
+        state.page = data.page ?? state.page;
+        state.totalPages = data.totalPages ?? 1;
+        state.totalCount = data.totalCount ?? 0;
+
         renderProjects(data.items || []);
+        renderPagination();
     } catch (error) {
         console.error('Error loading projects:', error);
 
         if (container) {
             container.innerHTML = `<div class="projects-error">Не удалось загрузить проекты.</div>`;
         }
+
+        state.totalPages = 1;
+        renderPagination();
+    }
+}
+
+function bindPagination() {
+    const prevBtn = document.getElementById('pagination-prev');
+    const nextBtn = document.getElementById('pagination-next');
+
+    if (prevBtn && prevBtn.dataset.bound !== 'true') {
+        prevBtn.dataset.bound = 'true';
+
+        prevBtn.addEventListener('click', () => {
+            if (state.page <= 1) return;
+
+            state.page -= 1;
+            loadProjects();
+        });
+    }
+
+    if (nextBtn && nextBtn.dataset.bound !== 'true') {
+        nextBtn.dataset.bound = 'true';
+
+        nextBtn.addEventListener('click', () => {
+            if (state.page >= state.totalPages) return;
+
+            state.page += 1;
+            loadProjects();
+        });
     }
 }
 
@@ -264,6 +317,7 @@ function initProjectCatalog() {
     if (!baseInitialized) {
         baseInitialized = true;
         bindSearch();
+        bindPagination();
         loadProjects();
     }
 
