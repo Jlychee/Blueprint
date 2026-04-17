@@ -113,8 +113,6 @@ async function loadProjects() {
     }
 
     try {
-        let filterSessionId;
-
         if (hasActiveFilters()) {
             getOrCreateFilterSessionId();
         } else {

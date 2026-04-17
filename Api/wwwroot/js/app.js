@@ -25,15 +25,24 @@ function getOrCreateUserMetricId() {
     return id;
 }
 
-function getOrCreateFilterSessionId(needReset = false) {
-    let id = getCookie('filter_session_id');
+function deleteFilterSessionId() {
+    document.cookie = "filterSessionId=; max-age=0; path=/";
+}
 
-    if (needReset || !id) {
-        id = generateId();
-        setCookie('filter_session_id', id, 1);
+function getOrCreateFilterSessionId(needReset = false) {
+    if (needReset) {
+        deleteFilterSessionId()
+    } else {
+        let id = getCookie('filter_session_id');
+
+        if (needReset || !id) {
+            id = generateId();
+            setCookie('filter_session_id', id, 1);
+        }
+
+        return id;
     }
 
-    return id;
 }
 
 
