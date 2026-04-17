@@ -8,21 +8,25 @@ public class TagSeeder
 {
     public static void Seed(ProjectContext context)
     {
-        if (!context.Tags.Any())
-        {
-            var path = Path.Combine(
-                "..",
-                "etc",
-                "SeedData",
-                "tag.json"
-            );
-            
+        var path = Path.Combine(
+            "..",
+            "etc",
+            "SeedData",
+            "tag.json"
+        );
 
-            var json = File.ReadAllText(path);
-            var tags = JsonSerializer.Deserialize<List<Tag>>(json) ?? [];
-            
-            context.Tags.AddRange(tags);
-            context.SaveChanges();
+
+        var json = File.ReadAllText(path);
+        var tags = JsonSerializer.Deserialize<List<Tag>>(json) ?? [];
+
+        foreach (var tag in tags)
+        {
+            var exists = context.Tags.Any(t => t.Title == tag.Title);
+
+            if (!exists)
+                context.Tags.Add(tag);
         }
+
+        context.SaveChanges();
     }
 }
