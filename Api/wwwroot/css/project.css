@@ -30,6 +30,15 @@
     margin-bottom: 50px;
     text-align: center;
 }
+.stack-empty {
+    font-size: 24px;
+    line-height: 1.4;
+    color: #c3c3c3;
+    min-height: auto;
+    display: block;
+    text-align: left;
+    min-width: 220px;
+}
 
 .tabs {
     display: flex;
@@ -189,18 +198,19 @@
 }
 
 .icons {
-    display: flex;
-    gap: 30px;
-    margin-top: 28px;
-    flex-wrap: wrap;
-    justify-content: left;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(92px, 92px));
+    gap: 24px;
+    justify-content: start;
+
 }
 
 .icon-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    text-align: center;
+    gap: 10px;
 }
 
 .icons img {
@@ -232,4 +242,89 @@
 .icon-item:hover .icon-label {
     opacity: 1;
     transform: translateY(0);
+}
+.product-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    margin-top: 16px;
+    text-align: center;
+}
+
+.product-empty-state__text {
+    margin: 0;
+    max-width: 420px;
+    line-height: 1.5;
+    color: #ffffff;
+}
+
+.product-empty-state__text span {
+    font-weight: 600;
+    color: #9D6A69;
+}
+
+.product-empty-state__image {
+    width: 180px;
+    height: auto;
+    opacity: 0.95;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
+    animation: bunnyFloat 2.8s ease-in-out infinite;
+}
+
+@keyframes bunnyFloat {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+.members-section {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}
+
+.members-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px 56px;
+}
+
+.member-card {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-width: 0;
+}
+
+.member-avatar {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.member-name {
+    font-size: 22px;
+    font-weight: inherit;
+    font-family: inherit;
+    word-break: break-word;
+}
+
+@media (max-width: 1100px) {
+    .members-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 28px 40px;
+    }
+}
+
+@media (max-width: 700px) {
+    .members-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
 }
