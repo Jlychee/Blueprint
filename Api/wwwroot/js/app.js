@@ -26,7 +26,7 @@ function getOrCreateUserMetricId() {
 }
 
 function deleteFilterSessionId(name) {
-    document.cookie = `f${name}=; max-age=0; path=/`;
+    document.cookie = `${name}=; max-age=0; path=/`;
 }
 
 function getOrCreateFilterSessionId(needReset = false) {
