@@ -22,6 +22,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.InitializeDatabase();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
