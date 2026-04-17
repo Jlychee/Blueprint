@@ -1,8 +1,7 @@
 function initSearchAndFilter() {
     const input = document.getElementById('search-input');
-    const clearBtn = document.querySelector('.clear');
+    const clearBtn = document.getElementById('filters-close');
     const layout = document.getElementById('catalog-layout');
-    const filterButtons = document.querySelectorAll('.filter-btn, #filter');
 
     if (input && clearBtn && input.dataset.searchInitialized !== 'true') {
         input.dataset.searchInitialized = 'true';
@@ -23,22 +22,19 @@ function initSearchAndFilter() {
         toggleClear();
     }
 
-    if (layout) {
-        filterButtons.forEach((button) => {
-            if (button.dataset.filtersBound === 'true') return;
+    if (!layout) return;
 
-            button.dataset.filtersBound = 'true';
-            button.addEventListener('click', () => {
+    if (!document.body.dataset.filtersBound) {
+        document.body.dataset.filtersBound = 'true';
+
+        document.addEventListener('click', (event) => {
+            if (event.target.closest('.filter-btn') || event.target.closest('#filter')) {
                 layout.classList.toggle('filters-open');
-            });
-        });
-    }
+            }
 
-    const closeBtn = document.getElementById('filters-close');
-    if (closeBtn && layout && closeBtn.dataset.filtersBound !== 'true') {
-        closeBtn.dataset.filtersBound = 'true';
-        closeBtn.addEventListener('click', () => {
-            layout.classList.remove('filters-open');
+            if (event.target.closest('#filters-close')) {
+                layout.classList.remove('filters-open');
+            }
         });
     }
 }
