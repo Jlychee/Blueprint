@@ -8,7 +8,7 @@ namespace Api.Application.Features.Metric;
 [Route("api/metrics")]
 public class MetricController(IMediator mediator) : ControllerBase
 {
-    [HttpPost("rebuild_open_cohorts_retention")]
+    [HttpGet("rebuild_open_cohorts_retention")]
     public async Task<IActionResult> RebuildOpenCohortsRetention()
     {
         await mediator.Send(new RebuildOpenCohortsRetentionCommand());

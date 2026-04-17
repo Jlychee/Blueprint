@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations.Metrics
 {
     [DbContext(typeof(MetricsContext))]
-    [Migration("20260417064709_InitMetrics")]
+    [Migration("20260417135815_InitMetrics")]
     partial class InitMetrics
     {
         /// <inheritdoc />
@@ -27,12 +27,17 @@ namespace Infrastructure.Migrations.Metrics
 
             modelBuilder.Entity("Infrastructure.Entities.FilteredProjectView", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<Guid>("FilterSessionId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("HasFilter")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("OpenedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -40,11 +45,44 @@ namespace Infrastructure.Migrations.Metrics
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
                     b.HasIndex("FilterSessionId");
 
                     b.ToTable("FilteredProjectViews");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.FilteredView", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Filter")
+                        .HasColumnType("jsonb");
+
+                    b.Property<Guid>("FilterSessionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("OpenedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Page")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilterSessionId");
+
+                    b.ToTable("FilteredViews");
                 });
 
             modelBuilder.Entity("Infrastructure.Entities.RetentionByCohort", b =>

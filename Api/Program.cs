@@ -14,19 +14,15 @@ builder
     .AddDatabase()
     .AddInfrastructureServices();
 
-var app = builder
-  .Build()
-  .InitializeDatabase();
-
-// await app.EnsureDatabaseReadyAsync();
-
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseCors("FrontendDev");
+
+app.InitializeDatabase();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
