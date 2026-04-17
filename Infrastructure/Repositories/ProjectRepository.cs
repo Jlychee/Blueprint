@@ -168,8 +168,9 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         if (filter.TagIds?.Any() == true)
         {
             query = query.Where(p =>
-                filter.TagIds.All(tagId =>
-                    p.ProjectTags.Any(pt => pt.TagId == tagId)));
+                p.ProjectTags
+                    .Count(pt => filter.TagIds.Contains(pt.TagId)) == filter.TagIds.Count
+            );
         }
 
         var total = await query.CountAsync(ct);
