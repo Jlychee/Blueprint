@@ -15,8 +15,6 @@ builder
     .AddInfrastructureServices();
 
 var app = builder.Build();
-await app.EnsureDatabaseReadyAsync();
-
 
 if (app.Environment.IsDevelopment())
 {
