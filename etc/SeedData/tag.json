@@ -1,0 +1,394 @@
+﻿[
+  {
+    "Id": 1,
+    "Title": "windows",
+    "Icon": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Windows_logo_-_2012.svg",
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 2,
+    "Title": "ios",
+    "Icon": "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/ios-icon.png",
+    "Color": "#C3C3C3",
+    "TagTypeId": 1
+  },
+  {
+    "Id": 3,
+    "Title": "android",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg",
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 4,
+    "Title": "macos",
+    "Icon": "https://www.svgrepo.com/show/349442/macos.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 1
+  },
+  {
+    "Id": 5,
+    "Title": "linux",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg",
+    "Color": null,
+    "TagTypeId": 1
+  },
+  {
+    "Id": 6,
+    "Title": "cross-platform",
+    "Icon": "https://uxwing.com/wp-content/themes/uxwing/download/web-app-development/cross-platform-icon.png",
+    "Color": "#C3C3C3",
+    "TagTypeId": 1
+  },
+  {
+    "Id": 7,
+    "Title": "kotlin",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kotlin/kotlin-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 8,
+    "Title": "python",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 9,
+    "Title": "c++",
+    "Icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/960px-ISO_C%2B%2B_Logo.svg.png?_=20170928190710",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 10,
+    "Title": "c#",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 11,
+    "Title": "c",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 12,
+    "Title": "java",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 13,
+    "Title": "go",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/go/go-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 14,
+    "Title": "js",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 15,
+    "Title": "rust",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/rust/rust-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 2
+  },
+  {
+    "Id": 16,
+    "Title": "ts",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 17,
+    "Title": "swift",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swift/swift-original.svg",
+    "Color": null,
+    "TagTypeId": 2
+  },
+  {
+    "Id": 18,
+    "Title": "jwt",
+    "Icon": "https://www.svgrepo.com/show/306280/jsonwebtokens.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 19,
+    "Title": "oauth",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oauth/oauth-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 20,
+    "Title": "asp.net",
+    "Icon": "https://www.svgrepo.com/show/508894/aspnet.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 21,
+    "Title": "react",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 22,
+    "Title": "next",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 23,
+    "Title": "django",
+    "Icon": "https://www.svgrepo.com/show/353657/django-icon.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 24,
+    "Title": "flask",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 25,
+    "Title": "fastapi",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/fastapi/fastapi-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 26,
+    "Title": "postgresql",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 27,
+    "Title": "mysql",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 28,
+    "Title": "sqlite",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 29,
+    "Title": "redis",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 30,
+    "Title": "elasticsearch",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/elasticsearch/elasticsearch-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 31,
+    "Title": "kafka",
+    "Icon": "https://www.svgrepo.com/show/353950/kafka.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 32,
+    "Title": "maui",
+    "Icon": "https://8svg.com/cdn/shop/files/7._Maui_with_Hook_SVG_Free_-_Demigod_Warrior_Pose_for_Cricut_and_Silhouette_bd7f6b06-cd78-4be8-bbb6-d996dfef4d89.jpg?v=1748623493&width=823",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 33,
+    "Title": "qt",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/qt/qt-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 34,
+    "Title": "mongodb",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 35,
+    "Title": "xamarin",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/xamarin/xamarin-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 36,
+    "Title": "unity",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unity/unity-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 37,
+    "Title": "godot",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/godot/godot-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 38,
+    "Title": "unreal engine",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/unrealengine/unrealengine-original.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 39,
+    "Title": "websocket",
+    "Icon": "https://www.svgrepo.com/show/354553/websocket.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 3
+  },
+  {
+    "Id": 40,
+    "Title": "entity framework core",
+    "Icon": "https://hexmos.com/freedevtools/svg_icons/entityframeworkcore/entityframeworkcore-original.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 41,
+    "Title": "signalr",
+    "Icon": "https://az-icons.com/export/icons/a39e7fd3307ff56cc26d5a64eec7bf3f.svg",
+    "Color": null,
+    "TagTypeId": 3
+  },
+  {
+    "Id": 42,
+    "Title": "grafana",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/grafana/grafana-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 43,
+    "Title": "prometheus",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/prometheus/prometheus-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 44,
+    "Title": "docker",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 45,
+    "Title": "swagger",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swagger/swagger-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 46,
+    "Title": "github actions",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/githubactions/githubactions-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 47,
+    "Title": "nginx",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nginx/nginx-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 48,
+    "Title": "apache",
+    "Icon": "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg",
+    "Color": null,
+    "TagTypeId": 4
+  },
+  {
+    "Id": 49,
+    "Title": "web",
+    "Icon": "https://www.svgrepo.com/show/447845/website-click.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 5
+  },
+  {
+    "Id": 50,
+    "Title": "bot",
+    "Icon": "https://www.svgrepo.com/show/521874/telegram.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 5
+  },
+  {
+    "Id": 51,
+    "Title": "mobile",
+    "Icon": "https://www.svgrepo.com/show/533116/mobile-alt.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 5
+  },
+  {
+    "Id": 52,
+    "Title": "desktop",
+    "Icon": "https://www.svgrepo.com/show/396286/desktop-computer.svg",
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 53,
+    "Title": "game",
+    "Icon": "https://www.svgrepo.com/show/404284/video-game.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 5
+  },
+  {
+    "Id": 54,
+    "Title": "api",
+    "Icon": "https://www.svgrepo.com/show/489281/api.svg",
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 55,
+    "Title": "cli",
+    "Icon": "https://www.svgrepo.com/show/374251/cli.svg",
+    "Color": null,
+    "TagTypeId": 5
+  },
+  {
+    "Id": 56,
+    "Title": "library",
+    "Icon": "https://www.svgrepo.com/show/529046/library.svg",
+    "Color": "#C3C3C3",
+    "TagTypeId": 5
+  }
+]

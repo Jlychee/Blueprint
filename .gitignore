@@ -1,5 +1,6 @@
 .env
 .env.*
+!.env.example
 
 .vs/
 *.user
@@ -29,9 +30,6 @@ appsettings.*.json
 *.vsconfig
 *.DotSettings.user
 .vscode/
-
-Migrations/
-*.snapshot
 
 TestResults/
 *.trx

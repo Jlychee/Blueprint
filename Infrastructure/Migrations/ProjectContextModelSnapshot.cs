@@ -79,7 +79,9 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Year", "Semester");
+                    b.HasIndex("Name");
+
+                    b.HasIndex("Year");
 
                     b.ToTable("Projects", t =>
                         {

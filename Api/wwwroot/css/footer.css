@@ -1,0 +1,130 @@
+.footer {
+    margin-top: 40px;
+    padding: 40px 0 28px;
+    background: transparent;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+
+.footer-row {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.footer-top {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.footer-title-block {
+    max-width: 640px;
+    margin: 0 auto;
+}
+.footer-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+    text-align: center;
+}
+
+.footer-subtitle {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #C3C3C3;
+    text-align: center;
+}
+
+.footer-links {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.footer-link-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 20px;
+    text-decoration: none;
+    color: inherit;
+    transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+}
+
+.footer-link-card:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(157, 106, 105, 0.45);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.22);
+}
+
+.footer-link-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #9D6A69;
+}
+
+.footer-link-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.footer-link-text {
+    font-size: 14px;
+    line-height: 1.45;
+    color: #C3C3C3;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.footer-bottom p {
+    font-size: 13px;
+    color: #8E8E8E;
+}
+
+@media (max-width: 900px) {
+    .footer-links {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-title {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .footer {
+        padding: 32px 0 24px;
+    }
+
+    .footer-link-card {
+        padding: 18px;
+        border-radius: 16px;
+    }
+
+    .footer-title {
+        font-size: 22px;
+    }
+
+    .footer-subtitle {
+        font-size: 14px;
+    }
+}

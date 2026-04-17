@@ -1,7 +1,6 @@
 ﻿using Infrastructure.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,7 +22,14 @@ public static class ServiceCollectionExtensions
 
         builder.Services.AddDbContext<ProjectContext>((sp, options) =>
         {
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(connectionString, x =>
+                x.MigrationsHistoryTable("__EFMigrationsHistory_Project"));
+        });
+
+        builder.Services.AddDbContext<MetricsContext>((sp, options) =>
+        {
+            options.UseNpgsql(connectionString, x =>
+                x.MigrationsHistoryTable("__EFMigrationsHistory_Metrics"));
 
             if (env.IsDevelopment())
             {
@@ -31,6 +37,7 @@ public static class ServiceCollectionExtensions
                     .LogTo(Console.WriteLine, LogLevel.Information);
             }
         });
+
         return builder;
     }
 }
