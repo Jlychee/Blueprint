@@ -25,6 +25,27 @@ function getOrCreateUserMetricId() {
     return id;
 }
 
+function deleteFilterSessionId(name) {
+    document.cookie = `${name}=; max-age=0; path=/`;
+}
+
+function getOrCreateFilterSessionId(needReset = false) {
+    if (needReset) {
+        deleteFilterSessionId('filter_session_id')
+    } else {
+        let id = getCookie('filter_session_id');
+
+        if (needReset || !id) {
+            id = generateId();
+            setCookie('filter_session_id', id, 1);
+        }
+
+        return id;
+    }
+
+}
+
+
 document.addEventListener('DOMContentLoaded', () => {
     getOrCreateUserMetricId();
 });
