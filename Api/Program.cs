@@ -14,11 +14,8 @@ builder
     .AddDatabase()
     .AddInfrastructureServices();
 
-var app = builder
-  .Build()
-  .InitializeDatabase();
-
-// await app.EnsureDatabaseReadyAsync();
+var app = builder.Build();
+await app.EnsureDatabaseReadyAsync();
 
 
 if (app.Environment.IsDevelopment())
@@ -31,10 +28,5 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
-app.MapControllers();
-app.Run();
-
-app.UseExceptionHandler();
-
 app.MapControllers();
 app.Run();

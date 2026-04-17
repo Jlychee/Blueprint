@@ -15,15 +15,9 @@ public class ProjectController(IMediator mediator) : ControllerBase
     [HttpGet("project/{id:int}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProject(int id)
+    public async Task<IActionResult> GetProject(int id,[FromUserCookie] UserCookie cookie)
     {
-      if (!Guid.TryParse(Request.Cookies["metric_user_id"],out var metricId))
-            metricId = Guid.Empty;
-
-        if (!Guid.TryParse(Request.Cookies["filter_session_id"],out var filterSessionId))
-            filterSessionId = Guid.Empty;
-
-        var result = await mediator.Send(new GetProjectQuery(id,metricId,filterSessionId));
+        var result = await mediator.Send(new GetProjectQuery(id,cookie));
     
         if (result is null)
             return NotFound();
@@ -34,9 +28,9 @@ public class ProjectController(IMediator mediator) : ControllerBase
     [HttpGet("projects")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetProjects([FromQuery] ProjectCatalogFilter filter)
+    public async Task<IActionResult> GetProjects([FromQuery] ProjectCatalogFilter filter,[FromUserCookie] UserCookie cookie)
     {
-        var result = await mediator.Send(new GetProjectsQuery(filter));
+        var result = await mediator.Send(new GetProjectsQuery(filter, cookie));
         if (result is null)
             return NotFound();
         return Ok(result);

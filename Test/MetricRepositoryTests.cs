@@ -93,28 +93,64 @@ public class MetricRepositoryTests
     [Test]
     public async Task RegisterFilteredProjectViewAsync_ShouldCreateView_WhenFilterSessionIdIsValid()
     {
+        var userId = Guid.NewGuid();
         var filterSessionId = Guid.NewGuid();
         var occurredAtUtc = new DateTime(2026, 4, 10, 12, 30, 0, DateTimeKind.Utc);
 
-        await repository.RegisterFilteredProjectViewAsync(filterSessionId, 42, occurredAtUtc, CancellationToken.None);
+        await repository.RegisterFilteredProjectViewAsync(userId, filterSessionId, 42, true, occurredAtUtc, CancellationToken.None);
 
         var view = await metricsContext.FilteredProjectViews.SingleAsync();
 
         Assert.Multiple(() =>
         {
+            Assert.That(view.UserId, Is.EqualTo(userId));
             Assert.That(view.FilterSessionId, Is.EqualTo(filterSessionId));
             Assert.That(view.ProjectId, Is.EqualTo(42));
+            Assert.That(view.HasFilter, Is.True);
             Assert.That(view.OpenedAtUtc, Is.EqualTo(occurredAtUtc));
         });
     }
 
     [Test]
-    public async Task RegisterFilteredProjectViewAsync_EmptyFilterSessionId_ShouldNotCreateView()
+    public async Task RegisterFilteredProjectViewAsync_EmptyFilterSessionId_ShouldCreateUnfilteredView()
     {
-        await repository.RegisterFilteredProjectViewAsync(Guid.Empty, 42,
-            new DateTime(2026, 4, 10, 12, 30, 0, DateTimeKind.Utc), CancellationToken.None);
+        var userId = Guid.NewGuid();
+        var occurredAtUtc = new DateTime(2026, 4, 10, 12, 30, 0, DateTimeKind.Utc);
 
-        Assert.That(await metricsContext.FilteredProjectViews.CountAsync(), Is.EqualTo(0));
+        await repository.RegisterFilteredProjectViewAsync(userId, Guid.Empty, 42, false,
+            occurredAtUtc, CancellationToken.None);
+
+        var view = await metricsContext.FilteredProjectViews.SingleAsync();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(view.UserId, Is.EqualTo(userId));
+            Assert.That(view.FilterSessionId, Is.EqualTo(Guid.Empty));
+            Assert.That(view.ProjectId, Is.EqualTo(42));
+            Assert.That(view.HasFilter, Is.False);
+            Assert.That(view.OpenedAtUtc, Is.EqualTo(occurredAtUtc));
+        });
+    }
+
+    [Test]
+    public async Task RegisterFilteredViewAsync_ShouldCreateView()
+    {
+        var userId = Guid.NewGuid();
+        var filterSessionId = Guid.NewGuid();
+        var occurredAtUtc = new DateTime(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
+
+        await repository.RegisterFilteredViewAsync(userId, filterSessionId, 3, occurredAtUtc, CancellationToken.None);
+
+        var view = await metricsContext.FilteredViews.SingleAsync();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(view.UserId, Is.EqualTo(userId));
+            Assert.That(view.FilterSessionId, Is.EqualTo(filterSessionId));
+            Assert.That(view.Page, Is.EqualTo(3));
+            Assert.That(view.OpenedAtUtc, Is.EqualTo(occurredAtUtc));
+            Assert.That(view.Filter, Is.Null);
+        });
     }
 
     [Test]
