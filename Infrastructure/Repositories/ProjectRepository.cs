@@ -157,7 +157,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         var query = projectContext.Projects.AsQueryable();
 
         if (filter.Year.HasValue)
-            query = query.Where(p => p.Year >= filter.Year.Value);
+            query = query.Where(p => p.Year == filter.Year.Value);
 
         if (filter.Semester.HasValue)
             query = query.Where(p => p.Semester == filter.Semester);
