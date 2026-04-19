@@ -40,24 +40,23 @@ public class CsvProjectParser(ITagRepository tagRepository) : IProjectTableParse
         var rawYear = fields[6];
         var rawSemester = fields[7];
         var shortDescription = fields[8];
-        var description = fields[9];
-        var rawDescriptionLink = fields[10];
-        var rawCastDevLink = fields[11];
-        var rawMvpLink = fields[12];
-        var rawRoadMapLink = fields[13];
-        var rawGitLink = fields[14];
-        var rawNonGitLink = fields[15];
-        var rawTagsJson = fields[16];
+        var rawDescription = fields[9];
+        var rawCustDevLink = fields[10];
+        var rawMvpLink = fields[11];
+        var rawRoadMapLink = fields[12];
+        var rawGitLink = fields[13];
+        var rawNonGitLink = fields[14];
+        var rawTagsJson = fields[15];
 
         return new FullProjectInfo
         {
             Name = name,
             Year = int.Parse(rawYear),
             Semester = int.Parse(rawSemester),
-            Description = description,
+            Description = rawDescription,
             ShortDescription = shortDescription,
             TeamMembers = ParseTeamMembers(rawParticipantFields),
-            Files = ParseFiles(rawDescriptionLink, rawCastDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,
+            Files = ParseFiles(rawDescription, rawCustDevLink, rawMvpLink, rawRoadMapLink, rawGitLink,
                 rawNonGitLink),
             Tags = await ParseTagsAsync(rawTagsJson, ct) ?? []
         };
