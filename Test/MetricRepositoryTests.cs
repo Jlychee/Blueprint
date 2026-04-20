@@ -182,13 +182,17 @@ public class MetricRepositoryTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(states[0].r7D, Is.False);
+            Assert.That(states[0].r7D, Is.True);
             Assert.That(states[1].r7D, Is.True);
+            Assert.That(states[0].r14D, Is.True);
+            Assert.That(states[1].r14D, Is.True);
+            Assert.That(states[0].r30D, Is.True);
+            Assert.That(states[1].r30D, Is.True);
             Assert.That(cohort.CohortDate, Is.EqualTo(new DateOnly(2026, 4, 1)));
             Assert.That(cohort.Users, Is.EqualTo(2));
-            Assert.That(cohort.r7D, Is.EqualTo(1));
-            Assert.That(cohort.r14D, Is.EqualTo(0));
-            Assert.That(cohort.r30D, Is.EqualTo(0));
+            Assert.That(cohort.r7D, Is.EqualTo(2));
+            Assert.That(cohort.r14D, Is.EqualTo(2));
+            Assert.That(cohort.r30D, Is.EqualTo(2));
         });
     }
 }
