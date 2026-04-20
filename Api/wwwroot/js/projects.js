@@ -259,15 +259,6 @@ function hasActiveFilters() {
     );
 }
 
-function hasActiveFilters() {
-    return Boolean(
-        state.search ||
-        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
-        state.year
-    );
-}
-
-
 async function loadProjects() {
     const container = document.getElementById('projects-grid');
 
