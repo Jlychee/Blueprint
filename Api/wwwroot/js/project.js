@@ -241,6 +241,9 @@ function renderProject(project) {
     renderStack(project.tags);
     
     generateTabs(project.files);
+    if (typeof window.activateTabFromHash === "function") {
+        window.activateTabFromHash(false);
+    }
 }
 
 loadProject();

@@ -18,6 +18,29 @@ let searchDebounce = null;
 
 console.log('projects.js loaded');
 console.log('window.location.origin =', window.location.origin);
+
+function scrollToProjectsTop() {
+    const target = document.querySelector('.search-section') || document.querySelector('.projects');
+    const headerOffset = 110;
+
+    requestAnimationFrame(() => {
+        if (!target) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            return;
+        }
+
+        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+        window.scrollTo({
+            top: Math.max(top, 0),
+            behavior: 'smooth'
+        });
+    });
+}
+
 function renderPagination() {
     const pagination = document.getElementById('projects-pagination');
     const prevBtn = document.getElementById('pagination-prev');
@@ -35,7 +58,24 @@ function renderPagination() {
     nextBtn.disabled = currentPage >= totalPages;
 
     pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+
+    prevBtn.onclick = async () => {
+        if (state.page <= 1) return;
+
+        state.page--;
+        await loadProjects();
+        scrollToProjectsTop();
+    };
+
+    nextBtn.onclick = async () => {
+        if (state.page >= state.totalPages) return;
+
+        state.page++;
+        await loadProjects();
+        scrollToProjectsTop();
+    };
 }
+
 function createTagChip(tag) {
     if (tag.icon) {
         const img = document.createElement('img');

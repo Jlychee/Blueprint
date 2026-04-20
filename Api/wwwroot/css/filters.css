@@ -52,18 +52,13 @@
     scrollbar-width: thin;
 }
 
-.filter-section-title {
-    margin-top: 28px;
-    margin-bottom: 18px;
-}
-
 .filter-section-title:first-child {
     margin-top: 0;
 }
 
 .filter-subsection-title {
-    margin-top: 18px;
-    margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .filter-subsection-title h3 {

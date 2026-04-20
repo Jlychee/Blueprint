@@ -4,8 +4,22 @@ using Infrastructure.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-builder.Services.AddProblemDetails(Options => { Options.CustomizeProblemDetails = ProblemDetailsConfig.Configure; });
 
+builder.Services.AddProblemDetails(options =>
+{
+    options.CustomizeProblemDetails = ProblemDetailsConfig.Configure;
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendDev", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:63342")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 builder
     .LoadEnvFiles()
     .AddTelemetry()
@@ -15,26 +29,24 @@ builder
     .AddInfrastructureServices();
 
 var app = builder
-  .Build()
-  .InitializeDatabase();
+    .Build()
+    .InitializeDatabase();
 
-// await app.EnsureDatabaseReadyAsync();
-
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors("FrontendDev");
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
-app.MapControllers();
-app.Run();
-
-app.UseExceptionHandler();
 
 app.MapControllers();
+
 app.Run();

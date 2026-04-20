@@ -1,9 +1,11 @@
 ﻿console.log('projectApi.js loaded');
 console.log('project window.location.origin =', window.location.origin);
 
+const BASE_URL = 'http://localhost';
+
 function buildUrl(path, params = new URLSearchParams()) {
     const query = params.toString();
-    return `${path}${query ? `?${query}` : ''}`;
+    return `${BASE_URL}${path}${query ? `?${query}` : ''}`;
 }
 
 async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {
@@ -12,12 +14,12 @@ async function fetchJson(path, params = new URLSearchParams(), errorText = 'Requ
 
     const response = await fetch(url, {
         headers: {
-            Accept: '*/*'
+            Accept: 'application/json'
         }
     });
 
     if (!response.ok) {
-        throw new Error(errorText);
+        throw new Error(`${errorText} (${response.status})`);
     }
 
     return await response.json();
