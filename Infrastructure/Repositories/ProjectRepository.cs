@@ -157,7 +157,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         var query = projectContext.Projects.AsQueryable();
 
         if (filter.Year.HasValue)
-            query = query.Where(p => p.Year >= filter.Year.Value);
+            query = query.Where(p => p.Year == filter.Year.Value);
 
         if (filter.Semester.HasValue)
             query = query.Where(p => p.Semester == filter.Semester);
@@ -168,8 +168,9 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         if (filter.TagIds?.Any() == true)
         {
             query = query.Where(p =>
-                filter.TagIds.All(tagId =>
-                    p.ProjectTags.Any(pt => pt.TagId == tagId)));
+                p.ProjectTags
+                    .Count(pt => filter.TagIds.Contains(pt.TagId)) == filter.TagIds.Count
+            );
         }
 
         var total = await query.CountAsync(ct);

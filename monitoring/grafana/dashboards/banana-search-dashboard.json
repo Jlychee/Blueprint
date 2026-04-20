@@ -1,0 +1,890 @@
+{
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "11.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Дашборд поиска и переходов в проекты на основе FilteredViews и FilteredProjectViews.",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "fixed"
+          },
+          "mappings": []
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "code": {
+          "language": "markdown",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "### ${__from:date:DD.MM.YYYY HH:mm} - ${__to:date:DD.MM.YYYY HH:mm}",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT CONCAT(\n  to_char($__timeFrom()::timestamptz, 'DD.MM.YYYY HH24:MI'),\n  ' - ',\n  to_char($__timeTo()::timestamptz, 'DD.MM.YYYY HH24:MI')\n) AS value;",
+          "refId": "A"
+        }
+      ],
+      "title": "Период данных",
+      "type": "text"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 0,
+        "y": 3
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(DISTINCT \"FilterSessionId\") AS value\nFROM public.\"FilteredViews\"\nWHERE $__timeFilter(\"OpenedAtUtc\");",
+          "refId": "A"
+        }
+      ],
+      "title": "Поисковые сессии",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 6,
+        "y": 3
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT COUNT(DISTINCT \"UserId\") AS value\nFROM public.\"FilteredViews\"\nWHERE $__timeFilter(\"OpenedAtUtc\");",
+          "refId": "A"
+        }
+      ],
+      "title": "Уникальные пользователи поиска",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 12,
+        "y": 3
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH session_pages AS (\n  SELECT \"FilterSessionId\", COUNT(DISTINCT \"Page\") AS page_count\n  FROM public.\"FilteredViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n  GROUP BY 1\n)\nSELECT COALESCE(ROUND(AVG(page_count)::numeric, 2), 0) AS value\nFROM session_pages;",
+          "refId": "A"
+        }
+      ],
+      "title": "Ср. страниц на поисковую сессию",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.5
+              },
+              {
+                "color": "green",
+                "value": 0.7
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 3
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH session_pages AS (\n  SELECT \"FilterSessionId\", COUNT(DISTINCT \"Page\") AS page_count\n  FROM public.\"FilteredViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n  GROUP BY 1\n)\nSELECT COALESCE(ROUND(AVG(CASE WHEN page_count >= 2 THEN 1.0 ELSE 0.0 END)::numeric, 4), 0) AS value\nFROM session_pages;",
+          "refId": "A"
+        }
+      ],
+      "title": "Сессии с 2+ страницами",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 15,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 2,
+            "pointSize": 4,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "id": 5,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH session_pages AS (\n  SELECT date_trunc('day', \"OpenedAtUtc\") AS day,\n         \"FilterSessionId\",\n         COUNT(DISTINCT \"Page\") AS page_count\n  FROM public.\"FilteredViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n  GROUP BY 1, 2\n)\nSELECT day AS time,\n       ROUND(AVG(page_count)::numeric, 2) AS \"Ср. страниц / сессия\",\n       COUNT(*) AS \"Сессии\"\nFROM session_pages\nGROUP BY 1\nORDER BY 1;",
+          "refId": "A"
+        }
+      ],
+      "title": "Глубина поиска по времени",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 80,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 3,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 7
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "time_series",
+          "rawQuery": true,
+          "rawSql": "WITH weekly AS (\n  SELECT date_trunc('week', \"OpenedAtUtc\") AS week,\n         COUNT(*) AS project_opens,\n         COUNT(DISTINCT \"ProjectId\") AS unique_projects,\n         COUNT(DISTINCT \"UserId\") AS users\n  FROM public.\"FilteredProjectViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n    AND \"HasFilter\" = TRUE\n  GROUP BY 1\n)\nSELECT week AS time,\n       project_opens AS \"Открытия проектов\",\n       unique_projects AS \"Уникальные проекты\",\n       users AS \"Пользователи\"\nFROM weekly\nORDER BY 1;",
+          "refId": "A"
+        }
+      ],
+      "title": "Открытия проектов из поиска по неделям",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 0.4
+              },
+              {
+                "color": "green",
+                "value": 0.65
+              }
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 0,
+        "y": 15
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH search_sessions AS (\n  SELECT DISTINCT \"FilterSessionId\"\n  FROM public.\"FilteredViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n), project_sessions AS (\n  SELECT DISTINCT \"FilterSessionId\"\n  FROM public.\"FilteredProjectViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n    AND \"HasFilter\" = TRUE\n)\nSELECT COALESCE(\n  ROUND(\n    COUNT(project_sessions.\"FilterSessionId\")::numeric\n    / NULLIF(COUNT(search_sessions.\"FilterSessionId\"), 0),\n  4),\n  0\n) AS value\nFROM search_sessions\nLEFT JOIN project_sessions USING (\"FilterSessionId\");",
+          "refId": "A"
+        }
+      ],
+      "title": "Конверсия поиск -> проект",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 8,
+        "y": 15
+      },
+      "id": 8,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH weekly_user_projects AS (\n  SELECT date_trunc('week', \"OpenedAtUtc\") AS week,\n         \"UserId\",\n         COUNT(DISTINCT \"ProjectId\") AS project_count\n  FROM public.\"FilteredProjectViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n    AND \"HasFilter\" = TRUE\n  GROUP BY 1, 2\n)\nSELECT COALESCE(ROUND(AVG(project_count)::numeric, 2), 0) AS value\nFROM weekly_user_projects;",
+          "refId": "A"
+        }
+      ],
+      "title": "Ср. проектов на пользователя в неделю",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 8,
+        "x": 16,
+        "y": 15
+      },
+      "id": 9,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH search_sessions AS (\n  SELECT DISTINCT \"FilterSessionId\"\n  FROM public.\"FilteredViews\"\n  WHERE $__timeFilter(\"OpenedAtUtc\")\n), session_project_counts AS (\n  SELECT s.\"FilterSessionId\",\n         COUNT(fpv.\"Id\") AS open_count\n  FROM search_sessions s\n  LEFT JOIN public.\"FilteredProjectViews\" fpv\n    ON fpv.\"FilterSessionId\" = s.\"FilterSessionId\"\n   AND fpv.\"HasFilter\" = TRUE\n  GROUP BY s.\"FilterSessionId\"\n)\nSELECT COALESCE(ROUND(AVG(open_count)::numeric, 2), 0) AS value\nFROM session_project_counts;",
+          "refId": "A"
+        }
+      ],
+      "title": "Ср. открытий проектов на поисковую сессию",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 19
+      },
+      "id": 10,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  p.\"Name\" AS \"Проект\",\n  COUNT(*) AS \"Открытия\",\n  COUNT(DISTINCT fpv.\"UserId\") AS \"Пользователи\",\n  COUNT(DISTINCT fpv.\"FilterSessionId\") AS \"Сессии\"\nFROM public.\"FilteredProjectViews\" fpv\nLEFT JOIN public.\"Projects\" p ON p.\"Id\" = fpv.\"ProjectId\"\nWHERE $__timeFilter(fpv.\"OpenedAtUtc\")\n  AND fpv.\"HasFilter\" = TRUE\nGROUP BY 1\nORDER BY 2 DESC, 1 ASC\nLIMIT 10;",
+          "refId": "A"
+        }
+      ],
+      "title": "Топ проектов, открытых из поиска",
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "banana-postgres"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 19
+      },
+      "id": 11,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "11.0.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "banana-postgres"
+          },
+          "editorMode": "code",
+          "format": "table",
+          "rawQuery": true,
+          "rawSql": "WITH search_sessions AS (\n  SELECT MIN(fv.\"OpenedAtUtc\") AS \"StartedAt\",\n         fv.\"UserId\",\n         fv.\"FilterSessionId\",\n         COUNT(DISTINCT fv.\"Page\") AS \"PagesViewed\"\n  FROM public.\"FilteredViews\" fv\n  WHERE $__timeFilter(fv.\"OpenedAtUtc\")\n  GROUP BY fv.\"UserId\", fv.\"FilterSessionId\"\n), project_counts AS (\n  SELECT fpv.\"FilterSessionId\",\n         COUNT(*) FILTER (WHERE fpv.\"HasFilter\" = TRUE) AS \"ProjectsOpened\"\n  FROM public.\"FilteredProjectViews\" fpv\n  WHERE $__timeFilter(fpv.\"OpenedAtUtc\")\n  GROUP BY fpv.\"FilterSessionId\"\n)\nSELECT\n  ss.\"StartedAt\" AS \"Начало\",\n  ss.\"UserId\" AS \"UserId\",\n  ss.\"FilterSessionId\" AS \"FilterSessionId\",\n  ss.\"PagesViewed\" AS \"Просмотрено страниц\",\n  COALESCE(pc.\"ProjectsOpened\", 0) AS \"Открыто проектов\",\n  CASE WHEN ss.\"PagesViewed\" >= 2 THEN 'да' ELSE 'нет' END AS \"Дошел до 2+ страниц\",\n  CASE WHEN COALESCE(pc.\"ProjectsOpened\", 0) > 0 THEN 'да' ELSE 'нет' END AS \"Открыл проект\"\nFROM search_sessions ss\nLEFT JOIN project_counts pc ON pc.\"FilterSessionId\" = ss.\"FilterSessionId\"\nORDER BY ss.\"StartedAt\" DESC;",
+          "refId": "A"
+        }
+      ],
+      "title": "Детализация поисковых сессий",
+      "type": "table"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 42,
+  "style": "dark",
+  "tags": [
+    "banana",
+    "search",
+    "metrics",
+    "funnel"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-45d",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Banana Метрики поиска",
+  "uid": "banana-search-metrics",
+  "version": 3,
+  "weekStart": "monday"
+}

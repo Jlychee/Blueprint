@@ -1,25 +1,12 @@
 using Api.Application.Common;
 using Infrastructure.Extensions;
+using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails(Options => { Options.CustomizeProblemDetails = ProblemDetailsConfig.Configure; });
 
-builder.Services.AddProblemDetails(options =>
-{
-    options.CustomizeProblemDetails = ProblemDetailsConfig.Configure;
-});
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("FrontendDev", policy =>
-    {
-        policy
-            .WithOrigins("http://localhost:63342")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
 builder
     .LoadEnvFiles()
     .AddTelemetry()
@@ -28,11 +15,13 @@ builder
     .AddDatabase()
     .AddInfrastructureServices();
 
-var app = builder
-    .Build()
-    .InitializeDatabase();
-
-app.UseExceptionHandler();
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+});
+var app = builder.Build();
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
@@ -40,13 +29,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.InitializeDatabase();
 app.UseCors("FrontendDev");
-
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
-
 app.MapControllers();
-
 app.Run();
