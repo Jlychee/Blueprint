@@ -59,13 +59,14 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
 
         foreach (var userRetentionState in userRetentionStates)
         {
-            var retentionDays = userRetentionState.SecondOpen == default
-                ? 0
-                : userRetentionState.SecondOpen.DayNumber - userRetentionState.FirstOpen.DayNumber;
+            var hasSecondOpen = userRetentionState.SecondOpen != default;
+            var retentionDays = hasSecondOpen
+                ? userRetentionState.SecondOpen.DayNumber - userRetentionState.FirstOpen.DayNumber
+                : int.MaxValue;
 
-            userRetentionState.r7D = retentionDays <= 7;
-            userRetentionState.r14D = retentionDays <= 14;
-            userRetentionState.r30D = retentionDays <= 30;
+            userRetentionState.r7D = hasSecondOpen && retentionDays <= 7;
+            userRetentionState.r14D = hasSecondOpen && retentionDays <= 14;
+            userRetentionState.r30D = hasSecondOpen && retentionDays <= 30;
         }
 
         await metricsContext.SaveChangesAsync(ct);
