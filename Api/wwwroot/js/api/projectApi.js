@@ -1,7 +1,4 @@
-﻿console.log('projectApi.js loaded');
-console.log('project window.location.origin =', window.location.origin);
-
-const BASE_URL = 'http://localhost';
+﻿const BASE_URL = 'http://localhost';
 
 function buildUrl(path, params = new URLSearchParams()) {
     const query = params.toString();
@@ -10,8 +7,6 @@ function buildUrl(path, params = new URLSearchParams()) {
 
 async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {
     const url = buildUrl(path, params);
-    console.log('API FETCH =>', url);
-
     const response = await fetch(url, {
         headers: {
             Accept: 'application/json'

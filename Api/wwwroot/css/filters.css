@@ -2,7 +2,9 @@
     width: 100%;
     height: calc(100vh - 130px);
     min-height: 0;
-    background: #111;
+    position: sticky;
+    top: 110px;
+    background: transparent;
     border-radius: 20px;
     color: white;
     font-family: 'Raleway', sans-serif;
