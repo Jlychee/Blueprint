@@ -22,7 +22,7 @@
 .logo {
     display: flex;
     align-items: center;
-    gap: 59px;
+    gap: 30px;
     text-decoration: none;
     color: inherit;
     cursor: pointer;

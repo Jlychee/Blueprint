@@ -140,15 +140,14 @@ function renderStack(tags) {
     
     for (const tag of tags) {
         const backgroundStyle = tag.color
-            ? `style="background-color: ${tag.color};"`
+            ? `style="filter: brightness(0) saturate(100%) invert(70%);
+                      box-shadow: none;"`
             : "";
-
         stackContainer.innerHTML += `<div class="icon-item">
                 <img
                     src="${tag.icon}"
                     alt="${tag.title}"
-                    ${backgroundStyle}
-                >
+                    ${backgroundStyle}>
                 <span class="icon-label">${formatTagName(tag.title)}</span>
             </div>`
     }
@@ -200,7 +199,7 @@ function renderProject(project) {
     }
 
     if (shortDescription) {
-        shortDescription.textContent = project.shortDescription || "";
+        shortDescription.textContent = project.description || "";
     }
 
     if (description) {
@@ -241,6 +240,9 @@ function renderProject(project) {
     renderStack(project.tags);
     
     generateTabs(project.files);
+    if (typeof window.activateTabFromHash === "function") {
+        window.activateTabFromHash(false);
+    }
 }
 
 loadProject();
