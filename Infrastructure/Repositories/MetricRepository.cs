@@ -63,9 +63,9 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
                 ? 0
                 : userRetentionState.SecondOpen.DayNumber - userRetentionState.FirstOpen.DayNumber;
 
-            userRetentionState.r7D = retentionDays >= 7;
-            userRetentionState.r14D = retentionDays >= 14;
-            userRetentionState.r30D = retentionDays >= 30;
+            userRetentionState.r7D = retentionDays <= 7;
+            userRetentionState.r14D = retentionDays <= 14;
+            userRetentionState.r30D = retentionDays <= 30;
         }
 
         await metricsContext.SaveChangesAsync(ct);
