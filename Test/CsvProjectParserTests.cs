@@ -31,8 +31,8 @@ public class CsvProjectParserTests()
     public async Task ParseTable_CommaSeparatedCsv_MapsBasicProjectFields()
     {
         var csv = """
-                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
-                  LearnTogether,Иван Иванов,Мария Петрова,,,,2024,1,Краткое описание,https://example.com/description,https://example.com/custdev,https://example.com/mvp,https://example.com/roadmap,https://github.com/example/project,,
+                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,Описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+                  LearnTogether,Иван Иванов,Мария Петрова,,,,2024,1,Краткое описание,Полное описание проекта,https://example.com/description,https://example.com/custdev,https://example.com/mvp,https://example.com/roadmap,https://github.com/example/project,,
                   """;
         using var stream = CreateCsvStream(csv);
 
@@ -42,9 +42,11 @@ public class CsvProjectParserTests()
         {
             Assert.That(result, Has.Count.EqualTo(1));
             Assert.That(result[0].Name, Is.EqualTo("LearnTogether"));
+            Assert.That(result[0].Description, Is.EqualTo("Полное описание проекта"));
             Assert.That(result[0].ShortDescription, Is.EqualTo("Краткое описание"));
             Assert.That(result[0].Year, Is.EqualTo(2024));
             Assert.That(result[0].Semester, Is.EqualTo(1));
+            Assert.That(result[0].Files.Description?.ToString(), Is.EqualTo("https://example.com/description"));
         });
     }
 
@@ -52,12 +54,12 @@ public class CsvProjectParserTests()
     public async Task ParseTable_MultilineQuotedTagsField_DoesNotBreakRecordBoundaries()
     {
         var csv = """
-                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
-                  LearnTogether,Иван Иванов,,,,,2024,1,Описание 1,https://example.com/description-1,,https://example.com/mvp-1,,https://github.com/example/project-1,,"{
+                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,Описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+                  LearnTogether,Иван Иванов,,,,,2024,1,Описание 1,Полное описание 1,https://example.com/description-1,,https://example.com/mvp-1,,https://github.com/example/project-1,,"{
                   ""Platform"": [""web"", ""server""],
                   ""Language"": [""c#""]
                   }"
-                  GuidesAi,Петр Петров,,,,,2024,2,Описание 2,https://example.com/description-2,,https://example.com/mvp-2,,https://github.com/example/project-2,,
+                  GuidesAi,Петр Петров,,,,,2024,2,Описание 2,Полное описание 2,https://example.com/description-2,,https://example.com/mvp-2,,https://github.com/example/project-2,,
                   """;
         using var stream = CreateCsvStream(csv);
 
@@ -74,8 +76,8 @@ public class CsvProjectParserTests()
     public async Task ParseTable_TagsJson_MapsTitlesAndIdsFromMockRepository()
     {
         var csv = """
-                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
-                  LearnTogether,Иван Иванов,,,,,2024,1,Описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,"{
+                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,Описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+                  LearnTogether,Иван Иванов,,,,,2024,1,Описание,Полное описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,"{
                   ""Platform"": [""web"", ""server""],
                   ""Language"": [""c#""]
                   }"
@@ -99,8 +101,8 @@ public class CsvProjectParserTests()
     public async Task ParseTable_BlankOptionalParticipants_DoesNotCreateEmptyTeamMembers()
     {
         var csv = """
-                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
-                  SoloProject,Иван Иванов,,,,,2024,1,Описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,
+                  Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,Описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+                  SoloProject,Иван Иванов,,,,,2024,1,Описание,Полное описание,https://example.com/description,,https://example.com/mvp,,https://github.com/example/project,,
                   """;
         using var stream = CreateCsvStream(csv);
 
@@ -122,6 +124,6 @@ public class CsvProjectParserTests()
 
     private const string Header =
         """
-        Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
+        Название продукта,Участник 1 (Фамилия Имя),Участник 2 (Фамилия Имя),Участник 3 (Фамилия Имя),Участник 4 (Фамилия Имя),Участник 5?  (Фамилия Имя),Год,Семестр,Короткое описание,Описание,"Описание продукта (текст, ссылка на документ)",ЦА и вопросы CustDev,Описание MVP (ссылка на документ),Дорожная карта проектов,Гиты,Продукты не гит,Код теги
         """;
 }

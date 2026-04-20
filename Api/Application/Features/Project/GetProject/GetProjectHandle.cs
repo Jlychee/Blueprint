@@ -4,17 +4,27 @@ using MediatR;
 
 namespace Api.Application.Features.Project.GetProject;
 
-public class GetProjectHandle(IProjectRepository projectRepository,IMetricRepository metricRepository): IRequestHandler<GetProjectQuery, FullProjectInfo>
+public class GetProjectHandle(IProjectRepository projectRepository, IMetricRepository metricRepository)
+    : IRequestHandler<GetProjectQuery, FullProjectInfo>
 {
     public async Task<FullProjectInfo?> Handle(GetProjectQuery request, CancellationToken cancellationToken)
     {
-        var project = await projectRepository.GetFullProjectInfoAsync(request.Id) ?? throw new KeyNotFoundException($"{request.Id}");
+        var project = await projectRepository.GetFullProjectInfoAsync(request.Id) ??
+                      throw new KeyNotFoundException($"{request.Id}");
         if (project is null)
             return null;
 
         var occurredAtUtc = DateTime.UtcNow;
-        await metricRepository.RegisterOpenAsync(request.MetricId, DateOnly.FromDateTime(occurredAtUtc), cancellationToken);
-        await metricRepository.RegisterFilteredProjectViewAsync(request.FilterSessionId, request.Id, occurredAtUtc, cancellationToken);
+        await metricRepository.RegisterOpenAsync(
+            request.cookie.MetricUserId, 
+            DateOnly.FromDateTime(occurredAtUtc),
+            cancellationToken);
+        
+        await metricRepository.RegisterFilteredProjectViewAsync(
+            request.cookie.MetricUserId,
+            request.cookie.FilterSessionId,
+            request.Id, request.cookie.FilterSessionId != Guid.Empty, occurredAtUtc,
+            cancellationToken);
         return project;
     }
 }
