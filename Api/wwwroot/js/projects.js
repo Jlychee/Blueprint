@@ -259,6 +259,15 @@ function hasActiveFilters() {
     );
 }
 
+function hasActiveFilters() {
+    return Boolean(
+        state.search ||
+        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
+        state.year
+    );
+}
+
+
 async function loadProjects() {
     const container = document.getElementById('projects-grid');
 
@@ -270,9 +279,9 @@ async function loadProjects() {
         if (hasActiveFilters()) {
             getOrCreateFilterSessionId();
         } else {
-            getOrCreateFilterSessionId(true); 
+            getOrCreateFilterSessionId(true);
         }
-        
+
         const data = await getAllProjects({
             tagIds: state.tagIds,
             year: state.year,
@@ -294,6 +303,7 @@ async function loadProjects() {
         if (container) {
             container.innerHTML = `<div class="projects-error">Не удалось загрузить проекты.</div>`;
         }
+        
 
         state.totalPages = 1;
         renderPagination();
