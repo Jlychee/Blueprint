@@ -11,13 +11,133 @@ const state = {
     totalPages: 1,
     totalCount: 0
 };
+const STORAGE_KEY = 'projectBlueprintCatalogState';
 
+function saveCatalogState() {
+    sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+            search: state.search,
+            tagIds: state.tagIds,
+            year: state.year,
+            page: state.page,
+            pageSize: state.pageSize
+        })
+    );
+}
+
+function restoreCatalogState() {
+    try {
+        const raw = sessionStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+
+        const saved = JSON.parse(raw);
+
+        state.search = typeof saved.search === 'string' ? saved.search : '';
+        state.tagIds = Array.isArray(saved.tagIds)
+            ? saved.tagIds.map(Number).filter(Number.isFinite)
+            : [];
+        state.year = saved.year != null && saved.year !== ''
+            ? Number(saved.year)
+            : null;
+        state.page = saved.page != null
+            ? Math.max(Number(saved.page), 1)
+            : 1;
+        state.pageSize = saved.pageSize != null
+            ? Math.max(Number(saved.pageSize), 1)
+            : PAGE_SIZE;
+    } catch (error) {
+        console.error('Failed to restore catalog state:', error);
+        sessionStorage.removeItem(STORAGE_KEY);
+    }
+}
+
+function syncUiWithState() {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = state.search || '';
+    }
+
+    document.querySelectorAll('#filter-tags-list input[name="tagIds"]').forEach((checkbox) => {
+        checkbox.checked = state.tagIds.includes(Number(checkbox.value));
+    });
+
+    document.querySelectorAll('#filter-years-list input[name="year"]').forEach((checkbox) => {
+        checkbox.checked = Number(checkbox.value) === state.year;
+    });
+}
 let baseInitialized = false;
 let filtersInitialized = false;
-let searchDebounce = null;
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
 
+function renderSearchStub(query) {
+    const container = document.getElementById('projects-grid');
+    const pagination = document.getElementById('projects-pagination');
+
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="search-stub">
+            <p class="search-stub__text">
+                Поиск по названию пока не подключён.
+                <br>
+                Запрос: <span>${escapeHtml(query)}</span>
+            </p>
+            <img
+                class="search-stub__image"
+                src="resources/images/hlopin.png"
+                alt="Поиск скоро появится"
+                width="180"
+                height="221"
+            >
+        </div>
+    `;
+
+    if (pagination) {
+        pagination.style.display = 'none';
+    }
+}
+
+function refreshCatalog() {
+    if (state.search) {
+        renderSearchStub(state.search);
+        return;
+    }
+
+    loadProjects();
+}
 console.log('projects.js loaded');
 console.log('window.location.origin =', window.location.origin);
+
+function scrollToProjectsTop() {
+    const target = document.querySelector('.search-section') || document.querySelector('.projects');
+    const headerOffset = 110;
+
+    requestAnimationFrame(() => {
+        if (!target) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            return;
+        }
+
+        const top = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+
+        window.scrollTo({
+            top: Math.max(top, 0),
+            behavior: 'smooth'
+        });
+    });
+}
+
 function renderPagination() {
     const pagination = document.getElementById('projects-pagination');
     const prevBtn = document.getElementById('pagination-prev');
@@ -28,23 +148,58 @@ function renderPagination() {
 
     const totalPages = Math.max(state.totalPages || 1, 1);
     const currentPage = Math.min(state.page, totalPages);
+    prevBtn.onclick = async () => {
+        if (state.page <= 1) return;
 
+        state.page--;
+        saveCatalogState();
+        await loadProjects();
+        scrollToProjectsTop();
+    };
+
+    nextBtn.onclick = async () => {
+        if (state.page >= state.totalPages) return;
+
+        state.page++;
+        saveCatalogState();
+        await loadProjects();
+        scrollToProjectsTop();
+    };
     info.textContent = `Страница ${currentPage} из ${totalPages}`;
 
     prevBtn.disabled = currentPage <= 1;
     nextBtn.disabled = currentPage >= totalPages;
 
     pagination.style.display = totalPages > 1 ? 'flex' : 'none';
+
+    prevBtn.onclick = async () => {
+        if (state.page <= 1) return;
+
+        state.page--;
+        await loadProjects();
+        scrollToProjectsTop();
+    };
+
+    nextBtn.onclick = async () => {
+        if (state.page >= state.totalPages) return;
+
+        state.page++;
+        await loadProjects();
+        scrollToProjectsTop();
+    };
 }
+
 function createTagChip(tag) {
     if (tag.icon) {
         const img = document.createElement('img');
         img.src = tag.icon;
         img.alt = tag.title || 'tag';
         img.title = tag.title || '';
-        if (tag.color) {
-            img.style.backgroundColor = tag.color;
-        }
+        img.style = tag.color
+            ? `filter: brightness(0) saturate(100%) invert(70%);
+                  box-shadow: none;`
+            : "";
+
         return img;
     }
 
@@ -78,7 +233,6 @@ function renderProjects(items) {
         title.textContent = project.name || 'Без названия';
         description.textContent =
             project.shortDescriptionAi ||
-            project.shortDescription ||
             'Описание пока не добавлено.';
 
         iconsContainer.innerHTML = '';
@@ -107,7 +261,6 @@ async function loadProjects() {
 
     try {
         const data = await getAllProjects({
-            search: state.search,
             tagIds: state.tagIds,
             year: state.year,
             page: state.page,
@@ -117,6 +270,8 @@ async function loadProjects() {
         state.page = data.page ?? state.page;
         state.totalPages = data.totalPages ?? 1;
         state.totalCount = data.totalCount ?? 0;
+
+        saveCatalogState();
 
         renderProjects(data.items || []);
         renderPagination();
@@ -131,7 +286,6 @@ async function loadProjects() {
         renderPagination();
     }
 }
-
 function bindPagination() {
     const prevBtn = document.getElementById('pagination-prev');
     const nextBtn = document.getElementById('pagination-next');
@@ -202,9 +356,11 @@ function renderTagsFilters(tagGroups) {
             ).map((checkbox) => Number(checkbox.value));
 
             state.page = 1;
+            saveCatalogState();
             loadProjects();
         });
     });
+    syncUiWithState();
 }
 
 function renderYearFilters() {
@@ -242,9 +398,11 @@ function renderYearFilters() {
             }
 
             state.page = 1;
+            saveCatalogState();
             loadProjects();
         });
     });
+    syncUiWithState();
 }
 
 function bindResetButton() {
@@ -270,7 +428,7 @@ function bindResetButton() {
         ).forEach((checkbox) => {
             checkbox.checked = false;
         });
-
+        saveCatalogState();
         loadProjects();
     });
 }
@@ -302,24 +460,45 @@ function bindSearch() {
 
     input.dataset.catalogSearchBound = 'true';
 
-    input.addEventListener('input', () => {
-        clearTimeout(searchDebounce);
+    input.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter') return;
 
-        searchDebounce = setTimeout(() => {
-            state.search = input.value.trim();
-            state.page = 1;
+        event.preventDefault();
+
+        const query = input.value.trim();
+        state.page = 1;
+        state.search = query;
+
+        if (!query) {
             loadProjects();
-        }, 300);
+            return;
+        }
+
+        renderSearchStub(query);
+    });
+
+    input.addEventListener('input', () => {
+        if (input.value.trim()) return;
+        if (!state.search) return;
+
+        state.search = '';
+        state.page = 1;
+        loadProjects();
     });
 }
-
 function initProjectCatalog() {
     if (!baseInitialized) {
         baseInitialized = true;
+        syncUiWithState();
+
         bindSearch();
         bindPagination();
         loadProjects();
     }
+    initFiltersUi().then(() => {
+        syncUiWithState();
+    });
+
 
     initFiltersUi();
 }

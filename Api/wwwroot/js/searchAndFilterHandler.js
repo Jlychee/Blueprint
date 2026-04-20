@@ -1,6 +1,6 @@
 function initSearchAndFilter() {
     const input = document.getElementById('search-input');
-    const clearBtn = document.getElementById('filters-close');
+    const clearBtn = document.querySelector('.clear');
     const layout = document.getElementById('catalog-layout');
 
     if (input && clearBtn && input.dataset.searchInitialized !== 'true') {
