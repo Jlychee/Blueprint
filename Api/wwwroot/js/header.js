@@ -67,8 +67,8 @@ function initHeaderSearch() {
         console.error('#search-btn не найден');
         return;
     }
-
-    searchBtn.addEventListener('click', focusIndexSearch);
+    
+    searchBtn.onclick = () => focusIndexSearch();
 }
 
 document.addEventListener('DOMContentLoaded', loadHeader);

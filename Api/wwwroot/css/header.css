@@ -1,3 +1,4 @@
+/* HEADER */
 
 .header {
     background: black;
@@ -14,11 +15,8 @@
     height: 100px;
 }
 
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 59px;
-}
+/* LOGO */
+
 .logo {
     display: flex;
     align-items: center;
@@ -43,6 +41,8 @@
     color: #9D6A69;
     font-weight: 50;
 }
+
+/* NAVIGATIONS */
 
 .nav {
     display: flex;
@@ -75,6 +75,9 @@
     height: 24px;
 }
 
+/* MEDIAS */
+
+
 @media (max-width: 768px) {
     .header {
         height: auto;
@@ -101,6 +104,7 @@
         gap: 8px;
     }
 }
+
 @media (max-width: 520px) {
     .header-row {
         flex-wrap: nowrap;
