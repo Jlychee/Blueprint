@@ -41,7 +41,7 @@
 function focusIndexSearch() {
     const searchSection = document.querySelector('.search-section');
     const searchInput = document.getElementById('search-input');
-    
+
     if (!searchSection) {
         console.error('.search-section не найден');
         return;
@@ -50,7 +50,7 @@ function focusIndexSearch() {
     searchSection.classList.toggle('active');
 
     if (searchSection.classList.contains('active')) {
-        searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        searchSection.scrollIntoView({behavior: 'smooth', block: 'center'});
 
         requestAnimationFrame(() => {
             if (searchInput) {
@@ -68,7 +68,7 @@ function initHeaderSearch() {
         return;
     }
 
-    searchBtn.addEventListener('click', focusIndexSearch);
+    searchBtn.onclick = () => focusIndexSearch();
 }
 
 document.addEventListener('DOMContentLoaded', loadHeader);

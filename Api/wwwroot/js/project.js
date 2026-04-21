@@ -3,43 +3,35 @@
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");
 
-function generateTabs(files) {
-    const container = document.getElementById("tabs-content");
-    if (!container) return;
-
-    container.querySelectorAll(".tab[data-generated='true']").forEach(tab => tab.remove());
-
-    Object.entries(files).forEach(([key, value]) => {
-        const tab = document.createElement("div");
-        tab.className = "tab";
-        tab.id = String(key).toLowerCase();
-        tab.dataset.generated = "true";
-
-        if (isEmptyValue(value)) {
-            tab.innerHTML = getEmptyStateMarkup(key);
-            container.appendChild(tab);
-            return;
-        }
-
-        if (Array.isArray(value)) {
-            tab.innerHTML = renderLinksList(key, value);
-            container.appendChild(tab);
-            return;
-        }
-
-        tab.innerHTML = renderSingleLink(value);
-        container.appendChild(tab);
-    });
+function escapeHtml(value) {
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 function isEmptyValue(value) {
     return value == null || (typeof value === "string" && value.trim() === "");
 }
+
+function isValidUrl(value) {
+    if (typeof value !== "string") return false;
+
+    try {
+        const url = new URL(value);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
+}
+
 function getEmptyStateMarkup(key) {
     return `
         <div class="product-empty-state">
             <p class="product-empty-state__text">
-                У этого продукта, к сожалению, нет данных о <span>${escapeHtml(key)}</span>
+                У этого проекта, к сожалению, нет данных о <span>${escapeHtml(key)}</span>
             </p>
             <img
                 class="product-empty-state__image"
@@ -53,107 +45,84 @@ function getEmptyStateMarkup(key) {
 }
 
 function renderLinksList(key, links) {
-    if (links.length === 0) {
+    if (!Array.isArray(links) || links.length === 0) {
         return getEmptyStateMarkup(key);
     }
 
     const items = links
-        .map(link => {
+        .map((link) => {
             const safeLink = escapeHtml(link);
-            return `
-                <li>
-                    <a href="${safeLink}" target="_blank" rel="noopener noreferrer">
-                        ${safeLink}
-                    </a>
-                </li>
-            `;
+
+            if (isValidUrl(link)) {
+                return `
+                    <li>
+                        <a href="${safeLink}" target="_blank" rel="noopener noreferrer">
+                            ${safeLink}
+                        </a>
+                    </li>
+                `;
+            }
+
+            return `<li>${safeLink}</li>`;
         })
         .join("");
 
     return `
-        <h3>Ссылки:</h3>
         <ul>
             ${items}
         </ul>
     `;
 }
 
-function renderSingleLink(link) {
-    const safeLink = escapeHtml(link);
+function renderSingleValue(key, value) {
+    if (isEmptyValue(value)) {
+        return getEmptyStateMarkup(key);
+    }
 
-    return `
-        <h3>Ссылка:</h3>
-        <p>
-            <a href="${safeLink}" target="_blank" rel="noopener noreferrer">
-                ${safeLink}
-            </a>
-        </p>
-    `;
+    const safeValue = escapeHtml(value);
+
+    if (isValidUrl(value)) {
+        return `
+            <p>
+                <a href="${safeValue}" target="_blank" rel="noopener noreferrer">
+                    ${safeValue}
+                </a>
+            </p>
+        `;
+    }
+
+    return `<p>${safeValue.replaceAll("\n", "<br>")}</p>`;
 }
 
-function escapeHtml(value) {
-    return String(value)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
+function generateTabs(files) {
+    const container = document.getElementById("tabs-content");
+    if (!container) return;
 
-async function loadProject() {
+    container.querySelectorAll(".tab[data-generated='true']").forEach((tab) => tab.remove());
 
-    if (!projectId) {
-        console.error("Project id not found in URL");
+    if (!files || typeof files !== "object") {
         return;
     }
 
-    try {
+    Object.entries(files).forEach(([key, value]) => {
+        const tab = document.createElement("div");
+        tab.className = "tab";
+        tab.id = String(key).toLowerCase();
+        tab.dataset.generated = "true";
 
-        const project = await getProject(projectId);
-
-        renderProject(project);
-
-    } catch (error) {
-
-        console.error("Error loading project:", error);
-
-        const container = document.getElementById("project-container");
-        if (container) {
-            container.innerHTML = "<p>Не удалось загрузить проект</p>";
+        if (Array.isArray(value)) {
+            tab.innerHTML = renderLinksList(key, value);
+        } else {
+            tab.innerHTML = renderSingleValue(key, value);
         }
 
-    }
-}
-
-function renderStack(tags) {
-    const stackContainer = document.getElementById("icons");
-    if (!stackContainer) return;
-
-    stackContainer.innerHTML = "";
-
-    if (!Array.isArray(tags) || tags.length === 0) {
-        stackContainer.innerHTML = `
-            <p class="stack-empty">Стек не указан</p>
-        `;
-        return;
-    }
-    
-    for (const tag of tags) {
-        const backgroundStyle = tag.color
-            ? `style="filter: brightness(0) saturate(100%) invert(70%);
-                      box-shadow: none;"`
-            : "";
-        stackContainer.innerHTML += `<div class="icon-item">
-                <img
-                    src="${tag.icon}"
-                    alt="${tag.title}"
-                    ${backgroundStyle}>
-                <span class="icon-label">${formatTagName(tag.title)}</span>
-            </div>`
-    }
+        container.appendChild(tab);
+    });
 }
 
 function formatTagName(tag) {
+    const normalizedTag = String(tag || "").trim().toLowerCase();
+
     const labels = {
         python: "Python",
         csharp: "C#",
@@ -180,68 +149,148 @@ function formatTagName(tag) {
         linux: "Linux"
     };
 
-    return labels[tag] || tag.charAt(0).toUpperCase() + tag.slice(1);
+    if (labels[normalizedTag]) {
+        return labels[normalizedTag];
+    }
+
+    if (!normalizedTag) {
+        return "Без названия";
+    }
+
+    return normalizedTag.charAt(0).toUpperCase() + normalizedTag.slice(1);
 }
-function renderProject(project) {
-    
-    const title = document.getElementById("project-title");
-    const shortDescription = document.getElementById("short-description");
-    const description = document.getElementById("description");
-    const stackContainer = document.getElementById("stack-icons");
-    const year = document.getElementById("year");
-    const semester = document.getElementById("semester");
-    const membersSection = document.querySelector(".members-section");
+
+function renderStack(tags) {
+    const stackContainer = document.getElementById("icons");
+    if (!stackContainer) return;
+
+    stackContainer.innerHTML = "";
+
+    if (!Array.isArray(tags) || tags.length === 0) {
+        stackContainer.innerHTML = `<p class="stack-empty">Стек не указан</p>`;
+        return;
+    }
+
+    tags.forEach((tag) => {
+        const item = document.createElement("div");
+        item.className = "icon-item";
+
+        if (tag.icon) {
+            const img = document.createElement("img");
+            img.src = tag.icon;
+            img.alt = tag.title || "Тег";
+
+            if (tag.color) {
+                img.style.filter = "brightness(0) saturate(100%) invert(70%)";
+                img.style.boxShadow = "none";
+            }
+
+            item.appendChild(img);
+        }
+
+        const label = document.createElement("span");
+        label.className = "icon-label";
+        label.textContent = formatTagName(tag.title);
+        item.appendChild(label);
+
+        stackContainer.appendChild(item);
+    });
+}
+
+function renderMembers(teamMembers) {
     const membersGrid = document.getElementById("members-grid");
+    if (!membersGrid) return;
 
+    const memberImages = [
+        "resources/images/bow_blush.svg",
+        "resources/images/sad_tear.svg",
+        "resources/images/wink_star.svg",
+        "resources/images/sleepy_moon.svg",
+        "resources/images/sparkle_heart.svg",
+        "resources/images/glasses_sad.svg"
+    ];
 
-    if (title) {
-        title.textContent = project.name;
+    if (!Array.isArray(teamMembers) || teamMembers.length === 0) {
+        membersGrid.innerHTML = `<p class="stack-empty">Участники не указаны</p>`;
+        return;
     }
 
-    if (shortDescription) {
-        shortDescription.textContent = project.description || "";
-    }
-
-    if (description) {
-        description.textContent = project.description || "";
-    }
-
-    if (year) {
-        year.textContent = project.year || "Год не указан";
-    }
-
-    if (semester) {
-        semester.textContent = project.semester || "";
-    }
-    if (membersSection && membersGrid) {
-        const members = project.teamMembers || [];
-        const memberImages = [
-            "resources/images/bow_blush.svg",
-            "resources/images/sad_tear.svg",
-            "resources/images/wink_star.svg",
-            "resources/images/sleepy_moon.svg",
-            "resources/images/sparkle_heart.svg",
-            "resources/images/glasses_sad.svg",
-        ];
-
-        membersGrid.innerHTML = members.map((member, index) => {
-            const memberName = member.userName || "Без имени";
+    membersGrid.innerHTML = teamMembers
+        .map((member, index) => {
+            const memberName = escapeHtml(member?.userName || "Без имени");
             const avatar = memberImages[index % memberImages.length];
 
             return `
-            <div class="member-card">
-                <img class="member-avatar" src="${avatar}" alt="Аватарка для ${memberName}">
-                <span class="member-name">${memberName}</span>
-            </div>
-        `;
-        }).join("");
+                <div class="member-card">
+                    <img class="member-avatar" src="${avatar}" alt="Аватарка для ${memberName}">
+                    <span class="member-name">${memberName}</span>
+                </div>
+            `;
+        })
+        .join("");
+}
+
+function renderProject(project) {
+    const title = document.getElementById("project-title");
+    const shortDescription = document.getElementById("short-description");
+    const year = document.getElementById("year");
+    const semester = document.getElementById("semester");
+
+    if (title) {
+        title.textContent = project?.name || "Без названия";
     }
-    console.log(project.tags);
-    renderStack(project.tags);
-    
-    generateTabs(project.files);
+
+    if (shortDescription) {
+        shortDescription.textContent =
+            project?.shortDescriptionAi ||
+            project?.shortDescription ||
+            project?.description ||
+            "";
+    }
+
+    if (year) {
+        year.textContent = project?.year || "Год не указан";
+    }
+
+    if (semester) {
+        semester.textContent = project?.semester || "Семестр не указан";
+    }
+
+    renderMembers(project?.teamMembers);
+    renderStack(project?.tags);
+    generateTabs(project?.files);
+
     if (typeof window.activateTabFromHash === "function") {
         window.activateTabFromHash(false);
+    }
+}
+
+function renderProjectError() {
+    const title = document.getElementById("project-title");
+    const shortDescription = document.getElementById("short-description");
+
+    if (title) {
+        title.textContent = "Не удалось загрузить проект";
+    }
+
+    if (shortDescription) {
+        shortDescription.textContent = "Попробуйте обновить страницу позже.";
+    }
+}
+
+async function loadProject() {
+    if (!projectId) {
+        console.error("Project id not found in URL");
+        renderProjectError();
+        return;
+    }
+
+    try {
+        const project = await getProject(projectId);
+        renderProject(project);
+    } catch (error) {
+        console.error("Error loading project:", error);
+        renderProjectError();
     }
 }
 

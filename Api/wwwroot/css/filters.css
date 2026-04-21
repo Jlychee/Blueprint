@@ -20,21 +20,21 @@
     gap: 16px;
     padding: 24px 24px 18px;
     flex-shrink: 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .filters h1 {
     font-size: 24px;
     font-weight: 700;
     margin: 0;
-    color: #fff;
+    color: var(--text);
 }
 
 .filters h2 {
     font-size: 20px;
     font-weight: 700;
     margin: 0;
-    color: #fff;
+    color: var(--text);
 }
 
 .filters-close {
@@ -65,7 +65,7 @@
 
 .filter-subsection-title h3 {
     font-size: 16px;
-    color: #fff;
+    color: var(--text);
     margin: 0;
 }
 
@@ -84,7 +84,7 @@
     gap: 12px;
     cursor: pointer;
     font-size: 16px;
-    color: #C3C3C3;
+    color: var(--text-muted);
     user-select: none;
 }
 
@@ -93,7 +93,7 @@
     -webkit-appearance: none;
     width: 18px;
     height: 18px;
-    border: 2px solid #666;
+    border: 2px solid var(--border);
     border-radius: 4px;
     background: transparent;
     cursor: pointer;
@@ -102,8 +102,8 @@
 }
 
 .filter-row input[type="checkbox"]:checked {
-    background: #9D6A69;
-    border-color: #9D6A69;
+    background: var(--accent);
+    border-color: var(--accent);
 }
 
 .filter-row input[type="checkbox"]:checked::after {
@@ -113,7 +113,7 @@
     top: 0;
     width: 5px;
     height: 10px;
-    border: solid #fff;
+    border: solid var(--text);
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
 }
@@ -123,9 +123,9 @@
     margin-top: 24px;
     min-height: 44px;
     border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.12);
-    background: #161616;
-    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: var(--buttons);
+    color: var(--text);
     font-size: 16px;
     cursor: pointer;
 }

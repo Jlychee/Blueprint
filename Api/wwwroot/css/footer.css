@@ -24,6 +24,7 @@
     max-width: 640px;
     margin: 0 auto;
 }
+
 .footer-title {
     font-size: 28px;
     font-weight: 600;
@@ -56,11 +57,10 @@
     border-radius: 20px;
     text-decoration: none;
     color: inherit;
-    transition:
-            transform 0.2s ease,
-            border-color 0.2s ease,
-            background 0.2s ease,
-            box-shadow 0.2s ease;
+    transition: transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .footer-link-card:hover {
@@ -80,13 +80,13 @@
 .footer-link-title {
     font-size: 20px;
     font-weight: 600;
-    color: #fff;
+    color: var(--text);
 }
 
 .footer-link-text {
     font-size: 14px;
     line-height: 1.45;
-    color: #C3C3C3;
+    color: var(--text-muted);
 }
 
 .footer-bottom {

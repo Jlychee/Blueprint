@@ -1,9 +1,11 @@
-﻿import { getAllProjects, getTags } from "./api/projectApi.js";
+﻿import {getAllProjects, getTags} from "./api/projectApi.js";
 
 const PAGE_SIZE = 9;
 const AVAILABLE_YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
+const STORAGE_KEY = "projectBlueprintCatalogState";
+
 const state = {
-    search: '',
+    search: "",
     tagIds: [],
     year: null,
     page: 1,
@@ -11,7 +13,10 @@ const state = {
     totalPages: 1,
     totalCount: 0
 };
-const STORAGE_KEY = 'projectBlueprintCatalogState';
+
+let baseInitialized = false;
+let filtersInitialized = false;
+let lastRequestId = 0;
 
 function saveCatalogState() {
     sessionStorage.setItem(
@@ -33,11 +38,11 @@ function restoreCatalogState() {
 
         const saved = JSON.parse(raw);
 
-        state.search = typeof saved.search === 'string' ? saved.search : '';
+        state.search = typeof saved.search === "string" ? saved.search : "";
         state.tagIds = Array.isArray(saved.tagIds)
             ? saved.tagIds.map(Number).filter(Number.isFinite)
             : [];
-        state.year = saved.year != null && saved.year !== ''
+        state.year = saved.year != null && saved.year !== ""
             ? Number(saved.year)
             : null;
         state.page = saved.page != null
@@ -47,15 +52,15 @@ function restoreCatalogState() {
             ? Math.max(Number(saved.pageSize), 1)
             : PAGE_SIZE;
     } catch (error) {
-        console.error('Failed to restore catalog state:', error);
+        console.error("Failed to restore catalog state:", error);
         sessionStorage.removeItem(STORAGE_KEY);
     }
 }
 
 function syncUiWithState() {
-    const searchInput = document.getElementById('search-input');
+    const searchInput = document.getElementById("search-input");
     if (searchInput) {
-        searchInput.value = state.search || '';
+        searchInput.value = state.search || "";
     }
 
     document.querySelectorAll('#filter-tags-list input[name="tagIds"]').forEach((checkbox) => {
@@ -66,20 +71,19 @@ function syncUiWithState() {
         checkbox.checked = Number(checkbox.value) === state.year;
     });
 }
-let baseInitialized = false;
-let filtersInitialized = false;
+
 function escapeHtml(value) {
     return String(value)
-        .replaceAll('&', '&amp;')
-        .replaceAll('<', '&lt;')
-        .replaceAll('>', '&gt;')
-        .replaceAll('"', '&quot;')
-        .replaceAll("'", '&#039;');
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
 
 function renderSearchStub(query) {
-    const container = document.getElementById('projects-grid');
-    const pagination = document.getElementById('projects-pagination');
+    const container = document.getElementById("projects-grid");
+    const pagination = document.getElementById("projects-pagination");
 
     if (!container) return;
 
@@ -101,11 +105,13 @@ function renderSearchStub(query) {
     `;
 
     if (pagination) {
-        pagination.style.display = 'none';
+        pagination.style.display = "none";
     }
 }
 
 function refreshCatalog() {
+    saveCatalogState();
+
     if (state.search) {
         renderSearchStub(state.search);
         return;
@@ -113,18 +119,16 @@ function refreshCatalog() {
 
     loadProjects();
 }
-console.log('projects.js loaded');
-console.log('window.location.origin =', window.location.origin);
 
 function scrollToProjectsTop() {
-    const target = document.querySelector('.search-section') || document.querySelector('.projects');
+    const target = document.querySelector(".search-section") || document.querySelector(".projects");
     const headerOffset = 110;
 
     requestAnimationFrame(() => {
         if (!target) {
             window.scrollTo({
                 top: 0,
-                behavior: 'smooth'
+                behavior: "smooth"
             });
             return;
         }
@@ -133,89 +137,56 @@ function scrollToProjectsTop() {
 
         window.scrollTo({
             top: Math.max(top, 0),
-            behavior: 'smooth'
+            behavior: "smooth"
         });
     });
 }
 
 function renderPagination() {
-    const pagination = document.getElementById('projects-pagination');
-    const prevBtn = document.getElementById('pagination-prev');
-    const nextBtn = document.getElementById('pagination-next');
-    const info = document.getElementById('pagination-info');
+    const pagination = document.getElementById("projects-pagination");
+    const prevBtn = document.getElementById("pagination-prev");
+    const nextBtn = document.getElementById("pagination-next");
+    const info = document.getElementById("pagination-info");
 
     if (!pagination || !prevBtn || !nextBtn || !info) return;
 
     const totalPages = Math.max(state.totalPages || 1, 1);
     const currentPage = Math.min(state.page, totalPages);
-    prevBtn.onclick = async () => {
-        if (state.page <= 1) return;
 
-        state.page--;
-        saveCatalogState();
-        await loadProjects();
-        scrollToProjectsTop();
-    };
-
-    nextBtn.onclick = async () => {
-        if (state.page >= state.totalPages) return;
-
-        state.page++;
-        saveCatalogState();
-        await loadProjects();
-        scrollToProjectsTop();
-    };
     info.textContent = `Страница ${currentPage} из ${totalPages}`;
-
     prevBtn.disabled = currentPage <= 1;
     nextBtn.disabled = currentPage >= totalPages;
-
-    pagination.style.display = totalPages > 1 ? 'flex' : 'none';
-
-    prevBtn.onclick = async () => {
-        if (state.page <= 1) return;
-
-        state.page--;
-        await loadProjects();
-        scrollToProjectsTop();
-    };
-
-    nextBtn.onclick = async () => {
-        if (state.page >= state.totalPages) return;
-
-        state.page++;
-        await loadProjects();
-        scrollToProjectsTop();
-    };
+    pagination.style.display = totalPages > 1 ? "flex" : "none";
 }
 
 function createTagChip(tag) {
     if (tag.icon) {
-        const img = document.createElement('img');
+        const img = document.createElement("img");
         img.src = tag.icon;
-        img.alt = tag.title || 'tag';
-        img.title = tag.title || '';
-        img.style = tag.color
-            ? `filter: brightness(0) saturate(100%) invert(70%);
-                  box-shadow: none;`
-            : "";
+        img.alt = tag.title || "tag";
+        img.title = tag.title || "";
+
+        if (tag.color) {
+            img.style.filter = "brightness(0) saturate(100%) invert(70%)";
+            img.style.boxShadow = "none";
+        }
 
         return img;
     }
 
-    const chip = document.createElement('span');
-    chip.className = 'tag-chip';
-    chip.textContent = tag.title || 'tag';
+    const chip = document.createElement("span");
+    chip.className = "tag-chip";
+    chip.textContent = tag.title || "tag";
     return chip;
 }
 
 function renderProjects(items) {
-    const container = document.getElementById('projects-grid');
-    const template = document.getElementById('project-card-template');
+    const container = document.getElementById("projects-grid");
+    const template = document.getElementById("project-card-template");
 
     if (!container || !template) return;
 
-    container.innerHTML = '';
+    container.innerHTML = "";
 
     if (!Array.isArray(items) || items.length === 0) {
         container.innerHTML = `<div class="projects-empty">По этим фильтрам пока ничего не найдено.</div>`;
@@ -224,33 +195,34 @@ function renderProjects(items) {
 
     items.forEach((project) => {
         const clone = template.content.cloneNode(true);
-        const card = clone.querySelector('.card');
-        const title = clone.querySelector('.project-title');
-        const description = clone.querySelector('.project-description');
-        const iconsContainer = clone.querySelector('.icons');
+        const card = clone.querySelector(".card");
+        const title = clone.querySelector(".project-title");
+        const description = clone.querySelector(".project-description");
+        const iconsContainer = clone.querySelector(".icons");
 
         card.href = `project.html?id=${project.id}`;
-        title.textContent = project.name || 'Без названия';
+        title.textContent = project.name || "Без названия";
         description.textContent =
             project.shortDescriptionAi ||
-            'Описание пока не добавлено.';
+            "Описание пока не добавлено.";
 
-        iconsContainer.innerHTML = '';
+        iconsContainer.innerHTML = "";
 
         if (Array.isArray(project.tags) && project.tags.length > 0) {
             project.tags.forEach((tag) => {
                 iconsContainer.appendChild(createTagChip(tag));
             });
         } else {
-            const empty = document.createElement('span');
-            empty.className = 'stack-empty';
-            empty.textContent = 'Стек не указан';
+            const empty = document.createElement("span");
+            empty.className = "stack-empty";
+            empty.textContent = "Стек не указан";
             iconsContainer.appendChild(empty);
         }
 
         container.appendChild(clone);
     });
 }
+
 function hasActiveFilters() {
     return Boolean(
         state.search ||
@@ -259,19 +231,26 @@ function hasActiveFilters() {
     );
 }
 
+function syncFilterSessionId() {
+    if (typeof window.getOrCreateFilterSessionId !== "function") return;
+
+    if (hasActiveFilters()) {
+        window.getOrCreateFilterSessionId();
+    } else {
+        window.getOrCreateFilterSessionId(true);
+    }
+}
+
 async function loadProjects() {
-    const container = document.getElementById('projects-grid');
+    const container = document.getElementById("projects-grid");
+    const requestId = ++lastRequestId;
 
     if (container) {
         container.innerHTML = `<div class="projects-empty">Загрузка проектов...</div>`;
     }
 
     try {
-        if (hasActiveFilters()) {
-            getOrCreateFilterSessionId();
-        } else {
-            getOrCreateFilterSessionId(true);
-        }
+        syncFilterSessionId();
 
         const data = await getAllProjects({
             tagIds: state.tagIds,
@@ -280,83 +259,99 @@ async function loadProjects() {
             pageSize: state.pageSize
         });
 
+        if (requestId !== lastRequestId) return;
+
         state.page = data.page ?? state.page;
         state.totalPages = data.totalPages ?? 1;
         state.totalCount = data.totalCount ?? 0;
 
         saveCatalogState();
-
         renderProjects(data.items || []);
         renderPagination();
     } catch (error) {
-        console.error('Error loading projects:', error);
+        if (requestId !== lastRequestId) return;
+
+        console.error("Error loading projects:", error);
 
         if (container) {
             container.innerHTML = `<div class="projects-error">Не удалось загрузить проекты.</div>`;
         }
-        
 
         state.totalPages = 1;
         renderPagination();
     }
 }
+
 function bindPagination() {
-    const prevBtn = document.getElementById('pagination-prev');
-    const nextBtn = document.getElementById('pagination-next');
+    const prevBtn = document.getElementById("pagination-prev");
+    const nextBtn = document.getElementById("pagination-next");
 
-    if (prevBtn && prevBtn.dataset.bound !== 'true') {
-        prevBtn.dataset.bound = 'true';
+    if (prevBtn && prevBtn.dataset.bound !== "true") {
+        prevBtn.dataset.bound = "true";
 
-        prevBtn.addEventListener('click', () => {
+        prevBtn.addEventListener("click", async () => {
             if (state.page <= 1) return;
 
             state.page -= 1;
-            loadProjects();
+            saveCatalogState();
+            await loadProjects();
+            scrollToProjectsTop();
         });
     }
 
-    if (nextBtn && nextBtn.dataset.bound !== 'true') {
-        nextBtn.dataset.bound = 'true';
+    if (nextBtn && nextBtn.dataset.bound !== "true") {
+        nextBtn.dataset.bound = "true";
 
-        nextBtn.addEventListener('click', () => {
+        nextBtn.addEventListener("click", async () => {
             if (state.page >= state.totalPages) return;
 
             state.page += 1;
-            loadProjects();
+            saveCatalogState();
+            await loadProjects();
+            scrollToProjectsTop();
         });
     }
 }
 
 function renderTagsFilters(tagGroups) {
-    const tagsContainer = document.getElementById('filter-tags-list');
+    const tagsContainer = document.getElementById("filter-tags-list");
     if (!tagsContainer) return;
 
-    tagsContainer.innerHTML = '';
+    tagsContainer.innerHTML = "";
 
     tagGroups.forEach((group) => {
         if (!group || !Array.isArray(group.tags) || group.tags.length === 0) {
             return;
         }
 
-        const section = document.createElement('div');
-        section.className = 'filter-group';
+        const section = document.createElement("div");
+        section.className = "filter-group";
 
-        const title = document.createElement('div');
-        title.className = 'filter-subsection-title';
-        title.innerHTML = `<h3>${group.type}</h3>`;
+        const title = document.createElement("div");
+        title.className = "filter-subsection-title";
+
+        const heading = document.createElement("h3");
+        heading.textContent = group.type || "Теги";
+        title.appendChild(heading);
         section.appendChild(title);
 
         group.tags.forEach((tag) => {
-            const row = document.createElement('div');
-            row.className = 'filter-row';
+            const row = document.createElement("div");
+            row.className = "filter-row";
 
-            row.innerHTML = `
-                <label>
-                    <input type="checkbox" name="tagIds" value="${tag.id}">
-                    <span>${tag.title}</span>
-                </label>
-            `;
+            const label = document.createElement("label");
+            const input = document.createElement("input");
+            const text = document.createElement("span");
 
+            input.type = "checkbox";
+            input.name = "tagIds";
+            input.value = String(tag.id);
+
+            text.textContent = tag.title || "Без названия";
+
+            label.appendChild(input);
+            label.appendChild(text);
+            row.appendChild(label);
             section.appendChild(row);
         });
 
@@ -364,41 +359,46 @@ function renderTagsFilters(tagGroups) {
     });
 
     tagsContainer.querySelectorAll('input[name="tagIds"]').forEach((input) => {
-        input.addEventListener('change', () => {
+        input.addEventListener("change", () => {
             state.tagIds = Array.from(
                 tagsContainer.querySelectorAll('input[name="tagIds"]:checked')
             ).map((checkbox) => Number(checkbox.value));
 
             state.page = 1;
-            saveCatalogState();
-            loadProjects();
+            refreshCatalog();
         });
     });
+
     syncUiWithState();
 }
 
 function renderYearFilters() {
-    const yearsContainer = document.getElementById('filter-years-list');
+    const yearsContainer = document.getElementById("filter-years-list");
     if (!yearsContainer) return;
 
-    yearsContainer.innerHTML = '';
+    yearsContainer.innerHTML = "";
 
     AVAILABLE_YEARS.forEach((year) => {
-        const row = document.createElement('div');
-        row.className = 'filter-row';
+        const row = document.createElement("div");
+        row.className = "filter-row";
 
-        row.innerHTML = `
-            <label>
-                <input type="checkbox" name="year" value="${year}">
-                <span>${year}</span>
-            </label>
-        `;
+        const label = document.createElement("label");
+        const input = document.createElement("input");
+        const text = document.createElement("span");
 
+        input.type = "checkbox";
+        input.name = "year";
+        input.value = String(year);
+        text.textContent = String(year);
+
+        label.appendChild(input);
+        label.appendChild(text);
+        row.appendChild(label);
         yearsContainer.appendChild(row);
     });
 
     yearsContainer.querySelectorAll('input[name="year"]').forEach((input) => {
-        input.addEventListener('change', () => {
+        input.addEventListener("change", () => {
             if (input.checked) {
                 yearsContainer.querySelectorAll('input[name="year"]').forEach((checkbox) => {
                     if (checkbox !== input) {
@@ -412,29 +412,29 @@ function renderYearFilters() {
             }
 
             state.page = 1;
-            saveCatalogState();
-            loadProjects();
+            refreshCatalog();
         });
     });
+
     syncUiWithState();
 }
 
 function bindResetButton() {
-    const resetButton = document.getElementById('filters-reset');
-    if (!resetButton || resetButton.dataset.bound === 'true') return;
+    const resetButton = document.getElementById("filters-reset");
+    if (!resetButton || resetButton.dataset.bound === "true") return;
 
-    resetButton.dataset.bound = 'true';
+    resetButton.dataset.bound = "true";
 
-    resetButton.addEventListener('click', () => {
-        state.search = '';
+    resetButton.addEventListener("click", () => {
+        state.search = "";
         state.tagIds = [];
         state.year = null;
         state.page = 1;
 
-        const searchInput = document.getElementById('search-input');
+        const searchInput = document.getElementById("search-input");
         if (searchInput) {
-            searchInput.value = '';
-            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            searchInput.value = "";
+            searchInput.dispatchEvent(new Event("input", {bubbles: true}));
         }
 
         document.querySelectorAll(
@@ -442,14 +442,14 @@ function bindResetButton() {
         ).forEach((checkbox) => {
             checkbox.checked = false;
         });
-        saveCatalogState();
-        loadProjects();
+
+        refreshCatalog();
     });
 }
 
 async function initFiltersUi() {
-    const tagsContainer = document.getElementById('filter-tags-list');
-    const yearsContainer = document.getElementById('filter-years-list');
+    const tagsContainer = document.getElementById("filter-tags-list");
+    const yearsContainer = document.getElementById("filter-years-list");
 
     if (!tagsContainer || !yearsContainer || filtersInitialized) return;
 
@@ -461,7 +461,7 @@ async function initFiltersUi() {
         const groups = await getTags();
         renderTagsFilters(Array.isArray(groups) ? groups : []);
     } catch (error) {
-        console.error('Error loading tags:', error);
+        console.error("Error loading tags:", error);
         tagsContainer.innerHTML = `<div class="projects-error">Не удалось загрузить теги.</div>`;
     }
 
@@ -469,19 +469,20 @@ async function initFiltersUi() {
 }
 
 function bindSearch() {
-    const input = document.getElementById('search-input');
-    if (!input || input.dataset.catalogSearchBound === 'true') return;
+    const input = document.getElementById("search-input");
+    if (!input || input.dataset.catalogSearchBound === "true") return;
 
-    input.dataset.catalogSearchBound = 'true';
+    input.dataset.catalogSearchBound = "true";
 
-    input.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter') return;
+    input.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
 
         event.preventDefault();
 
         const query = input.value.trim();
         state.page = 1;
         state.search = query;
+        saveCatalogState();
 
         if (!query) {
             loadProjects();
@@ -491,36 +492,37 @@ function bindSearch() {
         renderSearchStub(query);
     });
 
-    input.addEventListener('input', () => {
+    input.addEventListener("input", () => {
         if (input.value.trim()) return;
         if (!state.search) return;
 
-        state.search = '';
+        state.search = "";
         state.page = 1;
+        saveCatalogState();
         loadProjects();
     });
 }
+
 function initProjectCatalog() {
     if (!baseInitialized) {
         baseInitialized = true;
-        syncUiWithState();
 
+        restoreCatalogState();
+        syncUiWithState();
         bindSearch();
         bindPagination();
-        loadProjects();
+        refreshCatalog();
     }
+
     initFiltersUi().then(() => {
         syncUiWithState();
     });
-
-
-    initFiltersUi();
 }
 
 window.initProjectCatalog = initProjectCatalog;
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjectCatalog);
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initProjectCatalog);
 } else {
     initProjectCatalog();
 }
