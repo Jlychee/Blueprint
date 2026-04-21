@@ -1,5 +1,8 @@
+using System.Text.Json;
+using Client.Models.Models.DTO;
 using Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
@@ -10,13 +13,58 @@ public class MetricsContext(DbContextOptions<MetricsContext> options) : DbContex
     public DbSet<UserRetentionState> UserRetentionStates { get; set; }
     public DbSet<RetentionByCohort> RetentionByCohorts { get; set; }
     public DbSet<FilteredProjectView> FilteredProjectViews { get; set; }
+    public DbSet<FilteredView> FilteredViews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserRetentionStateConfiguration());
         modelBuilder.ApplyConfiguration(new RetentionByCohortConfiguration());
         modelBuilder.ApplyConfiguration(new FilteredProjectViewConfiguration());
+        modelBuilder.ApplyConfiguration(new FilteredViewConfiguration());
         base.OnModelCreating(modelBuilder);
+    }
+}
+
+public class FilteredViewConfiguration : IEntityTypeConfiguration<FilteredView>
+{
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
+
+    public void Configure(EntityTypeBuilder<FilteredView> builder)
+    {
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.UserId)
+            .IsRequired();
+        builder.Property(x => x.FilterSessionId)
+            .IsRequired();
+        builder.Property(x => x.Page)
+            .IsRequired();
+        var filterProperty = builder.Property(x => x.Filter)
+            .HasConversion(
+                filter => SerializeFilter(filter),
+                json => DeserializeFilter(json))
+            .HasColumnType("jsonb")
+            .IsRequired(false);
+
+        filterProperty.Metadata.SetValueComparer(new ValueComparer<ProjectCatalogFilter?>(
+            (left, right) => SerializeFilter(left) == SerializeFilter(right),
+            filter => SerializeFilter(filter).GetHashCode(),
+            filter => DeserializeFilter(SerializeFilter(filter))));
+
+        builder.Property(x => x.OpenedAtUtc)
+            .IsRequired();
+
+        builder.HasIndex(x => x.FilterSessionId);
+    }
+
+    private static string SerializeFilter(ProjectCatalogFilter? filter) =>
+        JsonSerializer.Serialize(filter, JsonOptions);
+
+    private static ProjectCatalogFilter? DeserializeFilter(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json) || json == "null")
+            return null;
+
+        return JsonSerializer.Deserialize<ProjectCatalogFilter>(json, JsonOptions);
     }
 }
 
@@ -55,11 +103,15 @@ public class FilteredProjectViewConfiguration : IEntityTypeConfiguration<Filtere
     public void Configure(EntityTypeBuilder<FilteredProjectView> builder)
     {
         builder.HasKey(x => x.Id);
+        builder.Property(x => x.UserId)
+            .IsRequired();
         builder.Property(x => x.FilterSessionId)
             .IsRequired();
         builder.Property(x => x.ProjectId)
             .IsRequired();
         builder.Property(x => x.OpenedAtUtc)
+            .IsRequired();
+        builder.Property(x => x.HasFilter)
             .IsRequired();
 
         builder.HasIndex(x => x.FilterSessionId);

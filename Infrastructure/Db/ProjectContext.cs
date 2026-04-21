@@ -57,7 +57,8 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
             t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
         });
 
-        builder.HasIndex(p => new {p.Year, p.Semester});
+        builder.HasIndex(p => p.Name);
+        builder.HasIndex(p => p.Year);
     }
 }
 
@@ -153,6 +154,8 @@ public class FileConfiguration : IEntityTypeConfiguration<File>
         builder.Property(f => f.Mvp).HasUriConversion();
         builder.Property(f => f.RoadMap).HasUriConversion();
         builder.Property(f => f.Product).HasUriListConversion();
+        
+        builder.HasKey(x => x.ProjectId);
     }
 }
 
