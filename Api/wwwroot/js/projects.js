@@ -1,4 +1,4 @@
-﻿import { getAllProjects, getTags } from "./api/projectApi.js";
+﻿import {getAllProjects, getTags} from "./api/projectApi.js";
 
 const PAGE_SIZE = 9;
 const AVAILABLE_YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
@@ -66,8 +66,10 @@ function syncUiWithState() {
         checkbox.checked = Number(checkbox.value) === state.year;
     });
 }
+
 let baseInitialized = false;
 let filtersInitialized = false;
+
 function escapeHtml(value) {
     return String(value)
         .replaceAll('&', '&amp;')
@@ -113,6 +115,7 @@ function refreshCatalog() {
 
     loadProjects();
 }
+
 console.log('projects.js loaded');
 console.log('window.location.origin =', window.location.origin);
 
@@ -155,8 +158,7 @@ function renderPagination() {
         saveCatalogState();
         await loadProjects();
         scrollToProjectsTop();
-    };
-
+    }
     nextBtn.onclick = async () => {
         if (state.page >= state.totalPages) return;
 
@@ -164,7 +166,7 @@ function renderPagination() {
         saveCatalogState();
         await loadProjects();
         scrollToProjectsTop();
-    };
+    }
     info.textContent = `Страница ${currentPage} из ${totalPages}`;
 
     prevBtn.disabled = currentPage <= 1;
@@ -296,36 +298,35 @@ async function loadProjects() {
         if (container) {
             container.innerHTML = `<div class="projects-error">Не удалось загрузить проекты.</div>`;
         }
-        
+
 
         state.totalPages = 1;
         renderPagination();
     }
 }
+
 function bindPagination() {
     const prevBtn = document.getElementById('pagination-prev');
     const nextBtn = document.getElementById('pagination-next');
 
     if (prevBtn && prevBtn.dataset.bound !== 'true') {
         prevBtn.dataset.bound = 'true';
-
-        prevBtn.addEventListener('click', () => {
+        prevBtn.onclick = () => {
             if (state.page <= 1) return;
 
             state.page -= 1;
             loadProjects();
-        });
+        };
     }
 
     if (nextBtn && nextBtn.dataset.bound !== 'true') {
         nextBtn.dataset.bound = 'true';
-
-        nextBtn.addEventListener('click', () => {
+        nextBtn.onclick = () => {
             if (state.page >= state.totalPages) return;
 
             state.page += 1;
             loadProjects();
-        });
+        };
     }
 }
 
@@ -426,8 +427,7 @@ function bindResetButton() {
     if (!resetButton || resetButton.dataset.bound === 'true') return;
 
     resetButton.dataset.bound = 'true';
-
-    resetButton.addEventListener('click', () => {
+    resetButton.onclick = () => {
         state.search = '';
         state.tagIds = [];
         state.year = null;
@@ -436,7 +436,7 @@ function bindResetButton() {
         const searchInput = document.getElementById('search-input');
         if (searchInput) {
             searchInput.value = '';
-            searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            searchInput.dispatchEvent(new Event('input', {bubbles: true}));
         }
 
         document.querySelectorAll(
@@ -446,7 +446,7 @@ function bindResetButton() {
         });
         saveCatalogState();
         loadProjects();
-    });
+    };
 }
 
 async function initFiltersUi() {
@@ -502,6 +502,7 @@ function bindSearch() {
         loadProjects();
     });
 }
+
 function initProjectCatalog() {
     if (!baseInitialized) {
         baseInitialized = true;

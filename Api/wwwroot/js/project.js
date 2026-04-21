@@ -35,6 +35,7 @@ function generateTabs(files) {
 function isEmptyValue(value) {
     return value == null || (typeof value === "string" && value.trim() === "");
 }
+
 function getEmptyStateMarkup(key) {
     return `
         <div class="product-empty-state">
@@ -137,7 +138,7 @@ function renderStack(tags) {
         `;
         return;
     }
-    
+
     for (const tag of tags) {
         const backgroundStyle = tag.color
             ? `style="filter: brightness(0) saturate(100%) invert(70%);
@@ -182,8 +183,9 @@ function formatTagName(tag) {
 
     return labels[tag] || tag.charAt(0).toUpperCase() + tag.slice(1);
 }
+
 function renderProject(project) {
-    
+
     const title = document.getElementById("project-title");
     const shortDescription = document.getElementById("short-description");
     const description = document.getElementById("description");
@@ -238,7 +240,7 @@ function renderProject(project) {
     }
     console.log(project.tags);
     renderStack(project.tags);
-    
+
     generateTabs(project.files);
     if (typeof window.activateTabFromHash === "function") {
         window.activateTabFromHash(false);
