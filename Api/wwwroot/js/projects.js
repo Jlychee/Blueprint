@@ -1,4 +1,4 @@
-﻿import { getAllProjects, getTags } from "./api/projectApi.js";
+﻿import {getAllProjects, getTags} from "./api/projectApi.js";
 
 const PAGE_SIZE = 9;
 const AVAILABLE_YEARS = [2021, 2022, 2023, 2024, 2025, 2026];
@@ -434,7 +434,7 @@ function bindResetButton() {
         const searchInput = document.getElementById("search-input");
         if (searchInput) {
             searchInput.value = "";
-            searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+            searchInput.dispatchEvent(new Event("input", {bubbles: true}));
         }
 
         document.querySelectorAll(

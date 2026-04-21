@@ -309,6 +309,7 @@
         grid-template-columns: 1fr;
         gap: 24px;
     }
+
     .project-title {
         font-size: 48px;
         margin-bottom: 36px;
@@ -366,6 +367,7 @@
         grid-template-columns: 1fr;
         gap: 24px;
     }
+
     .project-page {
         margin-top: 40px;
     }
@@ -445,6 +447,7 @@
         grid-template-columns: 1fr;
         gap: 24px;
     }
+
     .project-title {
         font-size: 28px;
     }
@@ -456,6 +459,7 @@
     .tab {
         font-size: 15px;
     }
+
     .info-table {
         overflow: hidden;
     }
@@ -481,6 +485,7 @@
     .table-caption {
         font-size: 0.95rem;
     }
+
     .navigation-objs img {
         width: 20px;
         height: 20px;

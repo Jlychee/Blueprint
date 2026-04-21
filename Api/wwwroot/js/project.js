@@ -1,4 +1,4 @@
-﻿import { getProject } from "./api/projectApi.js";
+﻿import {getProject} from "./api/projectApi.js";
 
 const params = new URLSearchParams(window.location.search);
 const projectId = params.get("id");

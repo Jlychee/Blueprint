@@ -11,7 +11,7 @@ function initSearchAndFilter() {
         }
 
         input.addEventListener('input', toggleClear);
-        
+
         clearBtn.onclick = () => {
             input.value = '';
             toggleClear();
