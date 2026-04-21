@@ -3,7 +3,7 @@
 }
 
 .project-card {
-    background: #111;
+    background: var(--card);
     border-radius: 20px;
     padding: 40px;
 }
@@ -34,7 +34,7 @@
 .stack-empty {
     font-size: 24px;
     line-height: 1.4;
-    color: #c3c3c3;
+    color: var(--text-muted);
     min-height: auto;
     display: block;
     text-align: left;
@@ -58,8 +58,8 @@
 }
 
 .tab-btn.active {
-    background: #191919;
-    border-radius: 12549.8px;
+    background: var(--bg);
+    border-radius: 12550px;
     padding: 19px 16px;
 }
 
@@ -232,7 +232,6 @@
     font-size: 0.85rem;
     color: #999;
     padding: 6px;
-    letter-spacing: 0.3px;
     opacity: 0;
     transform: translateY(-10px);
     transition: opacity 0.25s ease, transform 0.25s ease;
@@ -258,12 +257,12 @@
     margin: 0;
     max-width: 420px;
     line-height: 1.5;
-    color: #ffffff;
+    color: var(--text);
 }
 
 .product-empty-state__text span {
     font-weight: 600;
-    color: #9D6A69;
+    color: var(--accent);
 }
 
 .product-empty-state__image {

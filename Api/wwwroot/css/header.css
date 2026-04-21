@@ -32,13 +32,13 @@
     transform: translateY(-1px);
 }
 .logo img {
-    width: 52.51px;
-    height: 68.22px;
+    width: 53px;
+    height: 68px;
 }
 
 .logo-text {
     font-size: 25px;
-    color: #9D6A69;
+    color: var(--accent);
     font-weight: 50;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .nav button {
-    color: #C3C3C3;
+    color: var(--text-muted);
     text-decoration: none;
     font-size: 24px;
     border: none;

@@ -80,13 +80,13 @@
 .footer-link-title {
     font-size: 20px;
     font-weight: 600;
-    color: #fff;
+    color: var(--text);
 }
 
 .footer-link-text {
     font-size: 14px;
     line-height: 1.45;
-    color: #C3C3C3;
+    color: var(--text-muted);
 }
 
 .footer-bottom {
