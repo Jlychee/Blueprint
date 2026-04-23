@@ -12,12 +12,14 @@ public static class DatabaseInitializerExtensions
     {
         using var scope = app.Services.CreateScope();
 
-        var context = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+        var projectContext = scope.ServiceProvider.GetRequiredService<ProjectContext>();
+        projectContext.Database.Migrate();
+        
+        var metricsContext = scope.ServiceProvider.GetRequiredService<MetricsContext>();
+        metricsContext.Database.Migrate();
 
-        context.Database.Migrate();
-
-        TagTypeSeeder.Seed(context);
-        TagSeeder.Seed(context);
+        TagTypeSeeder.Seed(projectContext);
+        TagSeeder.Seed(projectContext);
 
         return app;
     }

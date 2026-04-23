@@ -1,25 +1,41 @@
 function initSearchAndFilter() {
     const input = document.getElementById('search-input');
     const clearBtn = document.querySelector('.clear');
+    const layout = document.getElementById('catalog-layout');
 
-    if (!input || !clearBtn) return;
-    if (input.dataset.searchInitialized === 'true') return;
+    if (input && clearBtn && input.dataset.searchInitialized !== 'true') {
+        input.dataset.searchInitialized = 'true';
 
-    input.dataset.searchInitialized = 'true';
+        function toggleClear() {
+            clearBtn.classList.toggle('active', input.value.length > 0);
+        }
 
-    function toggleClear() {
-        clearBtn.classList.toggle('active', input.value.length > 0);
+        input.addEventListener('input', toggleClear);
+
+        clearBtn.onclick = () => {
+            input.value = '';
+            toggleClear();
+            input.dispatchEvent(new Event('input', {bubbles: true}));
+            input.focus();
+        }
+
+        toggleClear();
     }
 
-    input.addEventListener('input', toggleClear);
+    if (!layout) return;
 
-    clearBtn.addEventListener('click', () => {
-        input.value = '';
-        toggleClear();
-        input.focus();
-    });
+    if (!document.body.dataset.filtersBound) {
+        document.body.dataset.filtersBound = 'true';
+        document.onclick = (event) => {
+            if (event.target.closest('.filter-btn') || event.target.closest('#filter')) {
+                layout.classList.toggle('filters-open');
+            }
 
-    toggleClear();
+            if (event.target.closest('#filters-close')) {
+                layout.classList.remove('filters-open');
+            }
+        }
+    }
 }
 
 window.initSearchAndFilter = initSearchAndFilter;

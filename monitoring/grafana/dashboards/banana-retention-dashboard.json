@@ -23,6 +23,12 @@
       "id": "table",
       "name": "Table",
       "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "text",
+      "name": "Text",
+      "version": ""
     }
   ],
   "annotations": {
@@ -41,13 +47,34 @@
       }
     ]
   },
-  "description": "Retention dashboard for cohorts built from the RetentionByCohorts table.",
+  "description": "\u0414\u0430\u0448\u0431\u043e\u0440\u0434 retention \u043f\u043e \u043a\u043e\u0433\u043e\u0440\u0442\u0430\u043c \u0438\u0437 \u0442\u0430\u0431\u043b\u0438\u0446\u044b RetentionByCohorts.",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
   "id": null,
   "links": [],
   "panels": [
+    {
+      "gridPos": {
+        "h": 3,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "code": {
+          "language": "markdown",
+          "showLineNumbers": false,
+          "showMiniMap": false
+        },
+        "content": "### ${__from:date:DD.MM.YYYY HH:mm} - ${__to:date:DD.MM.YYYY HH:mm}",
+        "mode": "markdown"
+      },
+      "pluginVersion": "11.0.0",
+      "title": "\u041f\u0435\u0440\u0438\u043e\u0434 \u0434\u0430\u043d\u043d\u044b\u0445",
+      "type": "text"
+    },
     {
       "datasource": {
         "type": "postgres",
@@ -76,7 +103,7 @@
         "h": 4,
         "w": 6,
         "x": 0,
-        "y": 0
+        "y": 3
       },
       "id": 1,
       "options": {
@@ -110,7 +137,7 @@
           "refId": "A"
         }
       ],
-      "title": "Users In Cohorts",
+      "title": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438 \u0432 \u043a\u043e\u0433\u043e\u0440\u0442\u0430\u0445",
       "type": "stat"
     },
     {
@@ -149,7 +176,7 @@
         "h": 4,
         "w": 6,
         "x": 6,
-        "y": 0
+        "y": 3
       },
       "id": 2,
       "options": {
@@ -183,7 +210,7 @@
           "refId": "A"
         }
       ],
-      "title": "Weighted R7",
+      "title": "\u0412\u0437\u0432\u0435\u0448\u0435\u043d\u043d\u044b\u0439 R7",
       "type": "stat"
     },
     {
@@ -222,7 +249,7 @@
         "h": 4,
         "w": 6,
         "x": 12,
-        "y": 0
+        "y": 3
       },
       "id": 3,
       "options": {
@@ -256,7 +283,7 @@
           "refId": "A"
         }
       ],
-      "title": "Weighted R14",
+      "title": "\u0412\u0437\u0432\u0435\u0448\u0435\u043d\u043d\u044b\u0439 R14",
       "type": "stat"
     },
     {
@@ -295,7 +322,7 @@
         "h": 4,
         "w": 6,
         "x": 18,
-        "y": 0
+        "y": 3
       },
       "id": 4,
       "options": {
@@ -329,7 +356,7 @@
           "refId": "A"
         }
       ],
-      "title": "Weighted R30",
+      "title": "\u0412\u0437\u0432\u0435\u0448\u0435\u043d\u043d\u044b\u0439 R30",
       "type": "stat"
     },
     {
@@ -346,7 +373,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "Retention, %",
+            "axisLabel": "\u0423\u0434\u0435\u0440\u0436\u0430\u043d\u0438\u0435, %",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -383,7 +410,7 @@
         "h": 8,
         "w": 14,
         "x": 0,
-        "y": 4
+        "y": 7
       },
       "id": 5,
       "options": {
@@ -412,7 +439,7 @@
           "refId": "A"
         }
       ],
-      "title": "Retention By Cohort Date",
+      "title": "Retention \u043f\u043e \u0434\u0430\u0442\u0435 \u043a\u043e\u0433\u043e\u0440\u0442\u044b",
       "type": "timeseries"
     },
     {
@@ -429,7 +456,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "Users",
+            "axisLabel": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "bars",
@@ -467,7 +494,7 @@
         "h": 8,
         "w": 10,
         "x": 14,
-        "y": 4
+        "y": 7
       },
       "id": 6,
       "options": {
@@ -496,7 +523,7 @@
           "refId": "A"
         }
       ],
-      "title": "Users By Cohort Date",
+      "title": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438 \u043f\u043e \u0434\u0430\u0442\u0435 \u043a\u043e\u0433\u043e\u0440\u0442\u044b",
       "type": "timeseries"
     },
     {
@@ -567,7 +594,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 15
       },
       "id": 7,
       "options": {
@@ -592,77 +619,12 @@
           "editorMode": "code",
           "format": "table",
           "rawQuery": true,
-          "rawSql": "SELECT\n  \"CohortDate\",\n  \"CohortWeek\",\n  \"Users\",\n  \"r7D\" AS \"R7 users\",\n  ROUND(100.0 * \"r7D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R7, %\",\n  \"r14D\" AS \"R14 users\",\n  ROUND(100.0 * \"r14D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R14, %\",\n  \"r30D\" AS \"R30 users\",\n  ROUND(100.0 * \"r30D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R30, %\"\nFROM public.\"RetentionByCohorts\"\nWHERE \"CohortDate\" >= $__timeFrom()::date\n  AND \"CohortDate\" <= $__timeTo()::date\nORDER BY \"CohortDate\" DESC;",
+          "rawSql": "SELECT\n  \"CohortDate\" AS \"\u0414\u0430\u0442\u0430 \u043a\u043e\u0433\u043e\u0440\u0442\u044b\",\n  \"CohortWeek\" AS \"\u041d\u0435\u0434\u0435\u043b\u044f \u043a\u043e\u0433\u043e\u0440\u0442\u044b\",\n  \"Users\" AS \"\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438\",\n  \"r7D\" AS \"R7 \u043f\u043e\u043b\u044c\u0437.\",\n  ROUND(100.0 * \"r7D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R7, %\",\n  \"r14D\" AS \"R14 \u043f\u043e\u043b\u044c\u0437.\",\n  ROUND(100.0 * \"r14D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R14, %\",\n  \"r30D\" AS \"R30 \u043f\u043e\u043b\u044c\u0437.\",\n  ROUND(100.0 * \"r30D\"::numeric / NULLIF(\"Users\", 0), 2) / 100.0 AS \"R30, %\"\nFROM public.\"RetentionByCohorts\"\nWHERE \"CohortDate\" >= $__timeFrom()::date\n  AND \"CohortDate\" <= $__timeTo()::date\nORDER BY \"CohortDate\" DESC;",
           "refId": "A"
         }
       ],
-      "title": "Cohorts Table",
+      "title": "\u0422\u0430\u0431\u043b\u0438\u0446\u0430 \u043a\u043e\u0433\u043e\u0440\u0442",
       "type": "table"
-    },
-    {
-      "datasource": {
-        "type": "postgres",
-        "uid": "banana-postgres"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 4,
-        "w": 6,
-        "x": 0,
-        "y": 22
-      },
-      "id": 8,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "percentChangeColorMode": "standard",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "showPercentChange": false,
-        "textMode": "auto",
-        "wideLayout": true
-      },
-      "pluginVersion": "11.0.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "postgres",
-            "uid": "banana-postgres"
-          },
-          "editorMode": "code",
-          "format": "table",
-          "rawQuery": true,
-          "rawSql": "SELECT COALESCE(ROUND(COUNT(*)::numeric / NULLIF(COUNT(DISTINCT \"FilterSessionId\"), 0), 2), 0) AS value\nFROM public.\"FilteredProjectViews\"\nWHERE \"OpenedAtUtc\" >= $__timeFrom()\n  AND \"OpenedAtUtc\" <= $__timeTo();",
-          "refId": "A"
-        }
-      ],
-      "title": "Avg Views After Filter",
-      "type": "stat"
     }
   ],
   "refresh": "1m",
@@ -682,8 +644,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Banana Retention",
+  "title": "Banana Retention \u043c\u0435\u0442\u0440\u0438\u043a\u0438",
   "uid": "banana-retention",
-  "version": 1,
+  "version": 3,
   "weekStart": "monday"
 }

@@ -8,22 +8,24 @@ public class TagTypeSeeder
 {
     public static void Seed(ProjectContext context)
     {
-        if (!context.TagTypes.Any())
-        {
-            var path = Path.Combine(
-                "..",
-                "etc",
-                "SeedData",
-                "tagTypes.json"
-            );
+        var path = Path.Combine(
+            "..",
+            "etc",
+            "SeedData",
+            "tagTypes.json"
+        );
 
-            var json = File.ReadAllText(path);
-            var tagTypes = JsonSerializer.Deserialize<List<TagType>>(json) ?? [];
-            
-            
-            
-            context.TagTypes.AddRange(tagTypes);
-            context.SaveChanges();
+        var json = File.ReadAllText(path);
+        var tagTypes = JsonSerializer.Deserialize<List<TagType>>(json) ?? [];
+
+        foreach (var tagType in tagTypes)
+        {
+            var exists = context.TagTypes.Any(t => t.Name == tagType.Name);
+
+            if (!exists)
+                context.TagTypes.Add(tagType);
         }
+
+        context.SaveChanges();
     }
 }

@@ -7,6 +7,8 @@ namespace Infrastructure.Repositories;
 
 public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
 {
+    private IMetricRepository _metricRepositoryImplementation;
+
     public async Task RegisterOpenAsync(Guid userId, DateOnly occurredAt, CancellationToken ct)
     {
         if (userId == Guid.Empty)
@@ -37,16 +39,14 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
         await metricsContext.SaveChangesAsync(ct);
     }
 
-    public async Task RegisterFilteredProjectViewAsync(Guid filterSessionId, int projectId, DateTime occurredAtUtc, CancellationToken ct)
+    public async Task RegisterFilteredProjectViewAsync(Guid userId, Guid filterSessionId, int projectId,bool hasFilter ,DateTime occurredAtUtc, CancellationToken ct)
     {
-        if (filterSessionId == Guid.Empty)
-            return;
-
         await metricsContext.FilteredProjectViews.AddAsync(new FilteredProjectView
         {
-            Id = Guid.NewGuid(),
+            UserId = userId,
             FilterSessionId = filterSessionId,
             ProjectId = projectId,
+            HasFilter = hasFilter,
             OpenedAtUtc = occurredAtUtc,
         }, ct);
 
@@ -59,13 +59,14 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
 
         foreach (var userRetentionState in userRetentionStates)
         {
-            var retentionDays = userRetentionState.SecondOpen == default
-                ? 0
-                : userRetentionState.SecondOpen.DayNumber - userRetentionState.FirstOpen.DayNumber;
+            var hasSecondOpen = userRetentionState.SecondOpen != default;
+            var retentionDays = hasSecondOpen
+                ? userRetentionState.SecondOpen.DayNumber - userRetentionState.FirstOpen.DayNumber
+                : int.MaxValue;
 
-            userRetentionState.r7D = retentionDays >= 7;
-            userRetentionState.r14D = retentionDays >= 14;
-            userRetentionState.r30D = retentionDays >= 30;
+            userRetentionState.r7D = hasSecondOpen && retentionDays <= 7;
+            userRetentionState.r14D = hasSecondOpen && retentionDays <= 14;
+            userRetentionState.r30D = hasSecondOpen && retentionDays <= 30;
         }
 
         await metricsContext.SaveChangesAsync(ct);
@@ -94,6 +95,20 @@ public class MetricRepository(MetricsContext metricsContext) : IMetricRepository
         }
 
         await metricsContext.RetentionByCohorts.AddRangeAsync(retentionByCohorts, ct);
+        await metricsContext.SaveChangesAsync(ct);
+    }
+
+    public async Task RegisterFilteredViewAsync(Guid userId, Guid filterSessionId, int page, DateTime occurredAtUtc,
+        CancellationToken ct)
+    {
+        await metricsContext.FilteredViews.AddAsync(new FilteredView
+        {
+            UserId = userId,
+            FilterSessionId = filterSessionId,
+            Page = page,
+            OpenedAtUtc = occurredAtUtc,
+        }, ct);
+
         await metricsContext.SaveChangesAsync(ct);
     }
 

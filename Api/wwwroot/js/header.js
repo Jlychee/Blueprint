@@ -1,6 +1,9 @@
 ﻿async function loadHeader() {
     const headerContainer = document.getElementById('header');
-    if (!headerContainer) return;
+    if (!headerContainer) {
+        console.error('Элемент #header не найден');
+        return;
+    }
 
     const headerPaths = [
         'resources/components/header.html',
@@ -39,25 +42,33 @@ function focusIndexSearch() {
     const searchSection = document.querySelector('.search-section');
     const searchInput = document.getElementById('search-input');
 
-    if (!searchInput) return;
-
-    if (searchSection) {
-        searchSection.classList.add('active');
-        searchSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (!searchSection) {
+        console.error('.search-section не найден');
+        return;
     }
 
-    requestAnimationFrame(() => {
-        searchInput.focus();
-        searchInput.select();
-    });
+    searchSection.classList.toggle('active');
+
+    if (searchSection.classList.contains('active')) {
+        searchSection.scrollIntoView({behavior: 'smooth', block: 'center'});
+
+        requestAnimationFrame(() => {
+            if (searchInput) {
+                searchInput.focus();
+                searchInput.select();
+            }
+        });
+    }
 }
 
 function initHeaderSearch() {
     const searchBtn = document.getElementById('search-btn');
+    if (!searchBtn) {
+        console.error('#search-btn не найден');
+        return;
+    }
 
-    if (!searchBtn) return;
-
-    searchBtn.addEventListener('click', focusIndexSearch);
+    searchBtn.onclick = () => focusIndexSearch();
 }
 
-loadHeader();
+document.addEventListener('DOMContentLoaded', loadHeader);

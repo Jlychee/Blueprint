@@ -5,16 +5,18 @@ using Api.Application.Features.Project.GetProjects;
 
 namespace Api.Application.Features.Project.GetProject;
 
-public class GetProjectsHandle(IProjectRepository projectRepository, ITagRepository tagRepository)
+public class GetProjectsHandle(IProjectRepository projectRepository, IMetricRepository metricRepository)
     : IRequestHandler<GetProjectsQuery, PagedResultDto<ProjectCardDto>>
 {
     public async Task<PagedResultDto<ProjectCardDto>> Handle(GetProjectsQuery request,
         CancellationToken cancellationToken)
     {
-        var filter = request.filter;
-        if (filter.TagNames is not null)
-            filter.TagIds = await tagRepository.GetTagsIdsByNameAsync(filter.TagNames, cancellationToken);
-
+        var occurredAtUtc = DateTime.UtcNow;
+        await metricRepository.RegisterFilteredViewAsync(request.cookie.MetricUserId,
+            request.cookie.FilterSessionId,
+            request.filter.Page,            
+            occurredAtUtc,
+            cancellationToken);
         return await projectRepository.SearchAsync(request.filter, cancellationToken)
             ?? throw new KeyNotFoundException();
     }

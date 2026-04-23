@@ -1,23 +1,47 @@
 ﻿const buttons = document.querySelectorAll(".tab-btn");
 
-buttons.forEach(button => {
+function activateTab(tabId, updateHash = true) {
+    const tabs = document.querySelectorAll(".tab");
 
-    button.addEventListener("click", () => {
+    let targetId = tabId || "short";
 
-        const tabId = button.dataset.tab;
+    const targetTab = document.getElementById(targetId);
+    const targetButton = document.querySelector(`.tab-btn[data-tab="${targetId}"]`);
 
-        const tabs = document.querySelectorAll(".tab");
+    if (!targetTab || !targetButton) {
+        targetId = "short";
+    }
 
-        buttons.forEach(btn => btn.classList.remove("active"));
-        tabs.forEach(tab => tab.classList.remove("active"));
-
-        button.classList.add("active");
-
-        const targetTab = document.getElementById(tabId);
-        if (targetTab) {
-            targetTab.classList.add("active");
-        }
-
+    buttons.forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === targetId);
     });
 
+    document.querySelectorAll(".tab").forEach(tab => {
+        tab.classList.toggle("active", tab.id === targetId);
+    });
+
+    if (updateHash) {
+        history.replaceState(null, "", `${window.location.pathname}${window.location.search}#${targetId}`);
+    }
+}
+
+function activateTabFromHash(updateHash = false) {
+    const hash = window.location.hash.replace("#", "").trim();
+    activateTab(hash || "short", updateHash);
+}
+
+buttons.forEach(button => {
+    button.onclick = () => activateTab(button.dataset.tab, true);
+    
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    activateTabFromHash(false);
+});
+
+window.addEventListener("hashchange", () => {
+    activateTabFromHash(false);
+});
+
+window.activateTabFromHash = activateTabFromHash;
+window.activateTab = activateTab;

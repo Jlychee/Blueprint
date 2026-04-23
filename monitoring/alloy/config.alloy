@@ -1,0 +1,53 @@
+discovery.docker "banana" {
+  host             = "unix:///var/run/docker.sock"
+  refresh_interval = "5s"
+}
+
+discovery.relabel "banana" {
+  targets = []
+
+  rule {
+    source_labels = ["__meta_docker_container_name"]
+    regex         = "/(.*)"
+    target_label  = "container"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "service"
+  }
+
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_project"]
+    target_label  = "compose_project"
+  }
+}
+
+loki.source.docker "banana" {
+  host             = "unix:///var/run/docker.sock"
+  targets          = discovery.docker.banana.targets
+  relabel_rules    = discovery.relabel.banana.rules
+  refresh_interval = "5s"
+  labels           = { job = "docker" }
+  forward_to       = [loki.process.banana.receiver]
+}
+
+loki.process "banana" {
+  stage.static_labels {
+    values = {
+      stack = "banana",
+    }
+  }
+
+  forward_to = [loki.write.banana.receiver]
+}
+
+loki.write "banana" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
+
+livedebugging {
+  enabled = true
+}
