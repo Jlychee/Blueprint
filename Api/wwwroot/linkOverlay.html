@@ -12,17 +12,18 @@
 
 </head>
 <body>
-<div class="overlay-bg" onclick="closeOverlay()"></div>
+<div class="overlay-bg" data-close-overlay></div>
 
 <div class="overlay">
-    <span class="close-btn" onclick="closeOverlay()">×</span>
+    <span class="close-btn" data-close-overlay>×</span>
 
     <h2>Ссылка на файл:</h2>
     <div class="link-wrapper">
         <label class="scroll-link-wrapper">
-            <input type="text" id="fileLink" value="https://projectblueprint.ru/Vibik/shortdescription" readonly>
+            <input type="text" id="fileLink" readonly>
         </label>
-        <button class="copy-btn" onclick="copyLink('fileLink')"><img src="resources/images/copy.svg" alt="скопировать">
+        <button class="copy-btn" data-copy-link="fileLink" type="button">
+            <img src="resources/images/copy.svg" alt="скопировать">
         </button>
 
     </div>
@@ -31,10 +32,11 @@
     <h2>Ссылка на проект:</h2>
     <div class="link-wrapper">
         <label class="scroll-link-wrapper">
-            <input type="text" id="projectLink" value="https://projectblueprint.ru/Vibik" readonly>
+            <input type="text" id="projectLink" readonly>
         </label>
-        <button class="copy-btn" onclick="copyLink('projectLink')"><img src="resources/images/copy.svg"
-                                                                        alt="скопировать"></button>
+        <button class="copy-btn" data-copy-link="projectLink" type="button">
+            <img src="resources/images/copy.svg" alt="скопировать">
+        </button>
     </div>
 </div>
 </body>

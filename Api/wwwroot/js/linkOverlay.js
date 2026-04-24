@@ -58,7 +58,33 @@ function copyLink(id) {
         alert("Ссылка скопирована!");
     });
 }
+function bindOverlayEvents(root = document) {
+    root.querySelectorAll('[data-close-overlay]').forEach((element) => {
+        if (element.dataset.bound === 'true') return;
 
+        element.dataset.bound = 'true';
+        element.addEventListener('click', closeOverlay);
+    });
+
+    root.querySelectorAll('[data-open-overlay]').forEach((button) => {
+        if (button.dataset.bound === 'true') return;
+
+        button.dataset.bound = 'true';
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            openOverlay();
+        });
+    });
+
+    root.querySelectorAll('[data-copy-link]').forEach((button) => {
+        if (button.dataset.bound === 'true') return;
+
+        button.dataset.bound = 'true';
+        button.addEventListener('click', () => {
+            copyLink(button.dataset.copyLink);
+        });
+    });
+}
 async function loadOverlay() {
     if (document.querySelector(".overlay")) {
         updateOverlayLinks();
@@ -72,7 +98,7 @@ async function loadOverlay() {
         const container = document.createElement('div');
         container.innerHTML = html;
         document.body.appendChild(container);
-
+        bindOverlayEvents(container);
         updateOverlayLinks();
     } catch (err) {
         console.error('Ошибка загрузки оверлея:', err);
@@ -84,4 +110,7 @@ window.closeOverlay = closeOverlay;
 window.copyLink = copyLink;
 window.updateOverlayLinks = updateOverlayLinks;
 
-document.addEventListener("DOMContentLoaded", loadOverlay);
+document.addEventListener("DOMContentLoaded", () => {
+    bindOverlayEvents();
+    loadOverlay();
+});

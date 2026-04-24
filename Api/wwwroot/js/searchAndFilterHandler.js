@@ -32,7 +32,7 @@ function initSearchAndFilter() {
 
     if (!document.body.dataset.filtersBound) {
         document.body.dataset.filtersBound = 'true';
-        document.onclick = (event) => {
+        document.addEventListener('click', (event) => {
             if (event.target.closest('.filter-btn') || event.target.closest('#filter')) {
                 layout.classList.toggle('filters-open');
             }
@@ -40,7 +40,7 @@ function initSearchAndFilter() {
             if (event.target.closest('#filters-close')) {
                 layout.classList.remove('filters-open');
             }
-        }
+        });
     }
 }
 

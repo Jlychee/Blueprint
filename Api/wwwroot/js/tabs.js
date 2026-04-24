@@ -30,9 +30,10 @@ function activateTabFromHash(updateHash = false) {
     activateTab(hash || "short", updateHash);
 }
 
-buttons.forEach(button => {
-    button.onclick = () => activateTab(button.dataset.tab, true);
-    
+buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+        activateTab(button.dataset.tab, true);
+    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {

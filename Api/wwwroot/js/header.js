@@ -68,7 +68,7 @@ function initHeaderSearch() {
         return;
     }
 
-    searchBtn.onclick = () => focusIndexSearch();
+    searchBtn.addEventListener('click', focusIndexSearch);
 }
 
 document.addEventListener('DOMContentLoaded', loadHeader);
