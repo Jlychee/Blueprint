@@ -111,12 +111,6 @@ function renderSearchStub(query) {
 
 function refreshCatalog() {
     saveCatalogState();
-
-    if (state.search) {
-        renderSearchStub(state.search);
-        return;
-    }
-
     loadProjects();
 }
 
@@ -259,8 +253,15 @@ async function loadProjects() {
         state.totalCount = data.totalCount ?? 0;
 
         saveCatalogState();
-        renderProjects(data.items || []);
-        renderPagination();
+
+        const items = data.items || [];
+
+        if (state.search && items.length === 0) {
+            renderSearchStub(state.search);
+        } else {
+            renderProjects(items);
+            renderPagination();
+        }
     } catch (error) {
         if (requestId !== lastRequestId) return;
 
@@ -461,6 +462,13 @@ async function initFiltersUi() {
     bindResetButton();
 }
 
+function hasActiveFilters() {
+    return Boolean(
+        state.search ||
+        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
+        state.year
+    );
+}
 function bindSearch() {
     const input = document.getElementById("search-input");
     if (!input || input.dataset.catalogSearchBound === "true") return;
@@ -472,23 +480,10 @@ function bindSearch() {
 
         event.preventDefault();
 
-        const query = input.value.trim();
+        state.search = input.value.trim();
         state.page = 1;
-        state.search = query;
-        saveCatalogState();
 
-        if (!query) {
-            loadProjects();
-            return;
-        }
-        const items = query || [];
-
-        if (state.search && items.length === 0) {
-            renderSearchStub(state.search);
-        } else {
-            renderProjects(items);
-        }
-        console.log(items)
+        refreshCatalog();
     });
 
     input.addEventListener("input", () => {
