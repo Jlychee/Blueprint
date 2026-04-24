@@ -90,14 +90,14 @@ function renderSearchStub(query) {
     container.innerHTML = `
         <div class="search-stub">
             <p class="search-stub__text">
-                Поиск по названию пока не подключён.
+                По запросу ничего не найдено.
                 <br>
                 Запрос: <span>${escapeHtml(query)}</span>
             </p>
             <img
                 class="search-stub__image"
                 src="resources/images/hlopin.png"
-                alt="Поиск скоро появится"
+                alt="Ничего не найдено"
                 width="180"
                 height="221"
             >
@@ -230,14 +230,6 @@ function hasActiveFilters() {
     );
 }
 
-function hasActiveFilters() {
-    return Boolean(
-        state.search ||
-        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
-        state.year
-    );
-}
-
 function syncFilterSessionId() {
     if (typeof window.getOrCreateFilterSessionId !== "function") return;
 
@@ -260,6 +252,7 @@ async function loadProjects() {
         syncFilterSessionId();
 
         const data = await getAllProjects({
+            search: state.search,
             tagIds: state.tagIds,
             year: state.year,
             page: state.page,
@@ -495,8 +488,14 @@ function bindSearch() {
             loadProjects();
             return;
         }
+        const items = query || [];
 
-        renderSearchStub(query);
+        if (state.search && items.length === 0) {
+            renderSearchStub(state.search);
+        } else {
+            renderProjects(items);
+        }
+        console.log(items)
     });
 
     input.addEventListener("input", () => {

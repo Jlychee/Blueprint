@@ -52,6 +52,13 @@ export async function getAllProjects(filters = {}) {
     if (filters.semester != null) {
         params.append('Semester', String(filters.semester));
     }
+    if (filters.cookie?.metricUserId) {
+        params.append('cookie.metricUserId', filters.cookie.metricUserId);
+    }
+
+    if (filters.cookie?.filterSessionId) {
+        params.append('cookie.filterSessionId', filters.cookie.filterSessionId);
+    }
 
     params.append('Page', String(filters.page ?? 1));
     params.append('PageSize', String(filters.pageSize ?? 9));
