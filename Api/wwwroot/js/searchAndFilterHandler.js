@@ -12,12 +12,18 @@ function initSearchAndFilter() {
 
         input.addEventListener('input', toggleClear);
 
-        clearBtn.onclick = () => {
+        clearBtn.addEventListener('click', () => {
             input.value = '';
             toggleClear();
-            input.dispatchEvent(new Event('input', {bubbles: true}));
+
+            if (typeof window.clearCatalogSearch === 'function') {
+                window.clearCatalogSearch();
+            } else {
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+            }
+
             input.focus();
-        }
+        });
 
         toggleClear();
     }
