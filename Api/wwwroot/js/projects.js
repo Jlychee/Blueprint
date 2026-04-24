@@ -222,13 +222,6 @@ function renderProjects(items) {
         container.appendChild(clone);
     });
 }
-function hasActiveFilters() {
-    return Boolean(
-        state.search ||
-        (Array.isArray(state.tagIds) && state.tagIds.length > 0) ||
-        state.year
-    );
-}
 
 function syncFilterSessionId() {
     if (typeof window.getOrCreateFilterSessionId !== "function") return;
