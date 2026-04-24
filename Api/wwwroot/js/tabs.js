@@ -31,9 +31,8 @@ function activateTabFromHash(updateHash = false) {
 }
 
 buttons.forEach(button => {
-    button.addEventListener("click", () => {
-        activateTab(button.dataset.tab, true);
-    });
+    button.onclick = () => activateTab(button.dataset.tab, true);
+    
 });
 
 document.addEventListener("DOMContentLoaded", () => {

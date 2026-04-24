@@ -21,20 +21,19 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
 });
 var app = builder.Build();
+app.UseForwardedHeaders();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-app.UseForwardedHeaders();
+
 app.InitializeDatabase();
+app.UseCors("FrontendDev");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseOpenTelemetryPrometheusScrapingEndpoint();
-
-app.UseExceptionHandler();
-
 app.MapControllers();
 app.Run();

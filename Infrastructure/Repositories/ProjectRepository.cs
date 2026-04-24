@@ -155,9 +155,12 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
     public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
     {
         var query = projectContext.Projects.AsQueryable();
+        
+        if (!string.IsNullOrEmpty(filter.Search))
+            query = query.Where(p => EF.Functions.ILike(p.Name, $"%{filter.Search.Trim()}%"));
 
         if (filter.Year.HasValue)
-            query = query.Where(p => p.Year >= filter.Year.Value);
+            query = query.Where(p => p.Year == filter.Year.Value);
 
         if (filter.Semester.HasValue)
             query = query.Where(p => p.Semester == filter.Semester);

@@ -122,7 +122,7 @@
     "Id": 18,
     "Title": "jwt",
     "Icon": "https://www.svgrepo.com/show/306280/jsonwebtokens.svg",
-    "Color": "#C3C3C3",
+    "Color": null,
     "TagTypeId": 3
   },
   {
