@@ -237,7 +237,11 @@ async function loadProjects() {
     const requestId = ++lastRequestId;
 
     if (container) {
-        container.innerHTML = `<div class="projects-empty">Загрузка проектов...</div>`;
+        container.classList.add("projects-grid--loading");
+
+        if (!container.children.length) {
+            container.innerHTML = `<div class="projects-empty">Загрузка проектов...</div>`;
+        }
     }
 
     try {
@@ -260,7 +264,9 @@ async function loadProjects() {
         saveCatalogState();
 
         const items = data.items || [];
-
+        if (container) {
+            container.classList.remove("projects-grid--loading");
+        }
         if (state.search && items.length === 0) {
             renderSearchStub(state.search);
         } else {
@@ -269,7 +275,9 @@ async function loadProjects() {
         }
     } catch (error) {
         if (requestId !== lastRequestId) return;
-
+        if (container) {
+            container.classList.remove("projects-grid--loading");
+        }
         console.error("Error loading projects:", error);
 
         if (container) {
@@ -324,15 +332,26 @@ function renderTagsFilters(tagGroups) {
         }
 
         const section = document.createElement("div");
-        section.className = "filter-group";
+        section.className = "filter-group filter-subsection";
 
-        const title = document.createElement("div");
+        const title = document.createElement("button");
+        title.type = "button";
         title.className = "filter-subsection-title";
+        title.dataset.filterToggle = "";
 
         const heading = document.createElement("h3");
         heading.textContent = group.type || "Теги";
+        const icon = document.createElement("img");
+        icon.src = "resources/images/chevron.svg";
+        icon.className = "filter-toggle-icon";
+        icon.alt = "";
+
+        title.appendChild(icon);
         title.appendChild(heading);
         section.appendChild(title);
+
+        const content = document.createElement("div");
+        content.className = "filter-subsection-content";
 
         group.tags.forEach((tag) => {
             const row = document.createElement("div");
@@ -351,9 +370,10 @@ function renderTagsFilters(tagGroups) {
             label.appendChild(input);
             label.appendChild(text);
             row.appendChild(label);
-            section.appendChild(row);
+            content.appendChild(row);
         });
 
+        section.appendChild(content);
         tagsContainer.appendChild(section);
     });
 
@@ -367,6 +387,10 @@ function renderTagsFilters(tagGroups) {
             refreshCatalog();
         });
     });
+
+    if (typeof window.initSearchAndFilter === "function") {
+        window.initSearchAndFilter();
+    }
 
     syncUiWithState();
 }
@@ -444,7 +468,6 @@ function bindResetButton() {
         });
 
         refreshCatalog();
-        restoreCatalogState();
     });
 }
 function getPositiveNumber(value, fallback) {

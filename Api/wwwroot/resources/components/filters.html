@@ -9,10 +9,17 @@
     <div class="filters-scroll">
         <div id="filter-tags-list"></div>
 
-        <div class="filter-subsection-title">
-            <h3>Год создания</h3>
+        <div class="filter-subsection">
+            <button type="button" class="filter-subsection-title" data-filter-toggle>
+                <img src="resources/images/chevron.svg"
+                    class="filter-toggle-icon"
+                    alt="">
+                <h3>Год создания</h3>
+            </button>
+            <div class="filter-subsection-content">
+                <div id="filter-years-list"></div>
+            </div>
         </div>
-        <div id="filter-years-list"></div>
 
         <button type="button" class="filters-reset" id="filters-reset">Сбросить</button>
     </div>

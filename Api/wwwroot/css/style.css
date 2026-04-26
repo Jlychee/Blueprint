@@ -57,11 +57,14 @@ body.filters-open {
     flex: 0 0 auto;
     white-space: nowrap;
 }
-
+.projects-grid--loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
 .filter-btn img {
     flex-shrink: 0;
 }
-
 .search {
     display: flex;
     align-items: center;
