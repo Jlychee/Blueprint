@@ -7,7 +7,7 @@
 body {
     background: var(--bg);
     color: var(--text);
-    font-family: Raleway, sans-serif;
+    font-family: var(--font-main);
 }
 
 body.filters-open {
@@ -51,17 +51,20 @@ body.filters-open {
     border-radius: 30px;
     background: var(--card);
     color: var(--text);
-    font-family: Raleway, sans-serif;
+    font-family: var(--font-main);
     font-size: 16px;
     cursor: pointer;
     flex: 0 0 auto;
     white-space: nowrap;
 }
-
+.projects-grid--loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
 .filter-btn img {
     flex-shrink: 0;
 }
-
 .search {
     display: flex;
     align-items: center;

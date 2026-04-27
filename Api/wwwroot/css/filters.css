@@ -129,6 +129,48 @@
     font-size: 16px;
     cursor: pointer;
 }
+.filter-subsection {
+    margin-bottom: 10px;
+}
+
+.filter-subsection-title {
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
+    flex-direction: row-reverse;
+}
+
+.filter-subsection-title h3 {
+    font-size: 16px;
+    color: var(--text);
+    margin: 0;
+}
+
+.filter-toggle-icon {
+    font-size: 18px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.filter-subsection.collapsed .filter-toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.filter-subsection.collapsed .filter-subsection-content {
+    display: none;
+}
+
 
 @media (max-width: 980px) {
     .filters {

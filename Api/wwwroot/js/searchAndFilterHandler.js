@@ -12,12 +12,18 @@ function initSearchAndFilter() {
 
         input.addEventListener('input', toggleClear);
 
-        clearBtn.onclick = () => {
+        clearBtn.addEventListener('click', () => {
             input.value = '';
             toggleClear();
-            input.dispatchEvent(new Event('input', {bubbles: true}));
+
+            if (typeof window.clearCatalogSearch === 'function') {
+                window.clearCatalogSearch();
+            } else {
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+            }
+
             input.focus();
-        }
+        });
 
         toggleClear();
     }
@@ -26,7 +32,8 @@ function initSearchAndFilter() {
 
     if (!document.body.dataset.filtersBound) {
         document.body.dataset.filtersBound = 'true';
-        document.onclick = (event) => {
+
+        document.addEventListener('click', (event) => {
             if (event.target.closest('.filter-btn') || event.target.closest('#filter')) {
                 layout.classList.toggle('filters-open');
             }
@@ -34,8 +41,21 @@ function initSearchAndFilter() {
             if (event.target.closest('#filters-close')) {
                 layout.classList.remove('filters-open');
             }
-        }
+        });
     }
+
+    document.querySelectorAll('[data-filter-toggle]').forEach((button) => {
+        if (button.dataset.bound === 'true') return;
+
+        button.dataset.bound = 'true';
+
+        button.addEventListener('click', () => {
+            const section = button.closest('.filter-subsection');
+            if (!section) return;
+
+            section.classList.toggle('collapsed');
+        });
+    });
 }
 
 window.initSearchAndFilter = initSearchAndFilter;
