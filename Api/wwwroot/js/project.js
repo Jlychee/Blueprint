@@ -54,7 +54,7 @@ function renderLinksList(key, links) {
             const safeLink = escapeHtml(link);
 
             if (isValidUrl(link)) {
-                return `
+                return `    
                     <li>
                         <a href="${safeLink}" target="_blank" rel="noopener noreferrer">
                             ${safeLink}
@@ -242,8 +242,7 @@ function renderProject(project) {
 
     if (shortDescription) {
         shortDescription.textContent =
-            project?.shortDescriptionAi ||
-            project?.shortDescription ||
+            project?.descriptionAi ||
             project?.description ||
             "";
     }

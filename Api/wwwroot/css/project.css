@@ -383,15 +383,17 @@
     }
 
     .tabs {
-        gap: 16px;
-        margin-bottom: 28px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+    }
+
+    .tabs::-webkit-scrollbar {
+        display: none;
     }
 
     .tab-btn {
-        font-size: 14px;
-        white-space: nowrap;
+        flex: 0 0 auto;
     }
-
     .tab-btn.active {
         padding: 12px 12px;
     }
@@ -400,6 +402,11 @@
         font-size: 17px;
         line-height: 1.5;
         gap: 28px;
+    }
+    .tab a {
+        word-break: break-all;
+        overflow-wrap: anywhere;
+        font-size: 15px;
     }
 
     .stack-empty {
@@ -417,28 +424,44 @@
 
     .table-wrapper {
         width: 100%;
-        overflow-x: auto;
+        overflow: visible;
     }
 
     .info-table {
         width: 100%;
         min-width: 0;
+        table-layout: fixed;
+        border-collapse: collapse;
+        border-radius: 12px;
         overflow: hidden;
     }
 
     .info-table th,
     .info-table td {
-        padding: 10px 12px;
-        font-size: 0.85rem;
+        width: 50%;
+        padding: 10px 8px;
+        font-size: 0.82rem;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        border: 1px solid white;
+    }
+
+    .info-table th {
+        width: 50%;
+        white-space: normal;
     }
 
     .info-table td {
-        font-size: 0.9rem;
+        width: 50%;
+        font-size: 0.88rem;
     }
 
     .table-caption {
         font-size: 1.05rem;
         margin-bottom: 1rem;
+        word-break: break-word;
+
     }
 }
 
