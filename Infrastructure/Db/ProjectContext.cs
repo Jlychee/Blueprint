@@ -35,6 +35,11 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
     public void Configure(EntityTypeBuilder<Like> builder)
     {
         builder.HasKey(x => new { x.ProjectId, x.UserId });
+        builder.HasOne(x => x.Project)
+            .WithMany(x => x.Likes)
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }
 public class ProjectConfiguration : IEntityTypeConfiguration<Project>
@@ -58,11 +63,15 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(x => x.Year).IsRequired();
         builder.Property(x => x.Semester).IsRequired();
+        builder.Property(x => x.LikesCount)
+            .IsRequired()
+            .HasDefaultValue(0);
         // TODO: я хз, через Constraint не статическую проверку не сделать (я бы хотела, кнч текущий год проверять)
         builder.ToTable(t =>
         {
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
             t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
+            t.HasCheckConstraint("CK_PROJECT_LIKES_COUNT", "\"LikesCount\" >= 0");
         });
 
         builder.HasIndex(p => p.Name);

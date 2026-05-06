@@ -101,7 +101,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                         .Select(t => new ProjectTag
                         {
                             TagId = existingTags[t.Title]
-                        }).ToList()
+                        }).ToList(),
                 };
 
                 projectContext.Projects.Add(entity);
@@ -192,6 +192,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                         Icon = pt.Tag.Icon,
                         Color = pt.Tag.Color,
                     }).ToList(),
+                LikeCount = p.LikesCount,
             }).ToListAsync(ct);
 
         return new PagedResultDto<ProjectCardDto>
@@ -205,29 +206,90 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
 
     public async Task<bool> LikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
     {
-        var exists = await projectContext.Likes
-            .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, cancellationToken: ct);
+        await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
 
-        if (exists) 
+        var projectExists = await projectContext.Projects
+            .AnyAsync(x => x.Id == projectId, ct);
+
+        if (!projectExists)
+        {
+            await transaction.CommitAsync(ct);
+            return false;
+        }
+
+        var exists = await projectContext.Likes
+            .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, ct);
+
+        if (exists)
+        {
+            await transaction.CommitAsync(ct);
             return true;
-        
+        }
+
         projectContext.Likes.Add(new Like
         {
             ProjectId = projectId,
             UserId = userId
         });
 
-        await projectContext.SaveChangesAsync(cancellationToken: ct);
+        try
+        {
+            await projectContext.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException) when (!ct.IsCancellationRequested)
+        {
+            await transaction.RollbackAsync(ct);
+            projectContext.ChangeTracker.Clear();
+
+            var likeExists = await projectContext.Likes
+                .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, ct);
+
+            if (likeExists)
+                return true;
+
+            projectExists = await projectContext.Projects
+                .AnyAsync(x => x.Id == projectId, ct);
+
+            if (!projectExists)
+                return false;
+
+            throw;
+        }
+
+        await projectContext.Projects
+            .Where(x => x.Id == projectId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.LikesCount, x => x.LikesCount + 1), ct);
+
+        await transaction.CommitAsync(ct);
 
         return true;
     }
 
     public async Task<bool> UnlikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
     {
-        await projectContext.Likes
+        await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
+
+        var deleted = await projectContext.Likes
             .Where(x => x.ProjectId == projectId && x.UserId == userId)
             .ExecuteDeleteAsync(cancellationToken: ct);
 
-        return false;
+        if (deleted == 0)
+        {
+            var projectExists = await projectContext.Projects
+                .AnyAsync(x => x.Id == projectId, ct);
+
+            await transaction.CommitAsync(ct);
+            return projectExists;
+        }
+
+        await projectContext.Projects
+            .Where(x => x.Id == projectId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.LikesCount, x => x.LikesCount > 0 ? x.LikesCount - 1 : 0), ct);
+
+        await transaction.CommitAsync(ct);
+
+        return true;
     }
 }
