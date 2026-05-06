@@ -209,6 +209,7 @@ body.filters-open {
 
 .card {
     display: flex;
+    position: relative;
     flex-direction: column;
     min-height: 260px;
     padding: 25px;
@@ -217,6 +218,16 @@ body.filters-open {
     color: inherit;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card .like {
+    display: block;
+    position: absolute;
+    top: 17px;
+    right: 17px;
+}
+.card .like-img {
+    width: 30px;
+    height: 30px;
 }
 
 .card:hover {
