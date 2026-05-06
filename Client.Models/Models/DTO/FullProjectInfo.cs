@@ -12,4 +12,6 @@ public class FullProjectInfo
     public FileDto Files { get; set; }
     public List<TeamMemberDto> TeamMembers { get; set; } = [];
     public List<TagDto>? Tags { get; set; } = [];
+    public int LikeCount { get; set; }
+    public bool IsLiked { get; set; }
 }

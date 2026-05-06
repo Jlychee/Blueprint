@@ -117,7 +117,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         }
     }
 
-    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)
+    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id, Guid userId)
     {
         return projectContext.Projects
             .Where(p => p.Id == id)
@@ -148,11 +148,16 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                     Title = t.Tag.Title,
                     Icon = t.Tag.Icon,
                     Color = t.Tag.Color,
-                }).ToList()
+                }).ToList(),
+                LikeCount = project.LikesCount,
+                IsLiked = project.Likes.Any(l => l.UserId == userId),
             }).SingleOrDefaultAsync();
     }
 
-    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
+    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(
+        ProjectCatalogFilter filter,
+        Guid userId,
+        CancellationToken ct)
     {
         var query = projectContext.Projects.AsQueryable();
         
@@ -196,6 +201,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                         Color = pt.Tag.Color,
                     }).ToList(),
                 LikeCount = p.LikesCount,
+                IsLiked = p.Likes.Any(l => l.UserId == userId),
             }).ToListAsync(ct);
 
         return new PagedResultDto<ProjectCardDto>
