@@ -15,6 +15,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
     public DbSet<ProjectTag> ProjectTags { get; set; }
     public DbSet<File> Files { get; set; }
     public DbSet<TagType> TagTypes { get; set; }
+    public DbSet<Like> Likes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,10 +26,17 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new FileConfiguration());
         modelBuilder.ApplyConfiguration(new TagTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new LikeConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
-
+public class LikeConfiguration : IEntityTypeConfiguration<Like>
+{
+    public void Configure(EntityTypeBuilder<Like> builder)
+    {
+        builder.HasKey(x => new { x.ProjectId, x.UserId });
+    }
+}
 public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 {
     public void Configure(EntityTypeBuilder<Project> builder)

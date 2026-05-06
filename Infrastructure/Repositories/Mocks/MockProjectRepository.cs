@@ -44,4 +44,14 @@ public class MockProjectRepository : IProjectRepository
         };
         return Task.FromResult(result);
     }
+
+    public Task<bool> LikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> UnlikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        return Task.FromResult(false);
+    }
 }

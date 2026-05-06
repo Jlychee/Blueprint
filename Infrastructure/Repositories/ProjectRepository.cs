@@ -202,4 +202,32 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             PageSize = filter.PageSize,
         };
     }
+
+    public async Task<bool> LikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        var exists = await projectContext.Likes
+            .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, cancellationToken: ct);
+
+        if (exists) 
+            return true;
+        
+        projectContext.Likes.Add(new Like
+        {
+            ProjectId = projectId,
+            UserId = userId
+        });
+
+        await projectContext.SaveChangesAsync(cancellationToken: ct);
+
+        return true;
+    }
+
+    public async Task<bool> UnlikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        await projectContext.Likes
+            .Where(x => x.ProjectId == projectId && x.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken: ct);
+
+        return false;
+    }
 }
