@@ -179,7 +179,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         var total = await query.CountAsync(ct);
 
         var items = await query
-            .OrderByDescending(p => p.Likes)
+            .OrderByDescending(p => p.Likes.Count)
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .Select(p => new ProjectCardDto
