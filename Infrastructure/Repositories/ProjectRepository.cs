@@ -213,7 +213,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         };
     }
 
-    public async Task<bool> LikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    public async Task<bool> LikeProjectAsync(int projectId, Guid userId, DateTime likedAtUtc, CancellationToken ct)
     {
         await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
 
@@ -238,7 +238,8 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         projectContext.Likes.Add(new Like
         {
             ProjectId = projectId,
-            UserId = userId
+            UserId = userId,
+            LikedAtUtc = likedAtUtc
         });
 
         try

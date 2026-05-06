@@ -47,7 +47,7 @@ public class MockProjectRepository : IProjectRepository
         return Task.FromResult(result);
     }
 
-    public Task<bool> LikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    public Task<bool> LikeProjectAsync(int projectId, Guid userId, DateTime likedAtUtc, CancellationToken ct)
     {
         return Task.FromResult(true);
     }

@@ -10,6 +10,6 @@ public interface IProjectRepository
         ProjectCatalogFilter filter,
         Guid userId,
         CancellationToken ct);
-    Task<bool> LikeProjectAsync(int projectId,Guid userId, CancellationToken ct);
+    Task<bool> LikeProjectAsync(int projectId, Guid userId, DateTime likedAtUtc, CancellationToken ct);
     Task<bool> UnlikeProjectAsync(int projectId,Guid userId, CancellationToken ct);
 }

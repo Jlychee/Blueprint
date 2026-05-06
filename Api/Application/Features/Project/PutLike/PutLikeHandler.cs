@@ -7,7 +7,12 @@ public class PutLikeHandler(IProjectRepository projectRepository)
 {
     public async Task<bool> Handle(PutLikeQuery request, CancellationToken cancellationToken)
     {
-        var status = await projectRepository.LikeProjectAsync(request.Id,request.cookie.MetricUserId, cancellationToken);
+        var likedAtUtc = DateTime.UtcNow;
+        var status = await projectRepository.LikeProjectAsync(
+            request.Id,
+            request.cookie.MetricUserId,
+            likedAtUtc,
+            cancellationToken);
         return status;
     }
 }

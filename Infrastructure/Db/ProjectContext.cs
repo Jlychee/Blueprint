@@ -35,6 +35,8 @@ public class LikeConfiguration : IEntityTypeConfiguration<Like>
     public void Configure(EntityTypeBuilder<Like> builder)
     {
         builder.HasKey(x => new { x.ProjectId, x.UserId });
+        builder.Property(x => x.LikedAtUtc)
+            .IsRequired();
         builder.HasOne(x => x.Project)
             .WithMany(x => x.Likes)
             .HasForeignKey(x => x.ProjectId)
