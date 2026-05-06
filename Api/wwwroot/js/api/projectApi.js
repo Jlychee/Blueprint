@@ -1,8 +1,7 @@
 ﻿const BASE_URL = 'http://localhost';
-
 function buildUrl(path, params = new URLSearchParams()) {
     const query = params.toString();
-    return `${BASE_URL}${path}${query ? `?${query}` : ''}`;
+    return `${path}${query ? `?${query}` : ''}`;
 }
 
 async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {
@@ -51,6 +50,13 @@ export async function getAllProjects(filters = {}) {
 
     if (filters.semester != null) {
         params.append('Semester', String(filters.semester));
+    }
+    if (filters.cookie?.metricUserId) {
+        params.append('cookie.metricUserId', filters.cookie.metricUserId);
+    }
+
+    if (filters.cookie?.filterSessionId) {
+        params.append('cookie.filterSessionId', filters.cookie.filterSessionId);
     }
 
     params.append('Page', String(filters.page ?? 1));
