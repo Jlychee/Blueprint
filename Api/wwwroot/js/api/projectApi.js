@@ -4,20 +4,51 @@ function buildUrl(path, params = new URLSearchParams()) {
     return `${BASE_URL}${path}${query ? `?${query}` : ''}`;
 }
 
-async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {
+async function requestJson(path, {
+    method = 'GET',
+    params = new URLSearchParams(),
+    body,
+    errorText = 'Request failed'
+} = {}) {
     const url = buildUrl(path, params);
-    const response = await fetch(url, {
+    const options = {
+        method,
+        credentials: 'include',
         headers: {
             Accept: 'application/json'
         }
-    });
+    };
+
+    if (body !== undefined) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url, options);
 
     if (!response.ok) {
         throw new Error(`${errorText} (${response.status})`);
     }
 
+    if (response.status === 204) {
+        return null;
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+
+    if (!contentType.includes('application/json')) {
+        return null;
+    }
+
     return await response.json();
 }
+async function fetchJson(path, params = new URLSearchParams(), errorText = 'Request failed') {
+    return requestJson(path, {
+        params,
+        errorText
+    });
+}
+
 
 export async function getProject(id) {
     return fetchJson(
@@ -43,7 +74,6 @@ export async function getAllProjects(filters = {}) {
     if (filters.teamMemberCount != null) {
         params.append('TeamMemberCount', String(filters.teamMemberCount));
     }
-
     if (filters.year != null) {
         params.append('Year', String(filters.year));
     }
@@ -70,29 +100,17 @@ export async function getAllProjects(filters = {}) {
 }
 
 export async function likeProject(id) {
-    const params = appendCookieParams(new URLSearchParams());
-
-    return fetchJson(
-        `/api/projects/project/${id}/like`,
-        params,
-        'Failed to like project',
-        {
-            method: 'PUT'
-        }
-    );
+    return requestJson(`/api/projects/project/${id}/like`, {
+        method: 'PUT',
+        errorText: 'Failed to like project'
+    });
 }
 
 export async function unlikeProject(id) {
-    const params = appendCookieParams(new URLSearchParams());
-
-    return fetchJson(
-        `/api/projects/project/${id}/like`,
-        params,
-        'Failed to unlike project',
-        {
-            method: 'DELETE'
-        }
-    );
+    return requestJson(`/api/projects/project/${id}/like`, {
+        method: 'DELETE',
+        errorText: 'Failed to unlike project'
+    });
 }
 
 export async function getTags() {

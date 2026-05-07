@@ -1,4 +1,5 @@
 ﻿import {state} from "./catalogState.js";
+import {initLikeElement, toggleProjectLike} from "../likes.js";
 
 export function syncUiWithState() {
     const searchInput = document.getElementById("search-input");
@@ -172,20 +173,36 @@ export async function renderProjects(items) {
         const title = clone.querySelector(".project-title");
         const description = clone.querySelector(".project-description");
         const iconsContainer = clone.querySelector(".icons");
-        const likeBtn = clone.querySelector(".like-btn");
-        const likeCounter = clone.querySelector(".like-counter");
+        const like = clone.querySelector(".like");
 
-        if (!card || !title || !description || !iconsContainer || !likeBtn || !likeCounter) {
+        if (!card || !title || !description || !iconsContainer) {
             return;
         }
 
         card.href = `project.html?id=${project.id}`;
         title.textContent = project.name || "Без названия";
+
+        initLikeElement(like, project);
+        like?.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            try {
+                await toggleProjectLike(like, project.id);
+            } catch (error) {
+                console.error("Error toggling project like:", error);
+            }
+        });
+        like?.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+
+            event.preventDefault();
+            like.click();
+        });
         description.textContent =
             project.shortDescriptionAi ||
             "Описание пока не добавлено.";
-        likeCounter.textContent = project.likeCount || 0;
-        console.log(project);
+
         iconsContainer.innerHTML = "";
 
         if (Array.isArray(project.tags) && project.tags.length > 0) {
