@@ -1,7 +1,7 @@
 ﻿const BASE_URL = 'http://localhost';
 function buildUrl(path, params = new URLSearchParams()) {
     const query = params.toString();
-    return `${path}${query ? `?${query}` : ''}`;
+    return `${BASE_URL}${path}${query ? `?${query}` : ''}`;
 }
 
 async function requestJson(path, {

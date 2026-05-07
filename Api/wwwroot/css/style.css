@@ -239,11 +239,6 @@ body.filters-open {
     justify-content: center;
 }
 
-.card .like-btn:focus {
-    outline: 2px solid var(--accent, #fff);
-    outline-offset: 1px;
-    border-radius: 8px;
-}
 
 .card .like-img {
     width: 30px;
@@ -497,20 +492,14 @@ body.filters-open {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
-.like:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 4px;
-    border-radius: 999px;
-}
 
 .like-img {
     width: 30px;
     height: 30px;
-    transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .like--active .like-img {
-    filter: invert(20%) sepia(88%) saturate(5201%) hue-rotate(339deg) brightness(103%) contrast(96%);
+    filter: invert(90%) sepia(88%) saturate(5201%) hue-rotate(339deg) brightness(70%) contrast(96%);
 }
 
 .like:hover .like-img,
@@ -525,8 +514,8 @@ body.filters-open {
 
 .card .like {
     position: absolute;
-    top: 17px;
-    right: 17px;
+    top: 10px;
+    right: 15px;
     z-index: 2;
 }
 

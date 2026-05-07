@@ -30,7 +30,7 @@ function updateLikeElement(element, state) {
     element.setAttribute("aria-pressed", String(liked));
     element.setAttribute("aria-label", liked ? "Убрать лайк" : "Поставить лайк");
 
-    const counter = element.querySelector(".like-count");
+    const counter = element.querySelector(".like-counter");
     if (counter) {
         counter.textContent = String(count);
     }
@@ -46,7 +46,7 @@ export async function toggleProjectLike(element, projectId) {
     if (!element || !projectId || element.classList.contains("like--loading")) return;
 
     const wasLiked = element.classList.contains("like--active");
-    const counter = element.querySelector(".like-count");
+    const counter = element.querySelector(".like-counter");
     const currentCount = Number(counter?.textContent) || 0;
     const optimisticState = {
         isLiked: !wasLiked,
