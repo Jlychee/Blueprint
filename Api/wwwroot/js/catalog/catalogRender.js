@@ -172,8 +172,10 @@ export async function renderProjects(items) {
         const title = clone.querySelector(".project-title");
         const description = clone.querySelector(".project-description");
         const iconsContainer = clone.querySelector(".icons");
+        const likeBtn = clone.querySelector(".like-btn");
+        const likeCounter = clone.querySelector(".like-counter");
 
-        if (!card || !title || !description || !iconsContainer) {
+        if (!card || !title || !description || !iconsContainer || !likeBtn || !likeCounter) {
             return;
         }
 
@@ -182,7 +184,8 @@ export async function renderProjects(items) {
         description.textContent =
             project.shortDescriptionAi ||
             "Описание пока не добавлено.";
-
+        likeCounter.textContent = project.likeCount || 0;
+        console.log(project);
         iconsContainer.innerHTML = "";
 
         if (Array.isArray(project.tags) && project.tags.length > 0) {

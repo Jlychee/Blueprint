@@ -69,6 +69,32 @@ export async function getAllProjects(filters = {}) {
     );
 }
 
+export async function likeProject(id) {
+    const params = appendCookieParams(new URLSearchParams());
+
+    return fetchJson(
+        `/api/projects/project/${id}/like`,
+        params,
+        'Failed to like project',
+        {
+            method: 'PUT'
+        }
+    );
+}
+
+export async function unlikeProject(id) {
+    const params = appendCookieParams(new URLSearchParams());
+
+    return fetchJson(
+        `/api/projects/project/${id}/like`,
+        params,
+        'Failed to unlike project',
+        {
+            method: 'DELETE'
+        }
+    );
+}
+
 export async function getTags() {
     return fetchJson(
         '/api/projects/tags',
