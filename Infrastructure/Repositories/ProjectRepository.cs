@@ -101,7 +101,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                         .Select(t => new ProjectTag
                         {
                             TagId = existingTags[t.Title]
-                        }).ToList()
+                        }).ToList(),
                 };
 
                 projectContext.Projects.Add(entity);
@@ -117,7 +117,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         }
     }
 
-    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)
+    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id, Guid userId)
     {
         return projectContext.Projects
             .Where(p => p.Id == id)
@@ -148,11 +148,16 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                     Title = t.Tag.Title,
                     Icon = t.Tag.Icon,
                     Color = t.Tag.Color,
-                }).ToList()
+                }).ToList(),
+                LikeCount = project.LikesCount,
+                IsLiked = project.Likes.Any(l => l.UserId == userId),
             }).SingleOrDefaultAsync();
     }
 
-    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
+    public async Task<PagedResultDto<ProjectCardDto>> SearchAsync(
+        ProjectCatalogFilter filter,
+        Guid userId,
+        CancellationToken ct)
     {
         var query = projectContext.Projects.AsQueryable();
         
@@ -179,7 +184,7 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
         var total = await query.CountAsync(ct);
 
         var items = await query
-            .OrderBy(p => p.Name)
+            .OrderByDescending(p => p.LikesCount)
             .Skip((filter.Page - 1) * filter.PageSize)
             .Take(filter.PageSize)
             .Select(p => new ProjectCardDto
@@ -195,6 +200,8 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
                         Icon = pt.Tag.Icon,
                         Color = pt.Tag.Color,
                     }).ToList(),
+                LikeCount = p.LikesCount,
+                IsLiked = p.Likes.Any(l => l.UserId == userId),
             }).ToListAsync(ct);
 
         return new PagedResultDto<ProjectCardDto>
@@ -204,5 +211,95 @@ public class ProjectRepository(ProjectContext projectContext) : IProjectReposito
             Page = filter.Page,
             PageSize = filter.PageSize,
         };
+    }
+
+    public async Task<bool> LikeProjectAsync(int projectId, Guid userId, DateTime likedAtUtc, CancellationToken ct)
+    {
+        await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
+
+        var projectExists = await projectContext.Projects
+            .AnyAsync(x => x.Id == projectId, ct);
+
+        if (!projectExists)
+        {
+            await transaction.CommitAsync(ct);
+            return false;
+        }
+
+        var exists = await projectContext.Likes
+            .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, ct);
+
+        if (exists)
+        {
+            await transaction.CommitAsync(ct);
+            return true;
+        }
+
+        projectContext.Likes.Add(new Like
+        {
+            ProjectId = projectId,
+            UserId = userId,
+            LikedAtUtc = likedAtUtc
+        });
+
+        try
+        {
+            await projectContext.SaveChangesAsync(ct);
+        }
+        catch (DbUpdateException) when (!ct.IsCancellationRequested)
+        {
+            await transaction.RollbackAsync(ct);
+            projectContext.ChangeTracker.Clear();
+
+            var likeExists = await projectContext.Likes
+                .AnyAsync(x => x.ProjectId == projectId && x.UserId == userId, ct);
+
+            if (likeExists)
+                return true;
+
+            projectExists = await projectContext.Projects
+                .AnyAsync(x => x.Id == projectId, ct);
+
+            if (!projectExists)
+                return false;
+
+            throw;
+        }
+
+        await projectContext.Projects
+            .Where(x => x.Id == projectId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.LikesCount, x => x.LikesCount + 1), ct);
+
+        await transaction.CommitAsync(ct);
+
+        return true;
+    }
+
+    public async Task<bool> UnlikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        await using var transaction = await projectContext.Database.BeginTransactionAsync(ct);
+
+        var deleted = await projectContext.Likes
+            .Where(x => x.ProjectId == projectId && x.UserId == userId)
+            .ExecuteDeleteAsync(cancellationToken: ct);
+
+        if (deleted == 0)
+        {
+            var projectExists = await projectContext.Projects
+                .AnyAsync(x => x.Id == projectId, ct);
+
+            await transaction.CommitAsync(ct);
+            return projectExists;
+        }
+
+        await projectContext.Projects
+            .Where(x => x.Id == projectId)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(x => x.LikesCount, x => x.LikesCount > 0 ? x.LikesCount - 1 : 0), ct);
+
+        await transaction.CommitAsync(ct);
+
+        return true;
     }
 }

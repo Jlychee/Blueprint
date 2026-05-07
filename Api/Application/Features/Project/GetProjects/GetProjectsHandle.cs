@@ -17,7 +17,10 @@ public class GetProjectsHandle(IProjectRepository projectRepository, IMetricRepo
             request.filter.Page,            
             occurredAtUtc,
             cancellationToken);
-        return await projectRepository.SearchAsync(request.filter, cancellationToken)
+        return await projectRepository.SearchAsync(
+                request.filter,
+                request.cookie.MetricUserId,
+                cancellationToken)
             ?? throw new KeyNotFoundException();
     }
 }

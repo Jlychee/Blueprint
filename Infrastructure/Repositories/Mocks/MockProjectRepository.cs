@@ -10,7 +10,7 @@ public class MockProjectRepository : IProjectRepository
         return Task.CompletedTask;
     }
 
-    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id)
+    public Task<FullProjectInfo?> GetFullProjectInfoAsync(int id, Guid userId)
     {
         var files = new FileDto
         {
@@ -28,12 +28,14 @@ public class MockProjectRepository : IProjectRepository
             Semester = 2,
             Files = files,
             Id = 1,
-            ShortDescription = "Short Description"
+            ShortDescription = "Short Description",
+            LikeCount = 0,
+            IsLiked = false
         };
         return Task.FromResult<FullProjectInfo?>(project);
     }
 
-    public Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, CancellationToken ct)
+    public Task<PagedResultDto<ProjectCardDto>> SearchAsync(ProjectCatalogFilter filter, Guid userId, CancellationToken ct)
     {
         var result = new PagedResultDto<ProjectCardDto>
         {
@@ -43,5 +45,15 @@ public class MockProjectRepository : IProjectRepository
             Items = new List<ProjectCardDto>()
         };
         return Task.FromResult(result);
+    }
+
+    public Task<bool> LikeProjectAsync(int projectId, Guid userId, DateTime likedAtUtc, CancellationToken ct)
+    {
+        return Task.FromResult(true);
+    }
+
+    public Task<bool> UnlikeProjectAsync(int projectId, Guid userId, CancellationToken ct)
+    {
+        return Task.FromResult(false);
     }
 }
