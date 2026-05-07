@@ -206,9 +206,9 @@ body.filters-open {
     opacity: 0.95;
     filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.12));
 }
-
 .card {
     display: flex;
+    position: relative;
     flex-direction: column;
     min-height: 260px;
     padding: 25px;
@@ -219,13 +219,49 @@ body.filters-open {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.card .like {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    position: absolute;
+    top: 17px;
+    right: 17px;
+}
+
+.card .like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.card .like-img {
+    width: 30px;
+    height: 30px;
+    display: block;
+    background: none;
+}
+
+.card .like-counter {
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1;
+    color: #fff;
+}
+
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
-.card h1,
-.card h3 {
+.card h1 {
     margin-bottom: 10px;
     font-size: 20px;
 }
@@ -442,4 +478,47 @@ body.filters-open {
     .filter-btn span {
         display: none;
     }
+}
+
+.like {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text);
+    font-weight: 700;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+
+.like-img {
+    width: 30px;
+    height: 30px;
+}
+
+.like--active .like-img {
+    filter: invert(90%) sepia(88%) saturate(5201%) hue-rotate(339deg) brightness(70%) contrast(96%);
+}
+
+.like:hover .like-img,
+.like--active .like-img {
+    transform: scale(1.08);
+}
+
+.like--loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.card .like {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 2;
+}
+
+.card .project-title {
+    padding-right: 66px;
 }

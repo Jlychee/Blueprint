@@ -72,7 +72,7 @@ export async function loadProjects() {
         if (state.search && items.length === 0) {
             renderSearchStub(state.search);
         } else {
-            renderProjects(items);
+            await renderProjects(items);
             renderPagination();
         }
     } catch (error) {

@@ -1,4 +1,5 @@
 ﻿import {state} from "./catalogState.js";
+import {initLikeElement, toggleProjectLike} from "../likes.js";
 
 export function syncUiWithState() {
     const searchInput = document.getElementById("search-input");
@@ -111,12 +112,53 @@ function createTagChip(tag) {
     chip.textContent = tag.title || "tag";
     return chip;
 }
+let projectCardTemplatePromise = null;
 
-export function renderProjects(items) {
+async function getProjectCardTemplate() {
+    const existingTemplate = document.getElementById("project-card-template");
+    if (existingTemplate) return existingTemplate;
+
+    if (!projectCardTemplatePromise) {
+        const templateUrl = new URL("../../resources/components/card.html", import.meta.url);
+        projectCardTemplatePromise = fetch(templateUrl)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Failed to load card template (${response.status})`);
+                }
+
+                return response.text();
+            })
+            .then((html) => {
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = html;
+
+                const template = wrapper.querySelector("#project-card-template");
+
+                if (!template) {
+                    throw new Error("Project card template not found in card.html");
+                }
+
+                document.body.appendChild(template);
+                return template;
+            });
+    }
+
+    return projectCardTemplatePromise;
+}
+export async function renderProjects(items) {
     const container = document.getElementById("projects-grid");
-    const template = document.getElementById("project-card-template");
 
-    if (!container || !template) return;
+    if (!container) return;
+
+    let template;
+
+    try {
+        template = await getProjectCardTemplate();
+    } catch (error) {
+        console.error("Error loading project card template:", error);
+        container.innerHTML = `<div class="projects-error">Не удалось загрузить шаблон карточки проекта.</div>`;
+        return;
+    }
 
     container.innerHTML = "";
 
@@ -131,9 +173,32 @@ export function renderProjects(items) {
         const title = clone.querySelector(".project-title");
         const description = clone.querySelector(".project-description");
         const iconsContainer = clone.querySelector(".icons");
+        const like = clone.querySelector(".like");
+
+        if (!card || !title || !description || !iconsContainer) {
+            return;
+        }
 
         card.href = `project.html?id=${project.id}`;
         title.textContent = project.name || "Без названия";
+
+        initLikeElement(like, project);
+        like?.addEventListener("click", async (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            try {
+                await toggleProjectLike(like, project.id);
+            } catch (error) {
+                console.error("Error toggling project like:", error);
+            }
+        });
+        like?.addEventListener("keydown", (event) => {
+            if (event.key !== "Enter" && event.key !== " ") return;
+
+            event.preventDefault();
+            like.click();
+        });
         description.textContent =
             project.shortDescriptionAi ||
             "Описание пока не добавлено.";

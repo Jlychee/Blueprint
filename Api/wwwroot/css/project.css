@@ -296,6 +296,26 @@
     font-family: inherit;
     word-break: break-word;
 }
+.project-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.project-like {
+    font-size: 40px;
+    margin-top: 0;
+    padding-bottom: 40px;
+    text-align: center;
+
+}
+
+.project-like .like-img {
+    width: 48px;
+    height: 48px;
+}
 
 @media (max-width: 1100px) {
     .members-grid {
@@ -445,6 +465,7 @@
         word-break: break-word;
         overflow-wrap: anywhere;
         border: 1px solid white;
+        border-radius: 12px;
     }
 
     .info-table th {
@@ -463,6 +484,27 @@
         word-break: break-word;
 
     }
+    .project-header {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .project-like {
+        font-size: 20px;
+        margin-top: 0;
+        padding-bottom: 40px;
+        text-align: center;
+
+    }
+
+    .project-like .like-img {
+        width: 20px;
+        height: 20px;
+    }
+
 }
 
 @media (max-width: 400px) {
@@ -518,6 +560,26 @@
     .navigation-objs button {
         width: 36px;
         height: 36px;
+    }
+    .project-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .project-like {
+        font-size: 20px;
+        margin-top: 0;
+        padding-bottom: 20px;
+        text-align: center;
+
+    }
+
+    .project-like .like-img {
+        width: 20px;
+        height: 20px;
     }
 
 }
