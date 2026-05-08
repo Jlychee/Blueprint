@@ -41,7 +41,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.InitializeDatabase();
-app.UseCors("FrontendDev");
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
