@@ -15,18 +15,18 @@
     --text: #ffffff;
     --text-muted: #C3C3C3;
     --accent: #9D6A69;
+    --border: #666;
+    --buttons: #161616;
+    --font-main: "Raleway", Arial, sans-serif;
 }
-
 
 /* BODY */
 body {
     padding-top: 70px;
-
     background: var(--bg);
     color: var(--text);
-    font-family: Raleway, sans-serif;
+    font-family: var(--font-main);
 }
-
 
 /* CONTAINER */
 

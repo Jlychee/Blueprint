@@ -1,6 +1,6 @@
 function initSearchAndFilter() {
     const input = document.getElementById('search-input');
-    const clearBtn = document.getElementById('filters-close');
+    const clearBtn = document.querySelector('.clear');
     const layout = document.getElementById('catalog-layout');
 
     if (input && clearBtn && input.dataset.searchInitialized !== 'true') {
@@ -15,7 +15,13 @@ function initSearchAndFilter() {
         clearBtn.addEventListener('click', () => {
             input.value = '';
             toggleClear();
-            input.dispatchEvent(new Event('input', { bubbles: true }));
+
+            if (typeof window.clearCatalogSearch === 'function') {
+                window.clearCatalogSearch();
+            } else {
+                input.dispatchEvent(new Event('input', {bubbles: true}));
+            }
+
             input.focus();
         });
 
@@ -37,6 +43,19 @@ function initSearchAndFilter() {
             }
         });
     }
+
+    document.querySelectorAll('[data-filter-toggle]').forEach((button) => {
+        if (button.dataset.bound === 'true') return;
+
+        button.dataset.bound = 'true';
+
+        button.addEventListener('click', () => {
+            const section = button.closest('.filter-subsection');
+            if (!section) return;
+
+            section.classList.toggle('collapsed');
+        });
+    });
 }
 
 window.initSearchAndFilter = initSearchAndFilter;

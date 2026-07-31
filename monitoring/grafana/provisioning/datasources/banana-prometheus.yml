@@ -5,7 +5,7 @@ datasources:
     uid: banana-prometheus
     type: prometheus
     access: proxy
-    url: prometheus:9090
+    url: http://prometheus:9090
     isDefault: false
     jsonData:
       httpMethod: POST

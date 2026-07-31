@@ -4,6 +4,7 @@ using Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 namespace Infrastructure.Db;
@@ -15,15 +16,20 @@ public class MetricsContext(DbContextOptions<MetricsContext> options) : DbContex
     public DbSet<FilteredProjectView> FilteredProjectViews { get; set; }
     public DbSet<FilteredView> FilteredViews { get; set; }
 
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new UserRetentionStateConfiguration());
         modelBuilder.ApplyConfiguration(new RetentionByCohortConfiguration());
         modelBuilder.ApplyConfiguration(new FilteredProjectViewConfiguration());
         modelBuilder.ApplyConfiguration(new FilteredViewConfiguration());
+
         base.OnModelCreating(modelBuilder);
     }
 }
+
+
 
 public class FilteredViewConfiguration : IEntityTypeConfiguration<FilteredView>
 {

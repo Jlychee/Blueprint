@@ -15,6 +15,7 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
     public DbSet<ProjectTag> ProjectTags { get; set; }
     public DbSet<File> Files { get; set; }
     public DbSet<TagType> TagTypes { get; set; }
+    public DbSet<Like> Likes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -25,10 +26,24 @@ public class ProjectContext(DbContextOptions<ProjectContext> options) : DbContex
         modelBuilder.ApplyConfiguration(new TagConfiguration());
         modelBuilder.ApplyConfiguration(new FileConfiguration());
         modelBuilder.ApplyConfiguration(new TagTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new LikeConfiguration());
         base.OnModelCreating(modelBuilder);
     }
 }
-
+public class LikeConfiguration : IEntityTypeConfiguration<Like>
+{
+    public void Configure(EntityTypeBuilder<Like> builder)
+    {
+        builder.HasKey(x => new { x.ProjectId, x.UserId });
+        builder.Property(x => x.LikedAtUtc)
+            .IsRequired();
+        builder.HasOne(x => x.Project)
+            .WithMany(x => x.Likes)
+            .HasForeignKey(x => x.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
+    }
+}
 public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 {
     public void Configure(EntityTypeBuilder<Project> builder)
@@ -50,11 +65,15 @@ public class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(x => x.Year).IsRequired();
         builder.Property(x => x.Semester).IsRequired();
+        builder.Property(x => x.LikesCount)
+            .IsRequired()
+            .HasDefaultValue(0);
         // TODO: я хз, через Constraint не статическую проверку не сделать (я бы хотела, кнч текущий год проверять)
         builder.ToTable(t =>
         {
             t.HasCheckConstraint("CK_PROJECT_YEAR", "\"Year\" >= 2000 AND \"Year\" <= 2100");
             t.HasCheckConstraint("CK_PROJECT_SEMESTER", "\"Semester\" IN (1,2)");
+            t.HasCheckConstraint("CK_PROJECT_LIKES_COUNT", "\"LikesCount\" >= 0");
         });
 
         builder.HasIndex(p => p.Name);

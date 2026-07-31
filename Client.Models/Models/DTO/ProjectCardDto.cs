@@ -6,4 +6,7 @@ public class ProjectCardDto
     public string Name { get; set; }
     public string ShortDescriptionAi { get; set; }
     public List<TagDto> Tags { get; set; } = [];
+
+    public int LikeCount { get; set; }
+    public bool IsLiked { get; set; }
 }
